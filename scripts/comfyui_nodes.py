@@ -38,4 +38,4 @@ def discover(data):
             "truncated": len(data) > len(rows)}
 
 def fetch_nodes(url, get_json):
-    return discover(get_json(url, "/object_info", max_bytes=32_000_000))
+    return discover(get_json(url, "/object_info", max_bytes=96_000_000, timeout=60))
