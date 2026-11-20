@@ -1735,5 +1735,13 @@
   "Invalid workflow request or file too large": "잘못된 요청 또는 파일이 너무 큼",
   "Invalid or unsupported workflow JSON": "잘못되었거나 지원되지 않는 JSON",
   "Workflow library limit reached": "라이브러리 한도 도달",
-  "Workflow not found": "워크플로를 찾을 수 없음"
+  "Workflow not found": "워크플로를 찾을 수 없음",
+  "Link workflow folder": "워크플로 폴더 연결",
+  "Select a folder on the launcher PC. Synchronization imports JSON files recursively without modifying originals.": "런처 PC의 폴더를 선택하세요. 동기화는 원본을 수정하지 않고 JSON을 재귀적으로 가져옵니다.",
+  "Workflow folder path": "워크플로 폴더 경로",
+  "Synchronize folder": "폴더 동기화",
+  "Scanning workflows...": "워크플로 검색 중...",
+  "Imported: {imported} · Updated: {updated} · Unchanged: {unchanged} · Skipped: {skipped}": "가져옴: {imported} · 업데이트: {updated} · 변경 없음: {unchanged} · 건너뜀: {skipped}",
+  "Invalid workflow folder": "잘못된 워크플로 폴더",
+  "Linked folder": "연결된 폴더"
 }
