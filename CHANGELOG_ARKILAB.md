@@ -1,5 +1,12 @@
 # OrkiLab changelog
 
+## 0.2.0-rc.1 — Workspace closeout candidate
+
+- Make the modern Workspace the sole launcher entry point, including old `/legacy` bookmarks.
+- Remove the preview label and update the documented launch flow.
+- Preserve trainer engines and shared compatibility assets.
+- User smoke testing reported successful trainer navigation; comprehensive regression and GPU validation remain pending.
+
 ## 0.2.0-dev.1 — Workspace preview
 
 - Add opt-in dashboard, engine filters, hardware summary and local SQLite project metadata.
