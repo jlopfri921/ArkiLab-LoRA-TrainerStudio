@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job queue · OrkiLab</title>
-    <link rel="icon" type="image/svg+xml" href="/assets/arkilab/arkilab-icon.svg">
+    <link rel="icon" type="image/svg+xml" href="/assets/orkilab/orkilab-icon.svg">
     <script src="/i18n.js"></script>
     <!--
         Cola de trabajos (scripts/job_queue.py): lo que entrena, lo que espera y lo terminado.
@@ -185,7 +185,7 @@
 <body>
 <div class="wrap">
     <div class="top">
-        <a href="/"><img src="/assets/arkilab/arkilab-logo-dark.svg" alt="OrkiLab"></a>
+        <a href="/"><img src="/assets/orkilab/orkilab-logo-dark.svg" alt="OrkiLab"></a>
         <div>
             <h1>Job queue</h1>
             <p>Trainings and pre-caches, one after another on the GPU</p>
@@ -248,7 +248,7 @@
     };
 
     function esc(s) { return String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
-    function cover(job) { const tr = trainers[job.trainer]; return tr ? '/' + tr.image : '/assets/arkilab/arkilab-logo-dark.svg'; }
+    function cover(job) { const tr = trainers[job.trainer]; return tr ? '/' + tr.image : '/assets/orkilab/orkilab-logo-dark.svg'; }
     function trainerUrl(job) { return job.port ? `${location.protocol}//${location.hostname}:${job.port}` : ''; }
     function hms(sec) {
         if (!isFinite(sec) || sec < 0) return '–';

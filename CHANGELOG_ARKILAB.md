@@ -25,3 +25,8 @@ Release candidate: CI and local hardware validation still required before stable
 - Extend ignore rules for private data and model weights.
 
 Status: development snapshot; runtime validation pending. No training engine changes.
+
+## Foundation branding follow-up
+
+- Unify the launcher, queue and all 21 launcher covers with the orbital O vector identity.
+- Preserve legacy asset paths as compatibility aliases; use OrkiLab paths for new UI links.

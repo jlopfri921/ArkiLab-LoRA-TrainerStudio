@@ -8,147 +8,147 @@
       "id": "ltx23",
       "name": "LTX 2.3",
       "description": "Video LoRAs",
-      "image": "assets/ltx23/arkilab-cover.svg",
+      "image": "assets/ltx23/orkilab-cover.svg",
       "run": "Run_LoRAlab-LTX23.bat"
     },
     {
       "id": "ltx25",
       "name": "LTX 2.5",
       "description": "Image, video, audio and edit LoRAs (8 GB)",
-      "image": "assets/ltx25/arkilab-cover.svg",
+      "image": "assets/ltx25/orkilab-cover.svg",
       "run": "Run_LoRAlab-LTX25.bat"
     },
     {
       "id": "krea2",
       "name": "Krea 2",
       "description": "Image LoRAs",
-      "image": "assets/krea2/arkilab-cover.svg",
+      "image": "assets/krea2/orkilab-cover.svg",
       "run": "Run_LoRAlab-Krea2.bat"
     },
     {
       "id": "minimaxh3",
       "name": "MiniMax-H3",
       "description": "Video and audio LoRAs",
-      "image": "assets/minimaxh3/arkilab-cover.svg",
+      "image": "assets/minimaxh3/orkilab-cover.svg",
       "run": "Run_LoRAlab-MiniMaxH3.bat"
     },
     {
       "id": "minimaxh3image",
       "name": "MiniMax-H3 Image",
       "description": "Image LoRAs (16 MP model, 6 steps)",
-      "image": "assets/minimaxh3image/arkilab-cover.svg",
+      "image": "assets/minimaxh3image/orkilab-cover.svg",
       "run": "Run_LoRAlab-MiniMaxH3Image.bat"
     },
     {
       "id": "wan22",
       "name": "Wan 2.2 (T2V-A14B)",
       "description": "Video and image LoRAs (high / low noise)",
-      "image": "assets/wan22/arkilab-cover.svg",
+      "image": "assets/wan22/orkilab-cover.svg",
       "run": "Run_LoRAlab-Wan22.bat"
     },
     {
       "id": "qwenimage21",
       "name": "Qwen-Image 2.1",
       "description": "Image and edit LoRAs",
-      "image": "assets/qwenimage21/arkilab-cover.svg",
+      "image": "assets/qwenimage21/orkilab-cover.svg",
       "run": "Run_LoRAlab-QwenImage21.bat"
     },
     {
       "id": "fibo2",
       "name": "Fibo 2.0",
       "description": "Image and edit LoRAs (BRIA)",
-      "image": "assets/fibo2/arkilab-cover.svg",
+      "image": "assets/fibo2/orkilab-cover.svg",
       "run": "Run_LoRAlab-Fibo2.bat"
     },
     {
       "id": "qwenimage2512",
       "name": "Qwen-Image 2512",
       "description": "Image LoRAs (2512) and edit LoRAs (Edit-2511)",
-      "image": "assets/qwenimage2512/arkilab-cover.svg",
+      "image": "assets/qwenimage2512/orkilab-cover.svg",
       "run": "Run_LoRAlab-QwenImage2512.bat"
     },
     {
       "id": "boogu",
       "name": "Boogu Image Edit",
       "description": "Image-edit LoRAs",
-      "image": "assets/boogu/arkilab-cover.svg",
+      "image": "assets/boogu/orkilab-cover.svg",
       "run": "Run_LoRAlab-Boogu.bat"
     },
     {
       "id": "zimage",
       "name": "Z-Image",
       "description": "Image LoRAs (also Z-Image-Turbo)",
-      "image": "assets/zimage/arkilab-cover.svg",
+      "image": "assets/zimage/orkilab-cover.svg",
       "run": "Run_LoRAlab-ZImage.bat"
     },
     {
       "id": "mingimage",
       "name": "Ming-Image",
       "description": "Text-to-image LoRAs (transparent designs)",
-      "image": "assets/mingimage/arkilab-cover.svg",
+      "image": "assets/mingimage/orkilab-cover.svg",
       "run": "Run_LoRAlab-MingImage.bat"
     },
     {
       "id": "anima",
       "name": "Anima",
       "description": "Anime and illustration LoRAs",
-      "image": "assets/anima/arkilab-cover.svg",
+      "image": "assets/anima/orkilab-cover.svg",
       "run": "Run_LoRAlab-Anima.bat"
     },
     {
       "id": "yue2",
       "name": "YuE2-3B",
       "description": "Music LoRAs (voice AR and phrasing NAR) · Experimental beta",
-      "image": "assets/yue2/arkilab-cover.svg",
+      "image": "assets/yue2/orkilab-cover.svg",
       "run": "Run_LoRAlab-YuE2.bat"
     },
     {
       "id": "flux1",
       "name": "FLUX.1 Dev",
       "description": "Image LoRAs",
-      "image": "assets/flux1/arkilab-cover.svg",
+      "image": "assets/flux1/orkilab-cover.svg",
       "run": "Run_LoRAlab-Flux1.bat"
     },
     {
       "id": "klein9b",
       "name": "FLUX.2 Klein 9B",
       "description": "Image and edit LoRAs",
-      "image": "assets/klein9b/arkilab-cover.svg",
+      "image": "assets/klein9b/orkilab-cover.svg",
       "run": "Run_LoRAlab-Klein9B.bat"
     },
     {
       "id": "flux3klein",
       "name": "FLUX.3 Image Klein",
       "description": "Image and edit LoRAs",
-      "image": "assets/flux3klein/arkilab-cover.svg",
+      "image": "assets/flux3klein/orkilab-cover.svg",
       "run": "Run_LoRAlab-Flux3Klein.bat"
     },
     {
       "id": "ernie",
       "name": "ERNIE-Image",
       "description": "Text-to-image LoRAs",
-      "image": "assets/ernie/arkilab-cover.svg",
+      "image": "assets/ernie/orkilab-cover.svg",
       "run": "Run_LoRAlab-Ernie.bat"
     },
     {
       "id": "mossimage",
       "name": "MOSS-Image",
       "description": "Text-to-image LoRAs (Base and SFT)",
-      "image": "assets/mossimage/arkilab-cover.svg",
+      "image": "assets/mossimage/orkilab-cover.svg",
       "run": "Run_LoRAlab-MossImage.bat"
     },
     {
       "id": "ideogram4",
       "name": "Ideogram 4",
       "description": "Image LoRAs",
-      "image": "assets/ideogram4/arkilab-cover.svg",
+      "image": "assets/ideogram4/orkilab-cover.svg",
       "run": "Run_LoRAlab-Ideogram4.bat"
     },
     {
       "id": "sdxl",
       "name": "SDXL",
       "description": "SDXL Base, Pony, Illustrious, NoobAI, Juggernaut, RealVis and custom checkpoints",
-      "image": "assets/sdxl/arkilab-cover.svg",
+      "image": "assets/sdxl/orkilab-cover.svg",
       "run": "Run_LoRAlab-SDXL.bat"
     }
   ],

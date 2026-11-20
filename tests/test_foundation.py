@@ -24,8 +24,8 @@ class BrandingTests(unittest.TestCase):
         for name in ("arkilab-icon.svg", "arkilab-logo-dark.svg", "arkilab-logo-light.svg"):
             path = ROOT / "assets/arkilab" / name
             self.assertTrue(ET.parse(path).getroot().tag.endswith("svg"))
-        self.assertIn("/assets/arkilab/arkilab-icon.svg", html)
-        self.assertIn("/assets/arkilab/arkilab-logo-dark.svg", html)
+        self.assertIn("/assets/orkilab/orkilab-icon.svg", html)
+        self.assertIn("/assets/orkilab/orkilab-logo-dark.svg", html)
         self.assertIn("Academia SD", (ROOT / "LICENSE").read_text(encoding="utf-8"))
         self.assertIn("AcademiaSD LoRAlab Trainer Studio", html)
 
