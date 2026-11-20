@@ -1639,5 +1639,18 @@
   "Settings": "설정",
   "About OrkiLab": "OrkiLab 정보",
   "Launcher connection lost. Check the console.": "런처 연결이 끊겼습니다. 콘솔을 확인하세요.",
-  "Check the launcher console.": "런처 콘솔을 확인하세요."
+  "Check the launcher console.": "런처 콘솔을 확인하세요.",
+  "ComfyUI Connect": "ComfyUI 연결",
+  "Datasets and Models: planned": "데이터셋 및 모델: 예정",
+  "Connect to ComfyUI on this PC or a private network. No generation jobs are submitted.": "이 PC 또는 사설 네트워크의 ComfyUI에 연결합니다. 생성 작업은 제출하지 않습니다.",
+  "ComfyUI address": "ComfyUI 주소",
+  "Use a local or private IP address and port. Configure ComfyUI on the launcher PC.": "로컬 또는 사설 IP 및 포트를 사용하세요. 런처 PC에서 ComfyUI를 설정하세요.",
+  "Save and test connection": "저장 및 연결 테스트",
+  "Test saved connection": "저장된 연결 테스트",
+  "Checking connection...": "연결 확인 중...",
+  "Connected to ComfyUI": "ComfyUI에 연결됨",
+  "Could not connect to ComfyUI": "ComfyUI에 연결할 수 없습니다",
+  "Use a local or private IP address and port": "로컬 또는 사설 IP 및 포트를 사용하세요",
+  "Configure ComfyUI on the launcher PC": "런처 PC에서 ComfyUI를 설정하세요",
+  "Invalid ComfyUI address": "잘못된 ComfyUI 주소"
 }
