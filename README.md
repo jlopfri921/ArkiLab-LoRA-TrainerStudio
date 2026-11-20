@@ -8,17 +8,93 @@
   <img alt="Windows and Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-293C60">
 </p>
 
-<p align="center"><a href="#quick-start">Quick start</a> · <a href="#training-engines">Training engines</a> · <a href="docs/arkilab/ROADMAP.md">Roadmap</a> · <a href="CHANGELOG_ARKILAB.md">Changelog</a> · <a href="#credits">Credits</a></p>
+<p align="center"><a href="#whats-new-in-orkilab--modern-workspace-and-comfyui-integration">What’s new</a> · <a href="#quick-start">Quick start</a> · <a href="#training-engines">Training engines</a> · <a href="docs/arkilab/ROADMAP.md">Roadmap</a> · <a href="CHANGELOG_ARKILAB.md">Changelog</a> · <a href="#credits">Credits</a></p>
 
 # OrkiLab — LoRA Trainer Studio
 
 Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Workspace is the default interface. This release candidate still requires comprehensive regression and GPU validation.
 
-## New Workspace tools (development)
+## What's new in OrkiLab — modern Workspace and ComfyUI integration
 
-The Workspace includes a dedicated **GPU Manager** (`/workspace#gpu-manager`) and a separate **ComfyUI Zone** (`/workspace/comfyui`) for connection, inventories, workflows, generation, history and LoRA comparisons. These are in-development features, not a completed 0.3 release; a real ComfyUI Desktop restart and end-to-end GPU testing are still required.
+> **Development status (November 20, 2026).** The features below have been implemented on the repository's default branch, but **have not yet passed end-to-end tests with real ComfyUI Desktop workflows and GPU jobs**. The current version identifier remains **0.2.0-rc.1**; do not interpret the 0.3.x development milestones as released versions. Keep backups of important workflows and datasets.
 
-Read the [Workspace feature guide](docs/arkilab/WORKSPACE_FEATURES.md) for usage, implementation details, constraints, current support and testing requirements. Track changes in [CHANGELOG_ARKILAB.md](CHANGELOG_ARKILAB.md).
+OrkiLab is growing beyond a collection of LoRA trainers into a unified **local-first training, generation and model-management workspace**, while keeping the existing training engines. The newer interfaces prioritize focused screens, contextual help, collapsible advanced options, and internationalization.
+
+### Open the new interfaces
+
+| Screen | Address on the launcher PC | What you can do |
+| --- | --- | --- |
+| **Workspace** | [`/workspace`](http://127.0.0.1:4990/workspace) | Dashboard, projects, trainer engines, queue, settings |
+| **GPU Manager** | [`/workspace#gpu-manager`](http://127.0.0.1:4990/workspace#gpu-manager) | Inspect NVIDIA GPU activity, VRAM, temperature and training warnings |
+| **ComfyUI Zone** | [`/workspace/comfyui`](http://127.0.0.1:4990/workspace/comfyui) | Manage ComfyUI through a dedicated area with its own navigation |
+| ComfyUI connection | [`#comfyui`](http://127.0.0.1:4990/workspace/comfyui#comfyui) | Configure local/private ComfyUI connection and engine mode |
+| Model library | [`#models`](http://127.0.0.1:4990/workspace/comfyui#models) | Search read-only inventories of installed and shared models |
+| Node explorer | [`#nodes`](http://127.0.0.1:4990/workspace/comfyui#nodes) | Inspect available built-in/custom ComfyUI nodes |
+| Workflow library | [`#workflows`](http://127.0.0.1:4990/workspace/comfyui#workflows) | Import, synchronize, search, inspect and favorite workflows |
+| Generation Studio | [`#generation`](http://127.0.0.1:4990/workspace/comfyui#generation) | Prepare and review workflows, edit parameters and generate |
+| Generation history | [`#history`](http://127.0.0.1:4990/workspace/comfyui#history) | Review past jobs, output files and exact submitted API graphs |
+| LoRA Comparator | [`#compare`](http://127.0.0.1:4990/workspace/comfyui#compare) | Compare LoRA strengths in controlled, sequential generations |
+
+**Navigation:** the Workspace has a single **ComfyUI Zone** entry. The Zone has its own sidebar; choosing an item shows only that module. Use **Back to Workspace** to return to training and projects. The workflow library is collapsible, its list has its own scroll area, and import/synchronization tools can be expanded only when needed.
+
+### New and improved features
+
+| Module | Implemented capabilities | Current limits |
+| --- | --- | --- |
+| **Modern Workspace** | Central dashboard, existing trainer shortcuts, project metadata in SQLite, queue and configuration access, separate ComfyUI area | Some specialized trainers still need individual UX/regression review |
+| **Multilingual UI** | English, Spanish, French, German, Portuguese, Italian, Japanese and Korean; additional navigation labels, contextual explanations and controls | Custom-node labels, model names and all legacy trainer text may not have translations |
+| **ComfyUI Connect** | Native, connected and hybrid modes; connection testing and private-network URL configuration | Does not automatically configure or restart ComfyUI |
+| **Model library** | Read-only model inventory by source/category, searching and filtering | Name matching is not a hash-based compatibility check |
+| **ComfyUI nodes** | Explore installed built-in/custom nodes, origin and capabilities | Metadata discovery does not guarantee successful execution |
+| **Workflow library** | Import API/UI JSON, synchronize folders without editing originals, categories, favorites, search, node inspection, LoRA detection hints | Custom nodes and nested subgraphs can require Bridge and runtime validation |
+| **OrkiLab Bridge** | Installable ComfyUI frontend extension, converts visual workflows via ComfyUI's own graph machinery | Requires restarting ComfyUI after installation; conversion of real nested subgraphs not yet validated |
+| **Generation Studio** | Explicit prepare/review/confirm flow, dynamic parameter editor, essential/advanced grouping, random seed for supported integer seed inputs, per-workflow presets | Presets are browser-local; linked node inputs cannot be changed here; not all workflows convert |
+| **Media results and history** | SQLite job history; image/video/audio preview and download; export submitted API JSON; mesh-file downloads | Generated media stays in ComfyUI; interactive 3D rendering and large-media verification remain outstanding |
+| **LoRA Comparator** | Direct workflow selector with compatibility hints, standard LoRA-loader selection, 2–6 strengths, fixed other parameters, sequential jobs and result grid | Standard `LoraLoader` / `LoraLoaderModelOnly` only; no arbitrary-LoRA/checkpoint comparison yet |
+| **GPU Manager** | Read-only `nvidia-smi` telemetry, VRAM used/free, GPU load and temperature, visible-page auto-refresh and warnings for active OrkiLab training | Observes only; does **not** manage processes, free memory, or schedule jobs |
+
+### Using ComfyUI generation: step by step
+
+1. In **ComfyUI Zone → ComfyUI Connect**, choose **ComfyUI connected** or **Hybrid** and save/test your local ComfyUI URL (for example `http://127.0.0.1:8188`).
+2. Open **Workflow library**. Import a saved ComfyUI JSON workflow, or synchronize your local workflows directory. You can inspect required node types without running anything.
+3. Open **Generation Studio**, choose a workflow and click **Prepare workflow** for API JSON. Visual workflows with unsupported nodes or subgraphs may need **Prepare with Bridge**.
+4. If using Bridge for the first time, expand **OrkiLab Bridge**, install the extension into ComfyUI's `custom_nodes` folder, then **restart ComfyUI**. Bridge opens a dedicated browser tab for conversion; it does not run the workflow automatically.
+5. Review the prepared API graph. Set available prompt, seed, sampler and other scalar parameters; apply changes, then explicitly check the confirmation before clicking **Generate with ComfyUI**.
+6. Once completed, review media previews and downloads in the Generation Studio result area or **Generation history**. The history records the submitted graph; the generated files remain on the ComfyUI server.
+
+**Safety:** OrkiLab does not silently execute imported workflows. Running an untrusted ComfyUI workflow can execute installed custom-node code on the ComfyUI host. Use trusted workflows and nodes. Generation actions remain local-only on the launcher PC, and the application checks active training and ComfyUI queue state before submission.
+
+### Comparing a LoRA without manually inspecting node code
+
+1. Open **ComfyUI Zone → LoRA Comparator**.
+2. Search/select a workflow. The selector prioritizes **LoRA detected**, then **LoRA needs checking**, then **No standard LoRA detected**. These are **hints**, not guaranteed compatibility.
+3. Click **Prepare selected workflow** (or **Prepare with ComfyUI Bridge** if it is visual JSON). If a standard LoRA loader is available after validation, select it by name.
+4. Enter two to six strengths such as `0, 0.5, 0.8, 1.0`, confirm and run. OrkiLab submits one generation at a time with the same prepared prompt/seed/model settings and displays the results together.
+
+A zero strength removes the effect of **the selected LoRA only**, not every other LoRA that may be in the workflow. **Stop after current** prevents additional submissions; it does not cancel a ComfyUI job already running. Compatibility for custom LoRA loaders is planned, not implemented.
+
+### GPU Manager: what it does and doesn't do
+
+Open **Workspace → GPU Manager** to see video memory totals and free/used VRAM, processing utilization and temperature where the NVIDIA driver provides them. The monitor refreshes roughly every five seconds while the page is visible and auto-refresh is enabled. It also indicates when OrkiLab detects active training. It works independently of ComfyUI, so **you can test it without restarting ComfyUI**.
+
+The monitor executes a fixed, read-only `nvidia-smi` query; it does **not** close GPU processes, unload models, force memory reclamation or automatically decide whether a generation will fit. GPU memory may be used by other applications. A missing NVIDIA tool or unsupported sensor should show an unavailable state.
+
+### Storage, source code and known validation gaps
+
+| Data | Location | Notes |
+| --- | --- | --- |
+| Workspace project metadata | `settings/orkilab/projects.sqlite3` | Local metadata only |
+| Imported workflows | `settings/orkilab/workflows.sqlite3` | Original source JSON files are not overwritten |
+| Generation history | `settings/orkilab/generations.sqlite3` | Run records, API parameters and output descriptors, **not duplicated media** |
+| ComfyUI connection settings | `settings/orkilab/comfyui.json` | Locally validated connection configuration |
+| Generation presets | Browser local storage | Device/browser-specific, not yet in SQLite |
+| GPU telemetry | `scripts/gpu_monitor.py` | Local read-only NVIDIA query |
+| Browser interface | `GUI/workspace.html`, `GUI/locales/` | Shared page and translated UI |
+| Bridge extension | `integrations/orkilab_bridge/` | Installed separately into ComfyUI's `custom_nodes` |
+
+**Still requiring acceptance tests:** ComfyUI Desktop Bridge after restart, real custom-node/subgraph conversion, image/video/audio playback, LoRA Comparator sequential runs and stop behavior, GPU Manager on actual hardware, multi-GPU handling and trainer UI regressions. An interactive 3D viewer, central/server-side presets, cross-LoRA/checkpoint comparisons and GPU scheduling are future work—not completed features.
+
+For deeper architecture, endpoint/security notes, a feature-by-feature checklist and tests, see **[the Workspace feature guide](docs/arkilab/WORKSPACE_FEATURES.md)**, **[development roadmap](docs/arkilab/ROADMAP.md)** and **[full changelog](CHANGELOG_ARKILAB.md)**.
 
 ## Workspace at a glance
 
