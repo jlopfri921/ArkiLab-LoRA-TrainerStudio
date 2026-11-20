@@ -13,6 +13,33 @@
 | 0.9 Desktop | portable application/installer | clean Windows/Linux install and rollback |
 | 1.0 Stable | documented supported matrix | regression and hardware validation |
 
+## Immediate milestone: 0.3.0-rc.1 — ComfyUI integration candidate
+
+**Status:** scope agreed, candidate **not tagged or released**. The version in `VERSION_ARKILAB` remains `0.2.0-rc.1` until the release gate passes.
+
+**Included in the 0.3 RC (features to stabilize, not a promise every workflow will work):**
+
+- Modern Workspace entry points and the ComfyUI Zone introduction/connection gate, with eight interface languages.
+- Local/private ComfyUI connection validation; read-only node and model discovery.
+- Workflow library: importing trusted UI/API JSON, indexing local folders, search, favorites, and non-destructive inspection.
+- OrkiLab Bridge visual-to-API graph preparation; validation of representative installed-node workflows.
+- Generation Studio: explicit review/confirmation, supported parameter editing, job status, best-effort per-node progress, safe cancellation, history and output access.
+- Optional, queue-safe ComfyUI model/cache release and per-generation system RAM/VRAM diagnostic snapshots. GPU Manager read-only multi-adapter telemetry and bounded charts.
+- Standard-LoRA-loader comparison as an explicitly scoped capability (custom loaders remain unsupported).
+- Preserved existing trainer launching and queue; no claim of full trainer-interface modernization in 0.3.
+
+**Exit criteria before changing the version to `0.3.0-rc.1`:**
+
+1. CI passes on Windows and Linux; unit tests include connection/navigation, Bridge parsing, execution safety, RAM/VRAM diagnostics and existing trainer launch routes.
+2. Record **actual** Windows + RTX 3090 + ComfyUI Desktop smoke-test evidence: connected/disconnected state, one known-good API graph, one visual graph via Bridge, execution progress, cancellation, history/output links and memory release without interrupting unrelated queue jobs.
+3. Check failure states: ComfyUI absent, invalid workflow/sampler, missing custom nodes, unsupported output, failed generation and unauthorized remote access. Imported workflows must never run automatically.
+4. Test language switching and page navigation (including Projects and Training Engines) in a real browser, verify no dataset/workflow files are rewritten, and review multi-GPU readings when hardware is available. Single-GPU validation must not be represented as multi-GPU validation.
+5. Update README, changelog and acceptance notes with results and known limitations; verify a safe update from the previous release candidate.
+
+**Reported progress (2026-11-21):** user reports that the previously planned real-world ComfyUI/GPU tests have been carried out. Detailed per-scenario PASS/FAIL evidence still needs to be recorded before claiming full certification. Engine-by-engine modernization remains ongoing. Documentation/version planning is being updated here. Packaging and RC tagging follow the exit checks.
+
+**Deferred beyond 0.3 RC:** Dataset Studio (0.4), multiview validation (0.5), broader benchmarking (0.6), Ollama assistant (0.7), Hugging Face/Civitai Hub integration (0.8), production desktop installer (0.9), full trainer modern-view replacement when independently verified, and scheduling or an interactive mesh viewer unless separately accepted.
+
 ### 0.3 implementation checkpoints (development, not released)
 
 | Area | Implemented in code | Acceptance still required |
