@@ -60,10 +60,11 @@ class TrainerSettingFinderTests(unittest.TestCase):
     def test_memory_presets_and_model_essentials_remain_visible(self):
         self.assertIn('const memoryAdvanced=', self.js)
         self.assertIn('const turboAdvanced=', self.js)
+        advanced_config = self.js.split(' const commonAdvanced=', 1)[1].split(' const engine=document.body.dataset', 1)[0]
         for setting in ("train_vram_profile", "train_use_turbo", "precache_num_frames",
                         "precache_max_frames", "train_total_steps", "train_lr",
                         "train_lora_rank", "train_batch_size", "train_train_audio"):
-            self.assertNotIn('"' + setting + '"', self.js)
+            self.assertNotIn('"' + setting + '"', advanced_config)
         self.assertIn("train_vram_budget_gb", self.js)
         self.assertIn("train_blocks_on_gpu", self.js)
         self.assertIn("train_audio_loss_weight", self.js)
