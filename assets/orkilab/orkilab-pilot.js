@@ -26,11 +26,18 @@ function init(){
  const mapped=new Set(stages.flatMap(x=>x[1]));
  // Fail open if an unfamiliar panel would otherwise become inaccessible.
  if(panels.some(p=>!mapped.has(p)))return;
- const advancedIds=["train_lr_scheduler","train_warmup_steps","train_lr_cycles","train_lora_alpha","train_use_rslora","train_use_loraplus","train_use_dora","train_dora_normfix","train_compute_precision","train_lora_targets","train_precision","train_grad_accum","train_save_every","train_seed","train_use_lokr","train_lokr_factor"];
+ // Explicit, reviewed IDs only. Auto VRAM profile and core train settings stay visible.
+ const commonAdvanced=["train_lr_scheduler","train_warmup_steps","train_lr_cycles","train_lora_alpha","train_use_rslora","train_use_loraplus","train_use_dora","train_dora_normfix","train_compute_precision","train_lora_targets","train_precision","train_grad_accum","train_save_every","train_seed","train_use_lokr","train_lokr_factor"];
+ const engineAdvanced={
+  "flux1":["train_resident_blocks","train_park_mode","train_ram_limit_gb","train_guidance"],
+  "qwenimage21":["train_turbo_strength"],
+  "sdxl":[]
+ };
+ const engine=document.body.dataset.orkiEngine||"sdxl";
+ const advancedIds=[...commonAdvanced,...(engineAdvanced[engine]||[])];
  const advanced=new Set(advancedIds.map(id=>document.getElementById(id)?.closest(".form-group")).filter(Boolean));
  // A shared container may also contain a basic setting; never conceal that container.
  for(const group of advanced){if(Array.from(group.querySelectorAll("input,select,textarea")).some(e=>e.id&&!advancedIds.includes(e.id)))advanced.delete(group);}
- const engine=document.body.dataset.orkiEngine||"sdxl";
  const preference="orkilab."+engine+".mode";
  let stage="Training",mode="Basic";
  try{const saved=localStorage.getItem(preference);if(saved==="Basic"||saved==="Expert")mode=saved;}catch{}
