@@ -33,6 +33,15 @@ def register(app, base, load_config):
         data = gpu_monitor.get_gpu_metrics().copy()
         data["training_active"] = bool(project_layout.training_in_progress(base))
         data["selected_gpu"] = gpu_stats.saved_gpu() or None
+        try:
+            import psutil
+            ram = psutil.virtual_memory()
+            data["system_ram"] = {"total_bytes": ram.total, "available_bytes": ram.available,
+                                  "used_bytes": ram.total - ram.available,
+                                  "percent": round((ram.total - ram.available) * 100 / ram.total, 1)
+                                  if ram.total else None}
+        except (ImportError, OSError, ValueError):
+            data["system_ram"] = None
         return jsonify(data)
 
     @app.get("/api/workspace/overview")
