@@ -1,5 +1,7 @@
-/* SDXL pilot: presentation only; original controls, IDs and callbacks remain intact. */
-body.orki-pilot .orki-tools:not(.orki-pilot-nav){display:none}
+/* Shared trainer layout: presentation only; original controls, IDs and callbacks remain intact. */
+body.orki-pilot > .orki-tools:not(.orki-pilot-nav){display:none}
+body.orki-pilot header .orki-tools{display:flex;margin:0;padding:6px 10px}
+body.orki-pilot header .orki-tools label{color:#a7bad2}
 body.orki-pilot header .banner-container{display:none}
 body.orki-pilot header{position:sticky;top:0;z-index:12;padding:12px 18px;margin-bottom:12px;background:#142239}
 body.orki-pilot .main-grid{display:grid;grid-template-columns:210px minmax(0,1fr);gap:16px;align-items:start}

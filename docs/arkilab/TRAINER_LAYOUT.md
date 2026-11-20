@@ -1,0 +1,3 @@
+# Modern trainer layout migration
+
+SDXL pilot was reported working by the maintainer. FLUX.1, FLUX.2 Klein 9B, FLUX.3 Image Klein, Qwen-Image 2.1 and Qwen-Image 2512 now use the same staged presentation. All controls and callbacks are preserved; memory profiles, model selectors and engine-specific parameters remain visible. Basic mode only hides selected common advanced settings. The source of the shared layout is in `assets/orkilab/`; per-engine copies support existing asset routes. The language selector remains visible. Runtime validation of the five new trainers is pending. Classic layout remains a temporary migration fallback; remove it once all modules are validated. Never remove backend capabilities during visual migration.

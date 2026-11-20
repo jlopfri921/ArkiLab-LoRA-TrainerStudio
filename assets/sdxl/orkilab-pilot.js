@@ -1,4 +1,4 @@
-/* SDXL opt-in pilot. Never writes trainer values or invokes training actions. */
+/* Shared staged trainer layout. Never writes trainer values or invokes training actions. */
 (() => {
 "use strict";
 const tr=k=>typeof t==="function"?t(k):k;
@@ -19,12 +19,14 @@ function init(){
  const mk=(tag,txt)=>{const e=document.createElement(tag);e.textContent=tr(txt);return e;};
  const btn=(label,action)=>{const b=mk("button",label);b.type="button";b.addEventListener("click",action);return b;};
  const stages=[["Project and pre-cache",[cache]],["Dataset",[]],["Training",[training]],["Previews",[preview]],["Export",[exportPanel]],["Logs",[]],["Credentials",[token]]];
- const advancedIds=["train_lr_scheduler","train_warmup_steps","train_lr_cycles","train_lora_alpha","train_use_rslora","train_use_loraplus","train_use_dora","train_dora_normfix","train_compute_precision","train_lora_targets","train_precision","train_grad_accum","train_save_every","train_seed"];
+ const advancedIds=["train_lr_scheduler","train_warmup_steps","train_lr_cycles","train_lora_alpha","train_use_rslora","train_use_loraplus","train_use_dora","train_dora_normfix","train_compute_precision","train_lora_targets","train_precision","train_grad_accum","train_save_every","train_seed","train_use_lokr","train_lokr_factor"];
  const advanced=new Set(advancedIds.map(id=>document.getElementById(id)?.closest(".form-group")).filter(Boolean));
  // A shared container may also contain a basic setting; never conceal that container.
  for(const group of advanced){if(Array.from(group.querySelectorAll("input,select,textarea")).some(e=>e.id&&!advancedIds.includes(e.id)))advanced.delete(group);}
+ const engine=document.body.dataset.orkiEngine||"sdxl";
+ const preference="orkilab."+engine+".mode";
  let stage="Training",mode="Expert";
- try{const saved=localStorage.getItem("orkilab.sdxl.mode");if(saved==="Basic"||saved==="Expert")mode=saved;}catch{}
+ try{const saved=localStorage.getItem(preference);if(saved==="Basic"||saved==="Expert")mode=saved;}catch{}
  const buttons=new Map(), modes=new Map();
  const hide=(e,on)=>{if(e)e.dataset.orkiStageHidden=on?"1":"0";};
  function render(){
@@ -40,7 +42,7 @@ function init(){
  nav.append(mk("strong","Training navigation"));
  for(const [label] of stages){const b=btn(label,()=>{stage=label;render();});buttons.set(label,b);nav.append(b);}
  const row=document.createElement("div");row.className="orki-mode-row";
- for(const label of ["Basic","Expert"]){const b=btn(label,()=>{mode=label;try{localStorage.setItem("orkilab.sdxl.mode",mode);}catch{}render();});modes.set(label,b);row.append(b);}
+ for(const label of ["Basic","Expert"]){const b=btn(label,()=>{mode=label;try{localStorage.setItem(preference,mode);}catch{}render();});modes.set(label,b);row.append(b);}
  nav.append(row,mk("p","Basic mode hides advanced parameters without changing their values. Review Expert before training."));
  const classic=btn("Classic layout",()=>{
    document.body.classList.remove("orki-pilot");grid.classList.remove("orki-monitor-only");nav.hidden=true;nav.style.display="none";
