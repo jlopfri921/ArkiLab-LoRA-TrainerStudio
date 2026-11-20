@@ -1692,5 +1692,21 @@
   "Embedding": "Embedding",
   "Upscaler": "Upscaler",
   "Audio encoder": "Codificatore audio",
-  "Vision encoder": "Codificatore visivo"
+  "Vision encoder": "Codificatore visivo",
+  "ComfyUI nodes": "Nodi ComfyUI",
+  "Discover installed nodes and possible capabilities. Detection is based on metadata, not a generation test.": "Scopri i nodi installati e le possibili capacità. Il rilevamento si basa sui metadati, non su un test di generazione.",
+  "Discover nodes": "Rileva nodi",
+  "Search nodes": "Cerca nodi",
+  "All origins": "Tutte le origini",
+  "Built-in": "Integrato",
+  "Unknown": "Sconosciuto",
+  "All capabilities": "Tutte le capacità",
+  "Capabilities": "Capacità",
+  "Module": "Modulo",
+  "Matching nodes": "Nodi corrispondenti",
+  "{shown} of {total} nodes": "{shown} di {total} nodi",
+  "Scanning nodes...": "Ricerca nodi...",
+  "Could not read ComfyUI nodes": "Impossibile leggere i nodi ComfyUI",
+  "Conditioning": "Condizionamento",
+  "Sampling": "Campionamento"
 }
