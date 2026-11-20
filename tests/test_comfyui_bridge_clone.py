@@ -61,6 +61,37 @@ class BridgeCloneSafetyTests(unittest.TestCase):
         self.assertIn('id="bridge-progress-label"', self.workspace)
         self.assertIn('t("Step {current} of {total}"', self.workspace)
 
+    def test_execution_progress_is_tied_to_submitted_prompt(self):
+        for snippet in (
+            'client_id = str(uuid.uuid4())',
+            'return ident, client_id',
+            'return jsonify(id=token, prompt_id=ident, client_id=client_id), 201',
+            'details.prompt_id!==runningGeneration.prompt_id',
+            'executionSocket=new WebSocket(wsUrl.href)',
+            'message.type==="executing"',
+            'message.type==="progress"',
+            'id="execution-progress"',
+            'id="generation-cancel"',
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, self.generation + self.workspace)
+
+    def test_cancel_targets_only_current_generation(self):
+        for snippet in (
+            '@app.post("/api/workspace/generation/<token>/cancel")',
+            '"delete": [ident]',
+            '{"prompt_id": ident}',
+            'if len(running) != 1 or pending:',
+            'state = "cancelling"',
+            '"cancelled"',
+            'Cannot safely interrupt while other ComfyUI jobs are present',
+        ):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, self.generation)
+        self.assertNotIn('"clear": True', self.generation)
+        self.assertIn('state NOT IN (\'completed\',\'error\',\'cancelled\')',
+            (ROOT / "scripts" / "generation_history.py").read_text(encoding="utf-8"))
+
     def test_install_action_overwrites_bridge_code(self):
         self.assertIn('shutil.copyfile(source / rel, dst)', self.generation)
         self.assertIn('"js/bridge.js"', self.generation)
