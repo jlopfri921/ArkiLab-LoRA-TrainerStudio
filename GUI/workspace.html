@@ -310,7 +310,7 @@ $("generation-bridge").onclick=async()=>{
    };
    window.addEventListener("message",listener);
    timer=setTimeout(()=>reject(Error(t("Bridge timed out. Check installation and restart ComfyUI."))),120000);
-   watch=setInterval(()=>{if(popup.closed)reject(Error(t("Bridge tab closed"));},1000);
+   watch=setInterval(()=>{if(popup.closed)reject(Error(t("Bridge tab closed")));},1000);
    target.hash=new URLSearchParams({orkilab_bridge:token,origin:location.origin}).toString();
    popup.location.href=target.href;
   });
