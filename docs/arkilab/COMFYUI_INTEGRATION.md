@@ -15,3 +15,11 @@ If the browser reports `Failed to execute 'postMessage' on 'Window': [object Obj
 **Apply in a local OrkiLab installation after merging/updating:** restart the OrkiLab launcher if needed, use **Install Bridge** again (pointing to the actual ComfyUI `custom_nodes` folder; this overwrites the bridge JS), fully restart ComfyUI Desktop, and hard-refresh the ComfyUI browser tab (Ctrl+F5). Then use a saved *visual-format* workflow in Generation Studio and click **Convert using Bridge**. Review the resulting API prompt before submitting any generation job.
 
 This is not evidence of an end-to-end ComfyUI runtime test. Custom-node serialization can still fail and should display a specific error identifying the problem. Test also on the installed ComfyUI Desktop version, since browser caching or third-party extension scripts can generate similar `postMessage` errors.
+
+## Persistent postMessage cloning error — isolate source
+
+The v1 JSON serialization patch did not resolve every observed installation error. An upstream ComfyUI frontend / custom-node issue can happen during `app.loadGraphData()` or `app.graphToPrompt()` itself, before OrkiLab sends a prompt. This diagnostic patch labels the failing stage and adds a guard to the OrkiLab-to-ComfyUI send direction. It does not claim to fix an upstream ComfyUI bug.
+
+After applying this branch locally, **reinstall/update the Bridge** to copy its changed JavaScript into ComfyUI's `custom_nodes/orkilab_bridge/js/bridge.js`, fully restart ComfyUI Desktop and hard-refresh ComfyUI's browser tab. Retry the same workflow, then capture the **exact text in Generation Studio** and the browser console stack from the ComfyUI popup (F12 → Console, preserving logs). A message beginning `Bridge failed at loadGraphData` means the failure occurred while ComfyUI loaded the visual workflow; `Bridge failed at graphToPrompt` means conversion failed before the outgoing reply. A message beginning `Bridge failed sending workflow to ComfyUI` identifies the other direction.
+
+To isolate upstream incompatibilities, try the same visual workflow directly in ComfyUI Desktop (open it and use its normal conversion/export functions); then repeat using a minimal workflow without custom nodes. If ComfyUI itself fails, inspect the installed frontend version and extensions rather than repeatedly reinstalling OrkiLab.

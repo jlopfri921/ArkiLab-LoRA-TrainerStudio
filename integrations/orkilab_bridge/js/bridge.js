@@ -20,15 +20,19 @@ if (valid && /^[a-f0-9]{32}$/.test(token || "") && window.opener) {
                 if (consumed || event.source !== opener || event.origin !== origin ||
                     event.data?.token !== token || event.data?.type !== "orkilab.convert") return;
                 consumed = true;
+                let phase = "validate incoming workflow";
                 try {
                     if (!event.data.graph || !Array.isArray(event.data.graph.nodes)) throw Error("Invalid visual graph");
                     // Reject missing node types rather than silently accepting placeholders.
+                    phase = "loadGraphData (ComfyUI frontend)";
                     await app.loadGraphData(event.data.graph, true, false);
+                    phase = "graphToPrompt (ComfyUI frontend)";
                     const converted = await app.graphToPrompt();
                     if (!converted?.output || !Object.keys(converted.output).length) throw Error("No executable nodes returned");
                     // ComfyUI or custom-node widgets can return functions, proxies and
                     // other non-cloneable objects. Cross-window messages must carry
                     // JSON-only API prompt data, not live editor objects.
+                    phase = "serialize converted prompt";
                     let prompt;
                     try {
                         const serialized = JSON.stringify(converted.output, (_key, value) => {
@@ -45,9 +49,11 @@ if (valid && /^[a-f0-9]{32}$/.test(token || "") && window.opener) {
                     if (!prompt || typeof prompt !== "object" || Array.isArray(prompt) || !Object.keys(prompt).length) {
                         throw Error("Invalid converted API prompt");
                     }
+                    phase = "postMessage API prompt";
                     opener.postMessage({type:"orkilab.result",token,prompt}, origin);
                 } catch (error) {
-                    const message = "Bridge conversion failed: " + String(error?.message || error);
+                    const message = "Bridge failed at " + phase + ": " + String(error?.message || error);
+                    console.error("OrkiLab Bridge", {phase, message, stack: String(error?.stack || "").slice(0, 1500)});
                     try {
                         opener.postMessage({type:"orkilab.result",token,error:message}, origin);
                     } catch (sendError) {
