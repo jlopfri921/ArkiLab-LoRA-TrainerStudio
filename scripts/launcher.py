@@ -3,7 +3,7 @@
 launcher.py — Lanzador común de AcademiaSD LoRAlab Trainer Studio
 Common launcher for AcademiaSD LoRAlab Trainer Studio
 
-Sirve GUI/launcher.html en http://127.0.0.1:4990 (IP y puertos en settings/network.json, ver remote_access.py). Los entrenadores salen de GUI/launcher.json:
+Sirve GUI/workspace.html en http://127.0.0.1:4990 (IP y puertos en settings/network.json, ver remote_access.py). Los entrenadores salen de GUI/launcher.json:
 al pulsar uno se abre su code/Run_LoRAlab-* (.bat en Windows, .sh equivalente en Linux)
 en una ventana nueva (la consola, que mantiene vivo el entrenador), que arranca su servidor
 en el puerto 5000; la pestaña del lanzador navega a él y su tarjeta queda con un brillo
@@ -420,7 +420,8 @@ def index():
 
 @app.route("/legacy")
 def legacy_launcher():
-    return send_from_directory(str(GUI_DIR), "launcher.html")
+    # Compatibility for old bookmarks; the classic UI is no longer served.
+    return send_from_directory(str(GUI_DIR), "workspace.html")
 
 
 @app.route("/launcher.json")
