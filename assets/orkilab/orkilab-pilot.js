@@ -26,13 +26,44 @@ function init(){
  const mapped=new Set(stages.flatMap(x=>x[1]));
  // Fail open if an unfamiliar panel would otherwise become inaccessible.
  if(panels.some(p=>!mapped.has(p)))return;
- const advancedIds=["train_lr_scheduler","train_warmup_steps","train_lr_cycles","train_lora_alpha","train_use_rslora","train_use_loraplus","train_use_dora","train_dora_normfix","train_compute_precision","train_lora_targets","train_precision","train_grad_accum","train_save_every","train_seed","train_use_lokr","train_lokr_factor"];
+ // Explicit, reviewed IDs only. Auto VRAM profile and core train settings stay visible.
+ const commonAdvanced=["train_lr_scheduler","train_warmup_steps","train_lr_cycles","train_lora_alpha","train_use_rslora","train_use_loraplus","train_use_dora","train_dora_normfix","train_compute_precision","train_lora_targets","train_precision","train_grad_accum","train_save_every","train_seed","train_use_lokr","train_lokr_factor"];
+ const memoryAdvanced=["train_resident_blocks","train_park_mode","train_ram_limit_gb"];
+ const turboAdvanced=["train_turbo_strength"];
+ const engineAdvanced={
+  // Image trainers: model-specific expert controls. The VRAM profile
+  // and use-turbo switch stay visible to first-time users.
+  flux1:[...memoryAdvanced,"train_guidance"],
+  flux3klein:[],
+  klein9b:[...memoryAdvanced,...turboAdvanced],
+  krea2:[...turboAdvanced,"precache_max_seq_len"],
+  zimage:[...turboAdvanced],
+  qwenimage21:[...turboAdvanced],
+  qwenimage2512:[...turboAdvanced,"train_blocks_on_gpu"],
+  ideogram4:[...memoryAdvanced],
+  mossimage:[...turboAdvanced],
+  ernie:[...turboAdvanced],
+  anima:[],
+  boogu:[...memoryAdvanced],
+  mingimage:[...memoryAdvanced],
+  fibo2:[...memoryAdvanced,...turboAdvanced],
+  sdxl:[],
+  // Video trainers: keep duration/frame count and the audio toggle
+  // visible. Manual VRAM budgets and weight tuning belong to Expert.
+  wan22:[...memoryAdvanced,...turboAdvanced,"train_preview_turbo"],
+  ltx23:[...memoryAdvanced,...turboAdvanced],
+  ltx25:[...memoryAdvanced,...turboAdvanced,"train_audio_loss_weight","precache_ref_downscale"],
+  minimaxh3:[...memoryAdvanced,...turboAdvanced,"train_vram_budget_gb","train_vram_swap_gb","train_vram_headroom_gb","train_adapter_strength","train_preview_lora_strength","train_caption_dropout","train_preview_turbo"],
+  // Audio uses a different dataset and keeps its specific options.
+  yue2:[]
+ };
+ const engine=document.body.dataset.orkiEngine||"sdxl";
+ const advancedIds=[...commonAdvanced,...(engineAdvanced[engine]||[])];
  const advanced=new Set(advancedIds.map(id=>document.getElementById(id)?.closest(".form-group")).filter(Boolean));
  // A shared container may also contain a basic setting; never conceal that container.
  for(const group of advanced){if(Array.from(group.querySelectorAll("input,select,textarea")).some(e=>e.id&&!advancedIds.includes(e.id)))advanced.delete(group);}
- const engine=document.body.dataset.orkiEngine||"sdxl";
  const preference="orkilab."+engine+".mode";
- let stage="Training",mode="Expert";
+ let stage="Training",mode="Basic";
  try{const saved=localStorage.getItem(preference);if(saved==="Basic"||saved==="Expert")mode=saved;}catch{}
  const buttons=new Map(), modes=new Map();
  const hide=(e,on)=>{if(e)e.dataset.orkiStageHidden=on?"1":"0";};
@@ -43,14 +74,53 @@ function init(){
    // Keep the actual status and console visible in every stage.
    hide(datasetSection,stage!=="Dataset");hide(gallerySection,stage!=="Previews");
    for(const group of advanced)group.dataset.orkiBasicHidden=mode==="Basic"?"1":"0";
+   const hiddenAdvanced=mode==="Basic"?Array.from(advanced).filter(g=>selected.some(p=>p.contains(g))).length:0;
+   stageSummary.textContent=tr(stage)+" · "+(mode==="Basic"?tr("Basic"):tr("Expert"))+(hiddenAdvanced?" · "+hiddenAdvanced+" "+tr("advanced settings hidden"):"");
    for(const [k,b] of buttons)b.setAttribute("aria-pressed",String(k===stage));
    for(const [k,b] of modes)b.setAttribute("aria-pressed",String(k===mode));
  }
  nav.append(mk("strong","Training navigation"));
  for(const [label] of stages){const b=btn(label,()=>{stage=label;render();});buttons.set(label,b);nav.append(b);}
- const row=document.createElement("div");row.className="orki-mode-row";
+ const row=document.createElement("div");row.className="orki-mode-row";row.setAttribute("role","group");row.setAttribute("aria-label",tr("Settings complexity"));
  for(const label of ["Basic","Expert"]){const b=btn(label,()=>{mode=label;try{localStorage.setItem(preference,mode);}catch{}render();});modes.set(label,b);row.append(b);}
  nav.append(row,mk("p","Basic mode hides advanced parameters without changing their values. Review Expert before training."));
+ const stageSummary=mk("p","");stageSummary.className="orki-stage-summary";stageSummary.setAttribute("role","status");nav.append(stageSummary);
+
+ // Search existing model-specific controls without replacing or altering them.
+ const searchWrap=document.createElement("div");searchWrap.className="orki-setting-search";
+ const search=document.createElement("input");search.type="search";search.className="no-i18n";
+ const searchResults=document.createElement("div");searchResults.className="orki-setting-results";
+ searchResults.setAttribute("role","list");searchResults.setAttribute("aria-live","polite");
+ const updatePlaceholder=()=>{search.placeholder=tr("Find setting");search.setAttribute("aria-label",tr("Find setting"));};
+ updatePlaceholder();document.addEventListener("orkilab:language-changed",updatePlaceholder);
+ const searchable=Array.from(sidebar.querySelectorAll(".form-group")).map(group=>{
+   const label=group.querySelector("label"),control=group.querySelector("input[id],select[id],textarea[id]");
+   if(!label||!control)return null;
+   const panel=group.closest(".panel");
+   const target=stages.find(([,items])=>items.includes(panel));
+   return target?{label,control,stage:target[0]}:null;
+ }).filter(Boolean);
+ search.addEventListener("input",()=>{
+   searchResults.replaceChildren();
+   const q=search.value.trim().toLocaleLowerCase();
+   if(q.length<2)return;
+   const matches=searchable.filter(x=>x.label.textContent.trim().toLocaleLowerCase().includes(q)||x.control.id.toLocaleLowerCase().includes(q)).slice(0,8);
+   if(!matches.length){const hint=document.createElement("p");hint.textContent=tr("No matching settings");searchResults.append(hint);return;}
+   for(const entry of matches){
+     const b=document.createElement("button");b.type="button";
+     b.textContent=entry.label.textContent.trim()+" · "+tr(entry.stage);
+     b.addEventListener("click",()=>{
+       stage=entry.stage;mode="Expert";render();
+       searchResults.replaceChildren();search.value="";
+       entry.control.scrollIntoView({block:"center",behavior:"auto"});
+       entry.control.focus({preventScroll:true});
+     });
+     searchResults.append(b);
+   }
+ });
+ searchWrap.append(search,searchResults);
+ nav.append(searchWrap);
+
  const classic=btn("Classic layout",()=>{
    document.body.classList.remove("orki-pilot");grid.classList.remove("orki-monitor-only");nav.hidden=true;nav.style.display="none";
    for(const p of panels)delete p.dataset.orkiStageHidden;

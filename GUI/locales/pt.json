@@ -1864,5 +1864,9 @@
   "Prepare and review a workflow, adjust editable parameters and explicitly confirm before running. Preparation alone does not generate.": "Prepare e reveja o workflow, altere os parâmetros editáveis e confirme antes de executar. A preparação não gera nada.",
   "See previously submitted workflows and output references. Media stays on the ComfyUI server.": "Consulte gerações anteriores e os resultados. Os ficheiros permanecem no servidor ComfyUI.",
   "Select a compatible workflow and compare selected LoRA strengths with otherwise unchanged generation settings.": "Escolha um workflow compatível e compare intensidades LoRA mantendo os outros parâmetros.",
-  "Choose a trainer for its model family. All detailed training settings remain in its dedicated interface.": "Escolha o treinador adequado à família de modelos. As definições detalhadas encontram-se na respetiva interface."
+  "Choose a trainer for its model family. All detailed training settings remain in its dedicated interface.": "Escolha o treinador adequado à família de modelos. As definições detalhadas encontram-se na respetiva interface.",
+  "Find setting": "Procurar definição",
+  "No matching settings": "Nenhuma definição encontrada",
+  "Settings complexity": "Complexidade das definições",
+  "advanced settings hidden": "definições avançadas ocultas"
 }
