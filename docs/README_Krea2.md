@@ -1,10 +1,10 @@
 
 
-> **Technical notes** for the Krea 2 trainer of **AcademiaSD LoRAlab Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
+> **Technical notes** for the Krea 2 trainer of **OrkiLab — LoRA Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
 
 # Krea 2 trainer — technical notes
 
-![AcademiaSD_LoRAlab-Krea2](../assets/krea2/portada.jpg)
+![OrkiLab training engine](../assets/krea2/orkilab-cover.svg)
 
 <p align="center">
   <b>An ultra-fast, low-resource Web GUI & pipeline for training Krea-2 (NF4) LoRAs.</b>

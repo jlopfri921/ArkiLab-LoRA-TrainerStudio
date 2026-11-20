@@ -1,10 +1,10 @@
 
 
-> **Technical notes** for the Fibo 2.0 trainer of **AcademiaSD LoRAlab Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
+> **Technical notes** for the Fibo 2.0 trainer of **OrkiLab — LoRA Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
 
 # Fibo 2.0 trainer — technical notes
 
-![AcademiaSD LoRAlab-Fibo2](../assets/fibo2/portada.jpg)
+![OrkiLab training engine](../assets/fibo2/orkilab-cover.svg)
 
 <p align="center">
   <b>A fast, low-resource Web GUI & pipeline for training BRIA Fibo 2.0 (NF4) LoRAs: characters, objects, styles and edits.</b>

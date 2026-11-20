@@ -1,6 +1,6 @@
 # LTX-2.5 trainer — technical notes
 
-> **Technical notes** for the LTX-2.5 trainer of **AcademiaSD LoRAlab Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
+> **Technical notes** for the LTX-2.5 trainer of **OrkiLab — LoRA Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
 
 > **Status: phases 1 (images), 2 (video clips) and 3 (video + audio).** The IC-LoRA edit mode is planned; see [PLAN_LTX25.md](PLAN_LTX25.md).
 

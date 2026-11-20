@@ -1,9 +1,9 @@
 # MiniMax-H3 trainer — technical notes
 
-> **Technical notes** for the MiniMax-H3 trainer of **AcademiaSD LoRAlab Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
+> **Technical notes** for the MiniMax-H3 trainer of **OrkiLab — LoRA Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
 
 
-![AcademiaSD LoRAlab MiniMax-H3](../assets/minimaxh3/portada.jpg)
+![OrkiLab training engine](../assets/minimaxh3/orkilab-cover.svg)
 
 <p align="center">
   <b>Train MiniMax-H3 character, style and video-effect LoRAs on a consumer GPU — a 33-Billion parameter joint video+audio DiT, from 8 GB of VRAM.</b>
@@ -20,7 +20,7 @@
 ---
 
 <p align="center">
-  <img src="../assets/minimaxh3/interface.jpg" alt="AcademiaSD LoRAlab MiniMax-H3 interface" width="100%">
+  
 </p>
 
 ---

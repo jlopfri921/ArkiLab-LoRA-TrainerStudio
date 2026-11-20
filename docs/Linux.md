@@ -17,7 +17,7 @@
 ## [EN] Install / [ES] Instalación
 
 ```bash
-git clone https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio.git
+git clone https://github.com/jlopfri921/OrkiLab-LoRA-TrainerStudio.git
 cd AcademiaSD_LoRAlab-TrainerStudio
 chmod +x *.sh code/*.sh
 ./Install_LoRAlab-TrainerStudio.sh   # one shared venv: PyTorch cu130, Diffusers, Transformers, PEFT, bitsandbytes, Flask...

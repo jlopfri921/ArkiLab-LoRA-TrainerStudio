@@ -1,10 +1,10 @@
 
 
-> **Technical notes** for the Qwen-Image 2.1 trainer of **AcademiaSD LoRAlab Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
+> **Technical notes** for the Qwen-Image 2.1 trainer of **OrkiLab — LoRA Trainer Studio**. Installation, updating and everyday use are in the [main README](../README.md).
 
 # Qwen-Image 2.1 trainer — technical notes
 
-![AcademiaSD_LoRAlab-Qwen_Image21](../assets/qwenimage21/portada.jpg)
+![OrkiLab training engine](../assets/qwenimage21/orkilab-cover.svg)
 
 <p align="center">
   <b>A fast, low-resource Web GUI & pipeline for training Qwen-Image 2.1 (NF4) LoRAs: characters, objects, styles and edits.</b>
