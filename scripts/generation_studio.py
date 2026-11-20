@@ -15,6 +15,7 @@ from flask import jsonify, request
 import project_layout
 from comfyui_connect import validate_settings, DEFAULT_SETTINGS, get_json, NoRedirect
 from workflow_library import inspect_graph
+from generation_parameters import editable_fields, apply_edits
 from workflow_conversion import convert_visual, node_schema, validate_prompt
 
 def register(app, base):
@@ -103,10 +104,10 @@ def register(app, base):
                 graph = bridge
             elif fmt == "ui":
                 graph = convert_visual(graph, cfg["url"], get_json)
-            if fmt == "api" or bridge is not None:
-                schemas = {kind: node_schema(cfg["url"], kind, get_json)
-                           for kind in {n["class_type"] for n in graph.values()}}
-                validate_prompt(graph, schemas)
+            schemas = {kind: node_schema(cfg["url"], kind, get_json)
+                       for kind in {n["class_type"] for n in graph.values()}}
+            validate_prompt(graph, schemas)
+            fields = editable_fields(graph, schemas)
             token = uuid.uuid4().hex
             with lock:
                 for key in list(prepared):
@@ -114,10 +115,37 @@ def register(app, base):
                         prepared.pop(key)
                 while len(prepared) >= 20:
                     prepared.pop(next(iter(prepared)))
-                prepared[token] = (time.monotonic(), ident, cfg["url"], hashlib.sha256(raw.encode()).hexdigest(), graph)
-            return jsonify(token=token, node_count=len(graph), converted=fmt=="ui", graph=graph)
+                prepared[token] = (time.monotonic(), ident, cfg["url"], hashlib.sha256(raw.encode()).hexdigest(), graph, fields, schemas)
+            return jsonify(token=token, node_count=len(graph), converted=fmt=="ui", graph=graph, fields=fields)
         except (OSError, ValueError, TypeError, KeyError, RecursionError) as exc:
             return jsonify(error="Workflow preparation failed", detail=str(exc)[:500]), 400
+
+    @app.post("/api/workspace/generation/parameters")
+    def generation_parameters():
+        if not local():
+            return jsonify(error="Manage workflows on the launcher PC"), 403
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 2_000_000:
+            return jsonify(error="Invalid request"), 400
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict) or not isinstance(body.get("token"), str):
+            return jsonify(error="Invalid request"), 400
+        cfg = config()
+        if cfg["mode"] == "native":
+            return jsonify(error="ComfyUI is disabled in native mode"), 409
+        try:
+            with lock:
+                item = prepared.get(body["token"])
+                if not item or time.monotonic() - item[0] > 1800 or item[2] != cfg["url"]:
+                    return jsonify(error="Prepare workflow before generating"), 409
+                graph = apply_edits(item[4], item[5], body.get("edits"))
+                validate_prompt(graph, item[6])
+                fields = editable_fields(graph, item[6])
+                token = uuid.uuid4().hex
+                prepared.pop(body["token"])
+                prepared[token] = (*item[:4], graph, fields, item[6])
+            return jsonify(token=token, graph=graph, fields=fields)
+        except (ValueError, TypeError, KeyError, RecursionError, OverflowError) as exc:
+            return jsonify(error="Invalid parameter changes", detail=str(exc)[:300]), 400
 
     @app.post("/api/workspace/generation")
     def generation_submit():
