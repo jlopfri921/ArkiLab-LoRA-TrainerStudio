@@ -37,14 +37,15 @@ def register(app, base):
         return request.remote_addr in ("127.0.0.1", "::1")
 
     def submit(url, graph):
-        payload = json.dumps({"prompt": graph, "client_id": str(uuid.uuid4())}, allow_nan=False).encode()
+        client_id = str(uuid.uuid4())
+        payload = json.dumps({"prompt": graph, "client_id": client_id}, allow_nan=False).encode()
         req = Request(url + "/prompt", data=payload, headers={"Content-Type": "application/json"}, method="POST")
         with build_opener(ProxyHandler({}), NoRedirect()).open(req, timeout=30) as response:
             result = json.loads(response.read(1_000_001))
         ident = result.get("prompt_id") if isinstance(result, dict) else None
         if not isinstance(ident, str) or not re.fullmatch(r"[a-zA-Z0-9_-]{1,100}", ident):
             raise ValueError("ComfyUI did not return a valid job ID")
-        return ident
+        return ident, client_id
 
     def read_graph(ident):
         path = base / "settings" / "orkilab" / "workflows.sqlite3"
@@ -226,7 +227,7 @@ def register(app, base):
                 if queue["queue_running"] or queue["queue_pending"]:
                     return jsonify(error="ComfyUI queue is busy"), 409
                 prepared.pop(token, None)
-                ident = submit(cfg["url"], graph)
+                ident, client_id = submit(cfg["url"], graph)
                 token = uuid.uuid4().hex
                 jobs[token] = (cfg["url"], ident)
                 try:
@@ -237,7 +238,7 @@ def register(app, base):
                     app.logger.warning("Generation submitted but history unavailable: %s", exc)
                 while len(jobs) > 100:
                     jobs.pop(next(iter(jobs)))
-            return jsonify(id=token, prompt_id=ident), 201
+            return jsonify(id=token, prompt_id=ident, client_id=client_id), 201
         except HTTPError as exc:
             return jsonify(error="ComfyUI rejected the request", detail=f"HTTP {exc.code}"), 502
         except (OSError, ValueError, TypeError) as exc:
