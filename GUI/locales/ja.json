@@ -2008,5 +2008,20 @@
   "No archived projects yet": "アーカイブされたプロジェクトはありません",
   "Your first project starts here": "最初のプロジェクトを始めましょう",
   "Projects you archive will appear here.": "アーカイブしたプロジェクトがここに表示されます。",
-  "Give your idea a name, choose an engine and keep your dataset reference together.": "アイデアに名前を付け、エンジンを選び、データの参照先を記録しましょう。"
+  "Give your idea a name, choose an engine and keep your dataset reference together.": "アイデアに名前を付け、エンジンを選び、データの参照先を記録しましょう。",
+  "Choose your training engine": "学習エンジンを選択",
+  "Train a LoRA to adapt a compatible base model to your images, clips or audio. Start with the type of media you want to teach the model, then select the training engine that matches its architecture.": "対応する基本モデルに画像・動画・音声を学習させる LoRA を作成します。まずメディアの種類を選び、モデルの構造に合うエンジンを選択してください。",
+  "Image LoRA": "画像 LoRA",
+  "Teach compatible image models a visual style, subject or concept with a prepared image dataset and captions.": "準備した画像とキャプションを使って、対応する画像モデルにスタイルや被写体、概念を学習させます。",
+  "Explore image trainers": "画像トレーナーを見る",
+  "Video LoRA": "動画 LoRA",
+  "Use a video-focused training engine for motion and temporal examples. Video training may require substantial GPU memory.": "動きや時間的な変化を扱う動画向けトレーナーです。大量の GPU メモリが必要な場合があります。",
+  "Explore video trainers": "動画トレーナーを見る",
+  "Audio and music": "音声と音楽",
+  "Work with compatible audio or music training engines. Dataset format and model requirements vary by engine.": "対応する音声・音楽トレーナーを使用します。データ形式とモデル要件はエンジンによって異なります。",
+  "Explore audio trainers": "音声トレーナーを見る",
+  "Each engine has its own dataset, model and hardware requirements. The category filters are a guide, not a guarantee of compatibility. Multimodal engines are listed separately.": "各エンジンのデータ、モデル、ハードウェア要件は異なります。分類は目安であり互換性を保証しません。マルチモーダルは別に表示されます。",
+  "Browse available engines": "利用できるエンジンを探す",
+  "Filter the trainers, inspect their descriptions and open the one you need.": "説明を確認し、フィルターで絞り込んでトレーナーを開きます。",
+  "{count} training engines shown": "表示中のトレーナー: {count} 件"
 }
