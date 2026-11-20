@@ -26,9 +26,33 @@ if (valid && /^[a-f0-9]{32}$/.test(token || "") && window.opener) {
                     await app.loadGraphData(event.data.graph, true, false);
                     const converted = await app.graphToPrompt();
                     if (!converted?.output || !Object.keys(converted.output).length) throw Error("No executable nodes returned");
-                    opener.postMessage({type:"orkilab.result",token,prompt:converted.output}, origin);
+                    // ComfyUI or custom-node widgets can return functions, proxies and
+                    // other non-cloneable objects. Cross-window messages must carry
+                    // JSON-only API prompt data, not live editor objects.
+                    let prompt;
+                    try {
+                        const serialized = JSON.stringify(converted.output, (_key, value) => {
+                            if (typeof value === "function" || typeof value === "symbol" || typeof value === "bigint") {
+                                throw Error("Unsupported non-JSON value in converted prompt");
+                            }
+                            return value;
+                        });
+                        if (!serialized) throw Error("Empty converted prompt");
+                        prompt = JSON.parse(serialized);
+                    } catch (error) {
+                        throw Error("Cannot serialize ComfyUI prompt: " + String(error.message || error));
+                    }
+                    if (!prompt || typeof prompt !== "object" || Array.isArray(prompt) || !Object.keys(prompt).length) {
+                        throw Error("Invalid converted API prompt");
+                    }
+                    opener.postMessage({type:"orkilab.result",token,prompt}, origin);
                 } catch (error) {
-                    opener.postMessage({type:"orkilab.result",token,error:String(error.message || error)}, origin);
+                    const message = "Bridge conversion failed: " + String(error?.message || error);
+                    try {
+                        opener.postMessage({type:"orkilab.result",token,error:message}, origin);
+                    } catch (sendError) {
+                        console.error("OrkiLab Bridge could not return conversion error", sendError, message);
+                    }
                 }
             });
             opener.postMessage({type:"orkilab.ready",token},origin);
