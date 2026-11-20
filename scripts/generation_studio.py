@@ -11,7 +11,9 @@ from urllib.request import Request, build_opener, ProxyHandler
 from urllib.error import HTTPError
 from pathlib import Path
 import shutil
-from flask import jsonify, request
+from flask import jsonify, request, Response, stream_with_context, abort
+from urllib.parse import urlencode
+from generation_history import GenerationHistory, describe_outputs
 import project_layout
 from comfyui_connect import validate_settings, DEFAULT_SETTINGS, get_json, NoRedirect
 from workflow_library import inspect_graph
@@ -21,6 +23,7 @@ from workflow_conversion import convert_visual, node_schema, validate_prompt
 def register(app, base):
     base = Path(base)
     jobs = {}
+    records = GenerationHistory(base)
     prepared = {}
     lock = threading.Lock()
 
@@ -182,6 +185,12 @@ def register(app, base):
                 ident = submit(cfg["url"], graph)
                 token = uuid.uuid4().hex
                 jobs[token] = (cfg["url"], ident)
+                try:
+                    with closing(sqlite3.connect(base / "settings" / "orkilab" / "workflows.sqlite3")) as con:
+                        row = con.execute("SELECT name FROM workflows WHERE id=?", (body["workflow_id"],)).fetchone()
+                    records.add(token, cfg["url"], ident, body["workflow_id"], row[0] if row else body["workflow_id"], graph)
+                except (OSError, sqlite3.Error, ValueError) as exc:
+                    app.logger.warning("Generation submitted but history unavailable: %s", exc)
                 while len(jobs) > 100:
                     jobs.pop(next(iter(jobs)))
             return jsonify(id=token, prompt_id=ident), 201
@@ -196,9 +205,15 @@ def register(app, base):
             return jsonify(error="Manage workflows on the launcher PC"), 403
         with lock:
             job = jobs.get(token)
+        saved = records.get(token)
+        if saved and saved["state"] in ("completed","error"):
+            return jsonify(state=saved["state"], outputs=json.loads(saved["outputs"]))
+        if not job and saved:
+            job = (saved["url"], saved["prompt_id"])
         if not job:
             return jsonify(error="Generation job not found"), 404
         url, ident = job
+        url = validate_settings({"url":url}, DEFAULT_SETTINGS)["url"]
         try:
             history = get_json(url, "/history/" + ident, max_bytes=16_000_000)
             entry = history.get(ident) if isinstance(history, dict) else None
@@ -208,18 +223,73 @@ def register(app, base):
                     raise ValueError("Invalid queue")
                 for key, state in (("queue_running", "running"), ("queue_pending", "queued")):
                     if any(isinstance(item, list) and len(item) > 1 and item[1] == ident for item in queue.get(key, [])):
+                        records.update(token,state,[])
                         return jsonify(state=state, outputs=[])
                 return jsonify(state="unknown", outputs=[])
             status = entry.get("status") or {}
             state = "error" if status.get("status_str") == "error" else "completed" if status.get("completed") else "unknown"
-            outputs = []
-            for node in (entry.get("outputs") or {}).values():
-                if not isinstance(node, dict):
-                    continue
-                for kind in ("images", "gifs", "audio", "video", "videos"):
-                    for item in node.get(kind, []) if isinstance(node.get(kind), list) else []:
-                        if isinstance(item, dict) and isinstance(item.get("filename"), str):
-                            outputs.append({"filename":item["filename"][:500], "kind":kind})
-            return jsonify(state=state, outputs=outputs[:100])
+            outputs = describe_outputs(entry)
+            records.update(token,state,outputs)
+            return jsonify(state=state, outputs=outputs)
         except (OSError, ValueError, TypeError) as exc:
             return jsonify(error="Could not read generation status", detail=str(exc)[:300]), 502
+
+    @app.get("/api/workspace/generation/history")
+    def generation_history():
+        if not local():
+            return jsonify(error="Manage workflows on the launcher PC"), 403
+        try:
+            offset = max(0,min(100000,int(request.args.get("offset",0))))
+        except ValueError:
+            return jsonify(error="Invalid request"),400
+        return jsonify(jobs=records.list(100,offset))
+
+    @app.get("/api/workspace/generation/history/<token>")
+    def generation_history_detail(token):
+        if not local():
+            return jsonify(error="Manage workflows on the launcher PC"),403
+        row = records.get(token)
+        if not row:
+            return jsonify(error="Generation job not found"),404
+        return jsonify(id=token, name=row["name"], graph=json.loads(row["graph"]), workflow_id=row["workflow_id"])
+
+    @app.get("/api/workspace/generation/media/<token>/<int:index>")
+    def generation_media(token,index):
+        if not local():
+            abort(403)
+        row = records.get(token)
+        if not row:
+            abort(404)
+        outputs = json.loads(row["outputs"])
+        if not 0 <= index < len(outputs):
+            abort(404)
+        item = outputs[index]
+        try:
+            url = validate_settings({"url":row["url"]},DEFAULT_SETTINGS)["url"]
+            query = urlencode({key:item[key] for key in ("filename","subfolder","type")})
+            headers = {}
+            byte_range = request.headers.get("Range","")
+            if re.fullmatch(r"bytes=\d*-\d*",byte_range):
+                headers["Range"] = byte_range
+            upstream = build_opener(ProxyHandler({}),NoRedirect()).open(Request(url+"/view?"+query,headers=headers),timeout=15)
+        except (OSError,ValueError):
+            abort(404)
+        def chunks():
+            with upstream:
+                while True:
+                    chunk = upstream.read(65536)
+                    if not chunk:
+                        break
+                    yield chunk
+        response = Response(stream_with_context(chunks()),status=upstream.status,mimetype=item["mime"])
+        response.call_on_close(upstream.close)
+        for key in ("Content-Length","Content-Range","Accept-Ranges"):
+            if upstream.headers.get(key):
+                response.headers[key] = upstream.headers[key]
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Content-Security-Policy"] = "default-src 'none'; sandbox"
+        if request.args.get("download") == "1" or item["mime"] == "application/octet-stream":
+            from werkzeug.http import dump_options_header
+            response.headers["Content-Disposition"] = dump_options_header("attachment",{"filename":item["filename"]})
+        return response
