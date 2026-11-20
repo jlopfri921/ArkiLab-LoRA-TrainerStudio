@@ -1,5 +1,11 @@
 # ArkiLab changelog
 
+## Unreleased — personal identity
+
+- Original ArkiLab engine covers and README banner.
+- English public README and personal maintainer attribution.
+- Remove promotional links from launcher; retain original credits and model identifiers.
+
 ## 0.1.0-rc.1 — Foundation release candidate
 
 - Add dependency-free regression tests for branding, version, updater guards and safe Git updates (temporary local repositories).
