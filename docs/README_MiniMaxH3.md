@@ -903,15 +903,17 @@ Most settings live in the `DEFAULTS` dictionary at the top of each script, docum
 
 ## 💬 Community & Support
 
-- ▶ **YouTube**: [youtube.com/@Academia_SD](https://www.youtube.com/@Academia_SD)
-- 𝕏 **X (Twitter)**: [twitter.com/Academia_S_D](https://twitter.com/Academia_S_D)
-- 💬 **Discord**: [discord.gg/Syuaduy678](https://discord.gg/Syuaduy678)
-- ☕ **Ko-Fi**: [ko-fi.com/academiasd](https://ko-fi.com/academiasd)
+**YouTube** — Coming soon · **X** — Coming soon · **Discord** — Coming soon · **Ko-fi** — Coming soon
+
+
+
+
+
 
 ---
 
 ## 📜 Credits & License
 
-Developed with ❤️ by **AcademiaSD**. Built on PyTorch, Diffusers, PEFT, bitsandbytes and Hugging Face Hub.
+OrkiLab is maintained by [jlopfri921](https://github.com/jlopfri921). Original project: AcademiaSD; see the credits and MIT license. Built on PyTorch, Diffusers, PEFT, bitsandbytes and Hugging Face Hub.
 
 Model: **MiniMax-H3** by MiniMaxAI. Quantized weights: **AcademiaSD/MiniMax-H3-NF4**.

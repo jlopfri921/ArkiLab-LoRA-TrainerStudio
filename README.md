@@ -933,6 +933,8 @@ Models and LoRAs downloaded at run time (not part of this repository): MelBandRo
 
 ## Community and support
 
+**YouTube** — Coming soon · **X** — Coming soon · **Discord** — Coming soon · **Ko-fi** — Coming soon
+
 Report issues in the [OrkiLab issue tracker](https://github.com/jlopfri921/OrkiLab-LoRA-TrainerStudio/issues).
 
 ## Credits

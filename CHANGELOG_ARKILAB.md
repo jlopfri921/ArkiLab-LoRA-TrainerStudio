@@ -33,3 +33,7 @@ Status: development snapshot; runtime validation pending. No training engine cha
 
 - Rebrand all trainer interfaces and Dataset Forge; remove inherited promotional social links from trainer pages.
 - Add regression checks for model-local branding assets and engine covers.
+
+## Community links
+
+- Disable inherited social links in documentation; reserve unlinked placeholders for future OrkiLab channels.

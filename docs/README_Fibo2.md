@@ -112,15 +112,17 @@ The conversion needs diffusers with `BriaFibo2Transformer2DModel` (merged upstre
 
 ## 💬 Community & Support
 
-- ▶ **YouTube**: [youtube.com/@Academia_SD](https://www.youtube.com/@Academia_SD)
-- 𝕏 **X (Twitter)**: [twitter.com/Academia_S_D](https://twitter.com/Academia_S_D)
-- 💬 **Discord**: [discord.gg/Syuaduy678](https://discord.gg/Syuaduy678)
-- ☕ **Ko-Fi**: [ko-fi.com/academiasd](https://ko-fi.com/academiasd)
+**YouTube** — Coming soon · **X** — Coming soon · **Discord** — Coming soon · **Ko-fi** — Coming soon
+
+
+
+
+
 
 ---
 
 ## 📜 Credits & License
 
-Developed with ❤️ by **AcademiaSD**. Built upon PyTorch, Diffusers, Transformers, PEFT, Bitsandbytes and Hugging Face Hub.
+OrkiLab is maintained by [jlopfri921](https://github.com/jlopfri921). Original project: AcademiaSD; see the credits and MIT license. Built upon PyTorch, Diffusers, Transformers, PEFT, Bitsandbytes and Hugging Face Hub.
 
 The code is MIT licensed. The **Fibo 2.0 weights are under a CC BY-NC 4.0 licence: non-commercial use only** (commercial use needs a separate agreement with BRIA). Check its terms before sharing trained LoRAs.

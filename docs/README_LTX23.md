@@ -20,7 +20,7 @@
 
 ---
 ## YouTube video instructions.
-https://www.youtube.com/watch?v=52Kyr7GZ6Y0
+*OrkiLab tutorial video: coming soon.*
 ---
 
 ## 🔬 Technical Deep-Dive: Why is it so fast, light, & high quality?
@@ -82,17 +82,19 @@ Here is the exact architectural breakdown of how this is achieved:
 
 ## 💬 Community & Support
 
+**YouTube** — Coming soon · **X** — Coming soon · **Discord** — Coming soon · **Ko-fi** — Coming soon
+
 Join the **AcademiaSD** community to learn more about local image and video AI.!
 
-- ▶ **YouTube**: [youtube.com/@Academia_SD](https://www.youtube.com/@Academia_SD)
-- 𝕏 **X (Twitter)**: [twitter.com/Academia_S_D](https://twitter.com/Academia_S_D)
-- 💬 **Discord**: [discord.gg/Syuaduy678](https://discord.gg/Syuaduy678)
-- ☕ **Ko-Fi**: [ko-fi.com/academiasd](https://ko-fi.com/academiasd)
+
+
+
+
 
 ---
 
 ## 📜 Credits & License
 
-Developed with ❤️ by **AcademiaSD**. Built upon PyTorch, Diffusers, PEFT, Bitsandbytes, and Hugging Face Hub.
+OrkiLab is maintained by [jlopfri921](https://github.com/jlopfri921). Original project: AcademiaSD; see the credits and MIT license. Built upon PyTorch, Diffusers, PEFT, Bitsandbytes, and Hugging Face Hub.
 
 
