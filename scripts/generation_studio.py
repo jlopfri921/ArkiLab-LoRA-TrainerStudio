@@ -150,6 +150,50 @@ def register(app, base):
         except (ValueError, TypeError, KeyError, RecursionError, OverflowError) as exc:
             return jsonify(error="Invalid parameter changes", detail=str(exc)[:300]), 400
 
+    @app.post("/api/workspace/generation/compare")
+    def generation_compare():
+        """Create separately validated, single-use variants from a prepared graph."""
+        if not local():
+            return jsonify(error="Manage workflows on the launcher PC"),403
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 8192:
+            return jsonify(error="Invalid request"),400
+        body = request.get_json(silent=True)
+        if not isinstance(body,dict) or not isinstance(body.get("token"),str) or not isinstance(body.get("node"),str):
+            return jsonify(error="Invalid request"),400
+        weights = body.get("weights")
+        if not isinstance(weights,list) or not 2 <= len(weights) <= 6 or any(type(w) not in (int,float) or not -2 <= w <= 2 for w in weights) or len(set(weights)) != len(weights):
+            return jsonify(error="Choose two to six distinct LoRA weights between -2 and 2"),400
+        cfg = config()
+        if cfg["mode"] == "native":
+            return jsonify(error="ComfyUI is disabled in native mode"),409
+        try:
+            with lock:
+                item = prepared.get(body["token"])
+                if not item or time.monotonic()-item[0]>1800 or item[2]!=cfg["url"]:
+                    return jsonify(error="Prepare workflow before generating"),409
+                node = item[4].get(body["node"],{})
+                if node.get("class_type") not in ("LoraLoader","LoraLoaderModelOnly"):
+                    raise ValueError("Choose a supported LoRA loader")
+                names = ["strength_model"] + (["strength_clip"] if node["class_type"]=="LoraLoader" else [])
+                variants = []
+                for weight in weights:
+                    graph = apply_edits(item[4],item[5],[{"node":body["node"],"name":name,"value":weight} for name in names])
+                    validate_prompt(graph,item[6])
+                    variants.append((weight,graph))
+                result = []
+                while len(prepared)+len(variants)>20:
+                    victim = next((key for key in prepared if key!=body["token"]),None)
+                    if victim is None:
+                        break
+                    prepared.pop(victim)
+                for weight,graph in variants:
+                    token=uuid.uuid4().hex
+                    prepared[token]=(time.monotonic(),*item[1:4],graph,editable_fields(graph,item[6]),item[6])
+                    result.append({"weight":weight,"token":token})
+            return jsonify(workflow_id=item[1],variants=result)
+        except (ValueError,TypeError,KeyError,RecursionError) as exc:
+            return jsonify(error="Comparison preparation failed",detail=str(exc)[:300]),400
+
     @app.post("/api/workspace/generation")
     def generation_submit():
         if not local():
