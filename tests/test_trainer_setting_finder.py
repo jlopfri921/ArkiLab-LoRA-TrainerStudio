@@ -24,6 +24,15 @@ class TrainerSettingFinderTests(unittest.TestCase):
         self.assertIn('entry.control.focus({preventScroll:true})', self.js)
         self.assertNotIn("entry.control.value=", self.js)
 
+    def test_basic_mode_and_search_feedback(self):
+        self.assertIn('let stage="Training",mode="Basic";', self.js)
+        self.assertIn('localStorage.getItem(preference)', self.js)
+        self.assertIn('stageSummary.textContent=', self.js)
+        self.assertIn('hiddenAdvanced', self.js)
+        self.assertIn('tr("No matching settings")', self.js)
+        self.assertIn('entry.label.textContent.trim()', self.js)
+        self.assertIn('mode="Expert";render();', self.js)
+
     def test_accessible_and_responsive(self):
         self.assertIn('search.type="search"', self.js)
         self.assertIn('search.setAttribute("aria-label"', self.js)
