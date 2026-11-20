@@ -1905,5 +1905,13 @@
   "Invalid workflow request or file too large": "Solicitud no válida o archivo demasiado grande",
   "Invalid or unsupported workflow JSON": "JSON de workflow no válido o no compatible",
   "Workflow library limit reached": "Límite de la biblioteca alcanzado",
-  "Workflow not found": "Workflow no encontrado"
+  "Workflow not found": "Workflow no encontrado",
+  "Link workflow folder": "Vincular carpeta de workflows",
+  "Select a folder on the launcher PC. Synchronization imports JSON files recursively without modifying originals.": "Selecciona una carpeta del PC del lanzador. La sincronización importa los JSON de todas las subcarpetas sin modificar los originales.",
+  "Workflow folder path": "Ruta de la carpeta de workflows",
+  "Synchronize folder": "Sincronizar carpeta",
+  "Scanning workflows...": "Buscando workflows...",
+  "Imported: {imported} · Updated: {updated} · Unchanged: {unchanged} · Skipped: {skipped}": "Importados: {imported} · Actualizados: {updated} · Sin cambios: {unchanged} · Omitidos: {skipped}",
+  "Invalid workflow folder": "Carpeta de workflows no válida",
+  "Linked folder": "Carpeta vinculada"
 }
