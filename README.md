@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/orkilab/orkilab-readme-banner.svg" alt="OrkiLab — LoRA Trainer Studio" width="100%"></p>
+<p align="center"><img src="assets/orkilab/orkilab-hero-v3.svg" alt="OrkiLab — LoRA Trainer Studio" width="100%"></p>
 
 <p align="center"><strong>Train. Adapt. Create.</strong><br>Local-first LoRA training for image, video and audio.</p>
 
