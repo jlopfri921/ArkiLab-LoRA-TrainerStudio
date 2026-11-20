@@ -10,6 +10,7 @@ from contextlib import closing
 from urllib.request import Request, build_opener, ProxyHandler
 from urllib.error import HTTPError
 from pathlib import Path
+import shutil
 from flask import jsonify, request
 import project_layout
 from comfyui_connect import validate_settings, DEFAULT_SETTINGS, get_json, NoRedirect
@@ -49,11 +50,38 @@ def register(app, base):
             row = con.execute("SELECT graph FROM workflows WHERE id=?", (ident,)).fetchone()
         return row[0] if row else None
 
+    @app.post("/api/workspace/generation/bridge/install")
+    def bridge_install():
+        if not local():
+            return jsonify(error="Manage workflows on the launcher PC"), 403
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 4096:
+            return jsonify(error="Invalid request"), 400
+        body = request.get_json(silent=True)
+        raw = body.get("folder") if isinstance(body, dict) else None
+        if not isinstance(raw, str) or not raw.strip():
+            return jsonify(error="Select the ComfyUI custom_nodes folder"), 400
+        try:
+            root = Path(raw.strip()).expanduser()
+            if not root.is_absolute() or root.name.lower() != "custom_nodes" or not root.is_dir():
+                raise ValueError("Select the ComfyUI custom_nodes folder")
+            root = root.resolve()
+            source = base / "integrations" / "orkilab_bridge"
+            target = root / "orkilab_bridge"
+            for rel in ("__init__.py", "js/bridge.js"):
+                dst = target / rel
+                if not dst.resolve().is_relative_to(root) or not (source / rel).is_file():
+                    raise ValueError("Invalid bridge installation path")
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source / rel, dst)
+            return jsonify(installed=True, folder=str(target))
+        except (OSError, ValueError) as exc:
+            return jsonify(error="Bridge installation failed", detail=str(exc)[:300]), 400
+
     @app.post("/api/workspace/generation/prepare")
     def generation_prepare():
         if not local():
             return jsonify(error="Manage workflows on the launcher PC"), 403
-        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 2048:
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 16_000_000:
             return jsonify(error="Invalid request"), 400
         body = request.get_json(silent=True)
         if not isinstance(body, dict) or not isinstance(body.get("workflow_id"), str):
@@ -68,9 +96,14 @@ def register(app, base):
         try:
             graph = json.loads(raw)
             fmt = inspect_graph(graph)["format"]
-            if fmt == "ui":
+            bridge = body.get("bridge_prompt")
+            if bridge is not None:
+                if fmt != "ui" or inspect_graph(bridge)["format"] != "api":
+                    raise ValueError("Invalid bridge prompt")
+                graph = bridge
+            elif fmt == "ui":
                 graph = convert_visual(graph, cfg["url"], get_json)
-            else:
+            if fmt == "api" or bridge is not None:
                 schemas = {kind: node_schema(cfg["url"], kind, get_json)
                            for kind in {n["class_type"] for n in graph.values()}}
                 validate_prompt(graph, schemas)
