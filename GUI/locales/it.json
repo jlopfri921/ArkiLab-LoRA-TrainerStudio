@@ -1769,5 +1769,16 @@
   "Could not read generation status": "Impossibile leggere lo stato",
   "ComfyUI Zone": "Area ComfyUI",
   "Back to Workspace": "Torna all’area di lavoro",
-  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "Gestisci connessione ComfyUI, modelli, nodi, workflow e generazione in un unico luogo."
+  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "Gestisci connessione ComfyUI, modelli, nodi, workflow e generazione in un unico luogo.",
+  "Generation history": "Cronologia delle generazioni",
+  "Review saved generation parameters and outputs. Original media remains on ComfyUI.": "Consulta parametri e risultati salvati. I file originali rimangono in ComfyUI.",
+  "Refresh history": "Aggiorna cronologia",
+  "Previous page": "Pagina precedente",
+  "Next page": "Pagina successiva",
+  "Media unavailable on ComfyUI": "File non disponibile in ComfyUI",
+  "Showing {count} generations": "{count} generazioni visualizzate",
+  "No generations recorded": "Nessuna generazione registrata",
+  "Saved generation parameters": "Parametri di generazione salvati",
+  "Download API JSON": "Scarica JSON API",
+  "Check generation status": "Controlla stato della generazione"
 }
