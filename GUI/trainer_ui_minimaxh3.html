@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcademiaSD MiniMax-H3 LoRAlab</title>
+    <title>OrkiLab — MiniMax-H3</title>
     <script src="/i18n.js"></script>
     <script src="/notify.js"></script>
     <script src="/preview_size.js"></script>
@@ -17,8 +17,8 @@
     <script src="/preview_prompts.js"></script>
 
     <!-- Favicon de la pestaña del navegador -->
-    <link rel="icon" type="image/png" href="/assets/logo_128.png">
-    <link rel="shortcut icon" type="image/png" href="/assets/logo_128.png">
+    <link rel="icon" type="image/svg+xml" href="/assets/orkilab-icon.svg">
+    <link rel="shortcut icon" type="image/svg+xml" href="/assets/orkilab-icon.svg">
 
     <style>
         :root {
@@ -357,13 +357,13 @@
     <header>
         <!-- Banner de la cabecera -->
         <div class="banner-container">
-            <img src="/assets/logo.jpg" alt="AcademiaSD MiniMax-H3 LoRAlab" class="banner-img" onerror="this.src='/assets/logo.jpg'; this.onerror=null;">
+            <img src="/assets/orkilab-logo.svg" alt="OrkiLab — MiniMax-H3" class="banner-img" onerror="this.src='/assets/orkilab-logo.svg'; this.onerror=null;">
         </div>
 
         <div class="header-content">
             <div class="logo-title">
                 <div>
-                    <h1>AcademiaSD MiniMax-H3 LoRAlab</h1>
+                    <h1>OrkiLab — MiniMax-H3</h1>
                     <span>Web GUI & Automation</span>
                     <a id="back-to-launcher" class="back-to-launcher" href="#" title="Back to the launcher"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</a>
                 </div>
@@ -371,10 +371,10 @@
 
             <!-- Redes Sociales / Social Links -->
             <div class="social-links">
-                <a href="https://www.youtube.com/@Academia_SD" target="_blank" class="social-btn"><span class="btn-yt">▶</span> YouTube</a>
-                <a href="https://twitter.com/Academia_S_D" target="_blank" class="social-btn"><span class="btn-x">𝕏</span> X (Twitter)</a>
-                <a href="https://discord.gg/Syuaduy678" target="_blank" class="social-btn"><span class="btn-discord">💬</span> Discord</a>
-                <a href="https://ko-fi.com/academiasd" target="_blank" class="social-btn"><span class="btn-kofi">☕</span> Ko-Fi</a>
+                
+                
+                
+                
             </div>
 
             <!-- Hardware Monitor (RAM, VRAM, GPU Temp) -->
@@ -1984,9 +1984,9 @@
                 // Tarjeta MiniMax-H3 Image: misma GUI, modelo fijado a imagen / the image card pins the model.
                 if (data.h3_model_forced === 'image') {
                     window.H3_IMAGE = true;
-                    document.title = 'AcademiaSD MiniMax-H3 Image LoRAlab';
+                    document.title = 'OrkiLab — MiniMax-H3 Image';
                     const h1 = document.querySelector('h1');
-                    if (h1) h1.textContent = 'AcademiaSD MiniMax-H3 Image LoRAlab';
+                    if (h1) h1.textContent = 'OrkiLab — MiniMax-H3 Image';
                     const model = document.getElementById('train_h3_model');
                     model.value = 'image';
                     (model.closest('.form-group') || model).style.display = 'none';
