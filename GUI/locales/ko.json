@@ -1830,5 +1830,6 @@
   "Prepare the selected workflow to detect available LoRA loaders.": "워크플로를 준비하여 LoRA 로더를 감지하세요.",
   "Ready: {count} LoRA loader(s) available for comparison.": "준비 완료: LoRA 로더 {count}개 사용 가능.",
   "No compatible standard LoRA loader found. Try a workflow with LoraLoader or LoraLoaderModelOnly.": "호환되는 표준 LoRA 로더가 없습니다. LoraLoader 등을 사용해 보세요.",
-  "LoRA": "LoRA"
+  "LoRA": "LoRA",
+  "Open in LoRA Comparator": "LoRA 비교에서 열기"
 }
