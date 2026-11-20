@@ -1,5 +1,7 @@
 """Discover ComfyUI node metadata without loading or executing workflows."""
 import re
+from http.client import HTTPException
+from urllib.error import HTTPError
 
 MAX_NODES = 5000
 
@@ -8,7 +10,7 @@ def discover(data):
         raise ValueError("Invalid ComfyUI node inventory")
     rows = []
     for key, item in data.items():
-        if not isinstance(key, str) or not isinstance(item, dict):
+        if not isinstance(key, str) or not isinstance(item, dict) or not any(k in item for k in ("input", "output", "display_name", "name")):
             continue
         module = str(item.get("python_module") or "")[:300]
         outputs = item.get("output", [])
@@ -34,8 +36,18 @@ def discover(data):
                      "origin": origin, "outputs": outputs, "tags": tags})
         if len(rows) >= MAX_NODES:
             break
+    if not rows:
+        raise ValueError("ComfyUI returned no valid node definitions")
     return {"nodes": sorted(rows, key=lambda x: x["name"].casefold()),
             "truncated": len(data) > len(rows)}
 
 def fetch_nodes(url, get_json):
-    return discover(get_json(url, "/object_info", max_bytes=96_000_000, timeout=60))
+    failures = []
+    for path in ("/object_info", "/api/object_info"):
+        try:
+            result = discover(get_json(url, path, max_bytes=96_000_000, timeout=60))
+            result["endpoint"] = path
+            return result
+        except (OSError, ValueError, HTTPException) as exc:
+            failures.append(f"{path}: {exc}"[:350])
+    raise ValueError(" | ".join(failures))
