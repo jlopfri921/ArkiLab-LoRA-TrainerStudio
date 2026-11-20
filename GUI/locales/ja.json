@@ -1652,5 +1652,17 @@
   "Could not connect to ComfyUI": "ComfyUI に接続できませんでした",
   "Use a local or private IP address and port": "ローカルまたはプライベートIPとポートを使用してください",
   "Configure ComfyUI on the launcher PC": "ランチャーPCでComfyUIを設定してください",
-  "Invalid ComfyUI address": "無効なComfyUIアドレス"
+  "Invalid ComfyUI address": "無効なComfyUIアドレス",
+  "Engine mode": "動作モード",
+  "OrkiLab native": "OrkiLab ネイティブ",
+  "ComfyUI connected": "ComfyUI 接続",
+  "Hybrid": "ハイブリッド",
+  "Shared model folder (optional)": "共有モデルフォルダー（任意）",
+  "Model folder is saved as a reference only. Training engines remain unchanged.": "フォルダーは参照としてのみ保存されます。学習エンジンは変更されません。",
+  "Use OrkiLab without ComfyUI.": "ComfyUI なしで OrkiLab を使用します。",
+  "Use ComfyUI for compatible generation. Training remains in OrkiLab.": "対応する生成に ComfyUI を使用します。学習は OrkiLab で行います。",
+  "Train in OrkiLab and use ComfyUI for compatible generation.": "OrkiLab で学習し、対応する生成に ComfyUI を使用します。",
+  "ComfyUI is disabled in native mode": "ネイティブモードでは ComfyUI は無効です",
+  "Invalid engine mode": "無効な動作モード",
+  "Invalid model folder": "無効なモデルフォルダー"
 }
