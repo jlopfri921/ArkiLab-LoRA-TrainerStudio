@@ -1692,5 +1692,21 @@
   "Embedding": "埋め込み",
   "Upscaler": "アップスケーラー",
   "Audio encoder": "音声エンコーダー",
-  "Vision encoder": "画像エンコーダー"
+  "Vision encoder": "画像エンコーダー",
+  "ComfyUI nodes": "ComfyUI ノード",
+  "Discover installed nodes and possible capabilities. Detection is based on metadata, not a generation test.": "インストール済みノードと可能な機能を検出します。生成テストではなくメタデータに基づく検出です。",
+  "Discover nodes": "ノードを検出",
+  "Search nodes": "ノードを検索",
+  "All origins": "すべての取得元",
+  "Built-in": "組み込み",
+  "Unknown": "不明",
+  "All capabilities": "すべての機能",
+  "Capabilities": "機能",
+  "Module": "モジュール",
+  "Matching nodes": "該当ノード",
+  "{shown} of {total} nodes": "{total} 件中 {shown} 件のノード",
+  "Scanning nodes...": "ノードを検索中...",
+  "Could not read ComfyUI nodes": "ComfyUI ノードを取得できません",
+  "Conditioning": "条件付け",
+  "Sampling": "サンプリング"
 }
