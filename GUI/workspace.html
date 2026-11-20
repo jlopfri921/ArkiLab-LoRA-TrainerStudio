@@ -231,6 +231,7 @@ function refreshCompare(){
  $("compare-run").disabled=!ready||!select.value;
  $("compare-stop").disabled=true;
 }
+$("gen-open-compare").onclick=()=>{$("compare-search").value="";fillCompareWorkflows();$("compare-workflow").value=$("generation-workflow").value;updateCompareSelection();location.hash="compare";};
 $("compare-search").oninput=fillCompareWorkflows;
 $("compare-workflow").onchange=()=>{$("compare-prepare-status").textContent="";updateCompareSelection();};
 $("compare-prepare").onclick=async()=>{
