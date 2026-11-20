@@ -1,4 +1,5 @@
 """Static regression coverage for shared trainer setting finder (no GPU required)."""
+import json
 import unittest
 from pathlib import Path
 
@@ -68,6 +69,15 @@ class TrainerSettingFinderTests(unittest.TestCase):
         self.assertIn("train_vram_budget_gb", self.js)
         self.assertIn("train_blocks_on_gpu", self.js)
         self.assertIn("train_audio_loss_weight", self.js)
+
+    def test_setting_finder_labels_translated_in_all_supported_locales(self):
+        for lang in ("es", "pt", "fr", "de", "it", "ja", "ko"):
+            with self.subTest(lang=lang):
+                file = ROOT / "GUI" / "locales" / (lang + ".json")
+                translations = json.loads(file.read_text(encoding="utf-8"))
+                for key in ("Find setting", "No matching settings",
+                            "Settings complexity", "advanced settings hidden"):
+                    self.assertTrue(translations.get(key), (lang, key))
 
     def test_accessible_and_responsive(self):
         self.assertIn('search.type="search"', self.js)
