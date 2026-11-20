@@ -22,3 +22,12 @@ body.orki-pilot .sidebar .panel-body{max-width:1000px}
 body.orki-pilot .terminal{height:clamp(180px,30vh,320px)}
 body.orki-pilot .panel-title{scroll-margin-top:155px}
 @media(max-width:960px){body.orki-pilot header{position:static}body.orki-pilot .main-grid{grid-template-columns:minmax(0,1fr)}body.orki-pilot .orki-pilot-nav{position:static;grid-column:1;grid-row:1;max-height:none;display:flex;flex-direction:row;flex-wrap:wrap}body.orki-pilot .orki-pilot-nav p{flex-basis:100%}body.orki-pilot .sidebar{grid-column:1;grid-row:2}body.orki-pilot .console-container{grid-column:1;grid-row:3}body.orki-pilot .main-grid.orki-monitor-only .console-container{grid-row:2}}
+
+
+/* Find settings in-place: no separate form, no duplicated controls. */
+.orki-pilot-nav .orki-setting-search{display:flex;flex-direction:column;gap:6px;min-width:0}
+.orki-pilot-nav .orki-setting-search input{width:100%;min-width:0;padding:9px;font-size:13px}
+.orki-pilot-nav .orki-setting-results{display:flex;flex-direction:column;gap:4px;max-height:240px;overflow-y:auto}
+.orki-pilot-nav .orki-setting-results button{font-size:12px;line-height:1.3;min-height:32px;white-space:normal;overflow-wrap:anywhere}
+.orki-pilot-nav .orki-setting-results button:focus-visible{outline:2px solid #3cdbd0;outline-offset:2px}
+@media(max-width:960px){.orki-pilot-nav .orki-setting-search{flex:1 1 100%}}
