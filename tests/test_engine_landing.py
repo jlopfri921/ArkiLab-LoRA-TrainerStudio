@@ -34,7 +34,7 @@ class EngineLandingTests(unittest.TestCase):
 
     def test_existing_engine_launcher_not_removed(self):
         self.assertIn('function launchButton(id)',HTML)
-        self.assertIn('card.append(launchButton(trainer.id))',HTML)
+        self.assertIn('details,launchButton(trainer.id)',HTML)
         self.assertIn('["all","image","video","audio","multimodal"]',HTML)
 
     def test_new_strings_translated(self):

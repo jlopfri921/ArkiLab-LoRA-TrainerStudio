@@ -2030,5 +2030,15 @@
   "Peak sampled": "Gemessener Spitzenwert",
   "After generation": "Nach Generierung",
   "After model unload": "Nach Modellentladung",
-  "Change after generation": "Änderung nach Generierung"
+  "Change after generation": "Änderung nach Generierung",
+  "Image training checklist": "Checkliste für Bildtraining",
+  "Prepare a compatible image dataset and captions. Check the base-model family, LoRA rank, resolution, memory usage and checkpoint options in this trainer.": "Bereite kompatible Bilder und Beschriftungen vor. Prüfe Basismodellfamilie, LoRA-Rang, Auflösung, Speicherbedarf und Checkpoints im Trainer.",
+  "Video training checklist": "Checkliste für Videotraining",
+  "Prepare the clips and their captions in the format required by this trainer. Check frame count, resolution, base model, available VRAM and checkpoint settings.": "Bereite Clips und Beschreibungen im geforderten Format vor. Prüfe Bildanzahl, Auflösung, Basismodell, verfügbaren VRAM und Checkpoints.",
+  "Audio training checklist": "Checkliste für Audiotraining",
+  "Prepare audio files and any required transcriptions or labels. Review sample rate, model family, dataset structure, GPU memory and checkpoints in the trainer.": "Bereite Audiodateien und nötige Transkripte oder Labels vor. Prüfe Abtastrate, Modellfamilie, Datensatzstruktur, GPU-Speicher und Checkpoints.",
+  "Multimodal training checklist": "Checkliste für multimodales Training",
+  "Check which input modalities and dataset structure this engine supports. Confirm compatible model weights, resolution or duration, GPU memory and checkpoints before training.": "Prüfe unterstützte Modalitäten und Datensatzstruktur. Bestätige kompatible Modellgewichte, Auflösung oder Dauer, GPU-Speicher und Checkpoints.",
+  "Before opening this trainer": "Vor dem Öffnen des Trainers",
+  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "Die genaue Kompatibilität, der empfohlene GPU-Speicher und Checkpoints müssen im gewählten Trainer geprüft werden. Diese Hilfe ändert keine Einstellungen."
 }
