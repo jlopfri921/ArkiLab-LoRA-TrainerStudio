@@ -36,6 +36,31 @@ class BridgeCloneSafetyTests(unittest.TestCase):
         self.assertIn("Bridge failed sending workflow to ComfyUI:", self.workspace)
         self.assertIn("JSON.parse(JSON.stringify(w.graph))", self.workspace)
 
+    def test_bridge_reports_progress_with_existing_origin_and_token(self):
+        self.assertIn('opener.postMessage({type:"orkilab.progress",token,step},origin)', self.bridge)
+        for step in ("received", "loading", "converting", "serializing", "returning"):
+            self.assertIn('progress("' + step + '")', self.bridge)
+        self.assertIn('e.origin!==target.origin||e.data?.token!==token', self.workspace)
+        self.assertIn('e.data.type==="orkilab.progress"&&sent', self.workspace)
+        self.assertIn('const allowed=["received","loading","converting","serializing","returning"]', self.workspace)
+
+    def test_preparation_can_be_cancelled_without_submitting_generation(self):
+        for snippet in (
+            'id="bridge-cancel"',
+            'const controller=new AbortController()',
+            'bridgeAbort.abort()',
+            'if(bridgeReject)bridgeReject(',
+            'signal:controller.signal',
+            'if(!popup.closed)popup.close()',
+            'if(controller.signal.aborted)throw Error(',
+            'showBridgeStep("validating")',
+            'showBridgeStep("done")',
+        ):
+            self.assertIn(snippet, self.workspace)
+        self.assertIn('id="bridge-progress-fill"', self.workspace)
+        self.assertIn('id="bridge-progress-label"', self.workspace)
+        self.assertIn('t("Step {current} of {total}"', self.workspace)
+
     def test_install_action_overwrites_bridge_code(self):
         self.assertIn('shutil.copyfile(source / rel, dst)', self.generation)
         self.assertIn('"js/bridge.js"', self.generation)
