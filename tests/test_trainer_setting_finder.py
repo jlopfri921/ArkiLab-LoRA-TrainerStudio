@@ -33,6 +33,14 @@ class TrainerSettingFinderTests(unittest.TestCase):
         self.assertIn('entry.label.textContent.trim()', self.js)
         self.assertIn('mode="Expert";render();', self.js)
 
+    def test_engine_specific_advanced_controls(self):
+        self.assertIn('const engineAdvanced={', self.js)
+        for field in ("train_resident_blocks", "train_park_mode", "train_ram_limit_gb", "train_turbo_strength"):
+            self.assertIn('"' + field + '"', self.js)
+        self.assertIn('const advancedIds=[...commonAdvanced,...(engineAdvanced[engine]||[])];', self.js)
+        # Automatic VRAM profile remains in the Basic view.
+        self.assertNotIn('"train_vram_profile"', self.js)
+
     def test_accessible_and_responsive(self):
         self.assertIn('search.type="search"', self.js)
         self.assertIn('search.setAttribute("aria-label"', self.js)
