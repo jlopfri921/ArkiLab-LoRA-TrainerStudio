@@ -1,5 +1,7 @@
 """Explicit submission of saved ComfyUI API graphs; no automatic execution."""
 import json
+import hashlib
+import time
 import re
 import sqlite3
 import threading
@@ -12,10 +14,12 @@ from flask import jsonify, request
 import project_layout
 from comfyui_connect import validate_settings, DEFAULT_SETTINGS, get_json, NoRedirect
 from workflow_library import inspect_graph
+from workflow_conversion import convert_visual, node_schema, validate_prompt
 
 def register(app, base):
     base = Path(base)
     jobs = {}
+    prepared = {}
     lock = threading.Lock()
 
     def config():
@@ -37,6 +41,51 @@ def register(app, base):
             raise ValueError("ComfyUI did not return a valid job ID")
         return ident
 
+    def read_graph(ident):
+        path = base / "settings" / "orkilab" / "workflows.sqlite3"
+        if not path.is_file():
+            return None
+        with closing(sqlite3.connect(path)) as con:
+            row = con.execute("SELECT graph FROM workflows WHERE id=?", (ident,)).fetchone()
+        return row[0] if row else None
+
+    @app.post("/api/workspace/generation/prepare")
+    def generation_prepare():
+        if not local():
+            return jsonify(error="Manage workflows on the launcher PC"), 403
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 2048:
+            return jsonify(error="Invalid request"), 400
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict) or not isinstance(body.get("workflow_id"), str):
+            return jsonify(error="Invalid request"), 400
+        cfg = config()
+        if cfg["mode"] == "native":
+            return jsonify(error="ComfyUI is disabled in native mode"), 409
+        ident = body["workflow_id"]
+        raw = read_graph(ident)
+        if raw is None:
+            return jsonify(error="Workflow not found"), 404
+        try:
+            graph = json.loads(raw)
+            fmt = inspect_graph(graph)["format"]
+            if fmt == "ui":
+                graph = convert_visual(graph, cfg["url"], get_json)
+            else:
+                schemas = {kind: node_schema(cfg["url"], kind, get_json)
+                           for kind in {n["class_type"] for n in graph.values()}}
+                validate_prompt(graph, schemas)
+            token = uuid.uuid4().hex
+            with lock:
+                for key in list(prepared):
+                    if time.monotonic() - prepared[key][0] > 1800:
+                        prepared.pop(key)
+                while len(prepared) >= 20:
+                    prepared.pop(next(iter(prepared)))
+                prepared[token] = (time.monotonic(), ident, cfg["url"], hashlib.sha256(raw.encode()).hexdigest(), graph)
+            return jsonify(token=token, node_count=len(graph), converted=fmt=="ui", graph=graph)
+        except (OSError, ValueError, TypeError, KeyError, RecursionError) as exc:
+            return jsonify(error="Workflow preparation failed", detail=str(exc)[:500]), 400
+
     @app.post("/api/workspace/generation")
     def generation_submit():
         if not local():
@@ -49,18 +98,18 @@ def register(app, base):
         cfg = config()
         if cfg["mode"] == "native":
             return jsonify(error="ComfyUI is disabled in native mode"), 409
-        path = base / "settings" / "orkilab" / "workflows.sqlite3"
-        if not path.is_file():
+        raw = read_graph(body["workflow_id"])
+        if raw is None:
             return jsonify(error="Workflow not found"), 404
-        with closing(sqlite3.connect(path)) as con:
-            row = con.execute("SELECT graph FROM workflows WHERE id=?", (body["workflow_id"],)).fetchone()
-        if not row:
-            return jsonify(error="Workflow not found"), 404
+        token = body.get("token")
+        if not isinstance(token, str):
+            return jsonify(error="Prepare workflow before generating"), 409
         try:
-            graph = json.loads(row[0])
-            if inspect_graph(graph)["format"] != "api":
-                return jsonify(error="Export this workflow in API format from ComfyUI first"), 400
             with lock:
+                item = prepared.get(token)
+                if not item or time.monotonic() - item[0] > 1800 or item[1:4] != (body["workflow_id"], cfg["url"], hashlib.sha256(raw.encode()).hexdigest()):
+                    return jsonify(error="Prepare workflow before generating"), 409
+                graph = item[4]
                 if project_layout.training_in_progress(base):
                     return jsonify(error="Training is active. Finish training before generating."), 409
                 queue = get_json(cfg["url"], "/queue")
@@ -68,6 +117,7 @@ def register(app, base):
                     return jsonify(error="Could not verify ComfyUI queue"), 502
                 if queue["queue_running"] or queue["queue_pending"]:
                     return jsonify(error="ComfyUI queue is busy"), 409
+                prepared.pop(token, None)
                 ident = submit(cfg["url"], graph)
                 token = uuid.uuid4().hex
                 jobs[token] = (cfg["url"], ident)
