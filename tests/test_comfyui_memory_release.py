@@ -37,7 +37,8 @@ class ComfyMemoryReleaseTests(unittest.TestCase):
             'id="comfy-memory-status"',
             'async function releaseComfyMemory(automatic=false)',
             'comfyui/memory/release",{confirm:true}',
-            'if($("comfy-auto-release").checked)await releaseComfyMemory(true)',
+            'if($("comfy-auto-release").checked)',
+            'await releaseComfyMemory(true)',
             'memoryAutoKey="orkilab.comfyui.autoMemoryRelease"',
         ):
             with self.subTest(snippet=snippet):
