@@ -2023,5 +2023,12 @@
   "Each engine has its own dataset, model and hardware requirements. The category filters are a guide, not a guarantee of compatibility. Multimodal engines are listed separately.": "各エンジンのデータ、モデル、ハードウェア要件は異なります。分類は目安であり互換性を保証しません。マルチモーダルは別に表示されます。",
   "Browse available engines": "利用できるエンジンを探す",
   "Filter the trainers, inspect their descriptions and open the one you need.": "説明を確認し、フィルターで絞り込んでトレーナーを開きます。",
-  "{count} training engines shown": "表示中のトレーナー: {count} 件"
+  "{count} training engines shown": "表示中のトレーナー: {count} 件",
+  "Generation memory diagnostics": "生成ごとのメモリ診断",
+  "System-wide RAM and VRAM; this cannot identify the exact process or prove a memory leak. Short peaks may be missed.": "システム全体の RAM と VRAM です。特定のプロセスへの帰属やメモリリークの証明はできず、短時間のピークは記録されない場合があります。",
+  "Before submission": "送信前",
+  "Peak sampled": "観測された最大値",
+  "After generation": "生成後",
+  "After model unload": "モデルの解放後",
+  "Change after generation": "生成後の変化"
 }

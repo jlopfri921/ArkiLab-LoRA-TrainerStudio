@@ -22,6 +22,14 @@ The Dashboard includes a small, dismissible **OrkiLab ecosystem** announcement c
 
 The manifest uses `{"version":1,"items":[...]}`. Items support `id`, `enabled`, multilingual `title` and `description` objects (`es`, `en`, etc.) and an HTTPS `url`. Links are limited to the project's approved domains in `scripts/promotions_feed.py`; updating that allowlist requires shipping a code change. The UI uses text only (no HTML, third-party JavaScript, embedded images, cookies or tracking). Remote requests are made by the local server to the fixed file, not directly from visitors' browsers; no visitor identifiers are sent.
 
+## Next release candidate: 0.3.0-rc.1 (planned, not published)
+
+The next release candidate focuses on a **stable, locally verified ComfyUI integration** rather than expanding all trainers at once. The expected scope is ComfyUI Zone onboarding and connection verification; read-only models/nodes; trusted workflow import, inspection and Bridge preparation; explicit Generation Studio submission with progress, safe cancellation, results and history; GPU monitoring; optional model/cache release; system-wide RAM/VRAM readings per generation; and standard LoRA strength comparison.
+
+**Not included as complete 0.3 commitments:** full per-trainer interface replacement, Dataset Studio, multiview tools, Ollama Copilot, Hub integrations, a packaged desktop installer, or support for every third-party ComfyUI node/workflow. Existing trainers remain accessible. The RC must pass Windows/Linux CI and documented on-device smoke tests; do not mark the version as 0.3 until then.
+
+**Project status (November 21, 2026):** the user reports completion of the hands-on ComfyUI/GPU tests; detailed outcomes, supported workflow samples and hardware evidence still need recording in the [acceptance checklist](docs/arkilab/GPU_GENERATION_ACCEPTANCE.md). Trainer modernization is underway. See the [0.3 RC scope and release gates](docs/arkilab/ROADMAP.md#immediate-milestone-030-rc1--comfyui-integration-candidate).
+
 ## What's new in OrkiLab — modern Workspace and ComfyUI integration
 
 > **Development status (November 20, 2026).** The features below have been implemented on the repository's default branch, but **have not yet passed end-to-end tests with real ComfyUI Desktop workflows and GPU jobs**. The current version identifier remains **0.2.0-rc.1**; do not interpret the 0.3.x development milestones as released versions. Keep backups of important workflows and datasets.

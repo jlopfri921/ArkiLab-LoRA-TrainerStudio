@@ -2193,5 +2193,12 @@
   "Each engine has its own dataset, model and hardware requirements. The category filters are a guide, not a guarantee of compatibility. Multimodal engines are listed separately.": "Cada entrenador tiene requisitos propios de datos, modelos y hardware. Los filtros orientan, pero no garantizan compatibilidad. Los entrenadores multimodales aparecen aparte.",
   "Browse available engines": "Explorar los entrenadores disponibles",
   "Filter the trainers, inspect their descriptions and open the one you need.": "Filtra, consulta las descripciones y abre el entrenador que necesites.",
-  "{count} training engines shown": "{count} entrenadores disponibles"
+  "{count} training engines shown": "{count} entrenadores disponibles",
+  "Generation memory diagnostics": "Diagnóstico de memoria por generación",
+  "System-wide RAM and VRAM; this cannot identify the exact process or prove a memory leak. Short peaks may be missed.": "RAM y VRAM del sistema completo; estos datos no identifican el proceso exacto ni demuestran una fuga de memoria. Pueden perderse picos breves.",
+  "Before submission": "Antes de enviar",
+  "Peak sampled": "Máximo observado",
+  "After generation": "Después de generar",
+  "After model unload": "Después de descargar modelos",
+  "Change after generation": "Variación tras generar"
 }
