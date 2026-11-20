@@ -244,7 +244,7 @@
   "Loading {name}...": "{name} wird geladen...",
   "Ready.": "Bereit.",
   "Dataset folder does not exist: {path}": "Der Dataset-Ordner existiert nicht: {path}",
-  "Dataset": "Dataset",
+  "Dataset": "Datensatz",
   "Mode": "Modus",
   "Samples": "Beispiele",
   "{n} to caption": "{n} zu beschriften",
@@ -1613,5 +1613,16 @@
   "Search sections": "Abschnitte suchen",
   "Expand all": "Alle öffnen",
   "Collapse all": "Alle schließen",
-  "Help": "Hilfe"
+  "Help": "Hilfe",
+  "Training navigation": "Trainingsnavigation",
+  "Project and pre-cache": "Projekt und Vorberechnung",
+  "Previews": "Vorschauen",
+  "Export": "Exportieren",
+  "Logs": "Protokolle",
+  "Credentials": "Zugangsdaten",
+  "Basic": "Basis",
+  "Expert": "Experte",
+  "Basic mode hides advanced parameters without changing their values. Review Expert before training.": "Der Basismodus blendet erweiterte Parameter aus, ohne Werte zu ändern. Vor dem Training Expertenmodus prüfen.",
+  "Classic layout": "Klassische Ansicht",
+  "Modern layout": "Moderne Ansicht"
 }

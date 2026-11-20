@@ -130,7 +130,7 @@
   "area": "면적",
   "sample ratio": "샘플 비율",
   "Training sample size and aspect ratio": "학습 샘플의 크기와 비율",
-  "Training": "학습과 동일",
+  "Training": "학습",
   "Saves the training settings, previews included. While training, they apply on the next step.": "미리보기를 포함한 학습 설정을 저장합니다. 학습 중에는 다음 스텝부터 적용됩니다.",
   "Console Output": "콘솔 출력",
   "IDLE": "대기 중",
@@ -1613,5 +1613,16 @@
   "Search sections": "섹션 검색",
   "Expand all": "모두 펼치기",
   "Collapse all": "모두 접기",
-  "Help": "도움말"
+  "Help": "도움말",
+  "Training navigation": "학습 탐색",
+  "Project and pre-cache": "프로젝트 및 사전 캐시",
+  "Previews": "미리보기",
+  "Export": "내보내기",
+  "Logs": "로그",
+  "Credentials": "인증 정보",
+  "Basic": "기본",
+  "Expert": "고급",
+  "Basic mode hides advanced parameters without changing their values. Review Expert before training.": "기본 모드는 값을 바꾸지 않고 고급 설정을 숨깁니다. 학습 전 고급 모드를 확인하세요.",
+  "Classic layout": "기존 레이아웃",
+  "Modern layout": "새 레이아웃"
 }

@@ -1,0 +1,3 @@
+# SDXL interface pilot
+
+Modern layout uses existing DOM controls and backend callbacks. Expert is the default; Basic only hides a conservative subset of advanced fields and persists the mode in browser storage. The console remains visible. Project/pre-cache share the existing panel. Classic layout restores the original layout without reloading. All model-specific parameters and training operations remain unchanged. Eight UI languages use the shared translation catalogues; existing untranslated strings fall back to English. Before wider rollout, verify navigation, live jobs, Basic/Expert value preservation, dataset operations, previews, export and classic fallback on Windows with a real SDXL installation.

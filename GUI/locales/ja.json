@@ -130,7 +130,7 @@
   "area": "面積",
   "sample ratio": "サンプルの縦横比",
   "Training sample size and aspect ratio": "学習サンプルのサイズと縦横比",
-  "Training": "学習時と同じ",
+  "Training": "学習",
   "Saves the training settings, previews included. While training, they apply on the next step.": "プレビューを含む学習設定を保存します。学習中は次のステップから反映されます。",
   "Console Output": "コンソール出力",
   "IDLE": "待機中",
@@ -1613,5 +1613,16 @@
   "Search sections": "セクション検索",
   "Expand all": "すべて展開",
   "Collapse all": "すべて折りたたむ",
-  "Help": "ヘルプ"
+  "Help": "ヘルプ",
+  "Training navigation": "学習ナビゲーション",
+  "Project and pre-cache": "プロジェクトと事前キャッシュ",
+  "Previews": "プレビュー",
+  "Export": "エクスポート",
+  "Logs": "ログ",
+  "Credentials": "認証情報",
+  "Basic": "基本",
+  "Expert": "上級",
+  "Basic mode hides advanced parameters without changing their values. Review Expert before training.": "基本モードは値を変更せず詳細設定を非表示にします。学習前に上級モードを確認してください。",
+  "Classic layout": "従来の表示",
+  "Modern layout": "新しい表示"
 }

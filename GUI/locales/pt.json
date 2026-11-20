@@ -130,7 +130,7 @@
   "area": "área",
   "sample ratio": "proporção da amostra",
   "Training sample size and aspect ratio": "Tamanho e proporção da amostra de treinamento",
-  "Training": "Treinamento",
+  "Training": "Treino",
   "Saves the training settings, previews included. While training, they apply on the next step.": "Salva as configurações de treinamento, previews incluídas. Durante o treinamento, elas valem a partir do próximo passo.",
   "Console Output": "Saída do console",
   "IDLE": "OCIOSO",
@@ -1613,5 +1613,16 @@
   "Search sections": "Pesquisar secções",
   "Expand all": "Expandir tudo",
   "Collapse all": "Recolher tudo",
-  "Help": "Ajuda"
+  "Help": "Ajuda",
+  "Training navigation": "Navegação do treino",
+  "Project and pre-cache": "Projeto e pré-cache",
+  "Previews": "Pré-visualizações",
+  "Export": "Exportar",
+  "Logs": "Registos",
+  "Credentials": "Credenciais",
+  "Basic": "Básico",
+  "Expert": "Avançado",
+  "Basic mode hides advanced parameters without changing their values. Review Expert before training.": "O modo básico oculta parâmetros avançados sem alterar os valores. Reveja o modo avançado antes do treino.",
+  "Classic layout": "Vista clássica",
+  "Modern layout": "Vista moderna"
 }

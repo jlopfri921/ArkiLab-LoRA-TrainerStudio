@@ -1613,5 +1613,16 @@
   "Search sections": "Rechercher des sections",
   "Expand all": "Tout développer",
   "Collapse all": "Tout réduire",
-  "Help": "Aide"
+  "Help": "Aide",
+  "Training navigation": "Navigation de l’entraînement",
+  "Project and pre-cache": "Projet et précache",
+  "Previews": "Aperçus",
+  "Export": "Exporter",
+  "Logs": "Journaux",
+  "Credentials": "Identifiants",
+  "Basic": "Basique",
+  "Expert": "Expert",
+  "Basic mode hides advanced parameters without changing their values. Review Expert before training.": "Le mode basique masque les paramètres avancés sans modifier leurs valeurs. Vérifiez le mode expert avant l’entraînement.",
+  "Classic layout": "Vue classique",
+  "Modern layout": "Vue moderne"
 }
