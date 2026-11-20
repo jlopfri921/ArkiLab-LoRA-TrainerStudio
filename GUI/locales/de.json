@@ -246,7 +246,7 @@
   "Dataset folder does not exist: {path}": "Der Dataset-Ordner existiert nicht: {path}",
   "Dataset": "Datensatz",
   "Mode": "Modus",
-  "Samples": "Beispiele",
+  "Samples": "Messwerte",
   "{n} to caption": "{n} zu beschriften",
   "(none)": "(keins)",
   "yes": "ja",
@@ -1596,7 +1596,7 @@
   "Multimodal": "Multimodal",
   "Unavailable": "Nicht verfügbar",
   "Configured": "Konfiguriert",
-  "System RAM": "Arbeitsspeicher",
+  "System RAM": "System-RAM",
   "{amount} available": "{amount} verfügbar",
   "Storage": "Speicherplatz",
   "Free on installation drive": "Frei auf dem Installationslaufwerk",
@@ -1966,5 +1966,11 @@
   "Unloads cached ComfyUI models from RAM/VRAM when its queue is empty. Does not restart ComfyUI or guarantee all Python memory is returned. The automatic option affects only generations started here.": "Entlädt zwischengespeicherte ComfyUI-Modelle aus RAM/VRAM, wenn die Warteschlange leer ist. ComfyUI wird nicht neu gestartet; eine vollständige Freigabe des Python-Speichers ist nicht garantiert. Automatisch gilt nur für hier gestartete Generierungen.",
   "Unload ComfyUI models and clear its cache? Only when all jobs are finished.": "ComfyUI-Modelle entladen und Cache leeren? Nur wenn alle Aufträge abgeschlossen sind.",
   "Requesting ComfyUI memory release...": "Speicherfreigabe bei ComfyUI wird angefordert...",
-  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "Bereinigung angenommen. RAM/VRAM wird möglicherweise nur teilweise oder verzögert freigegeben."
+  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "Bereinigung angenommen. RAM/VRAM wird möglicherweise nur teilweise oder verzögert freigegeben.",
+  "Resource history": "Ressourcenverlauf",
+  "Clear chart": "Diagramm löschen",
+  "Last 10 minutes while this screen is open · local session only": "Letzte 10 Minuten bei geöffnetem Bildschirm · nur lokale Sitzung",
+  "RAM is system-wide available memory, not only ComfyUI. VRAM and GPU readings include all processes; missing samples are not treated as zero.": "RAM bezeichnet den systemweit verfügbaren Speicher, nicht nur ComfyUI. VRAM- und GPU-Werte umfassen alle Prozesse; fehlende Messwerte werden nicht als null gezählt.",
+  "No samples yet": "Noch keine Messwerte",
+  "Power": "Leistung"
 }
