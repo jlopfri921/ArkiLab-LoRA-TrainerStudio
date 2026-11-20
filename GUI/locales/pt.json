@@ -1959,5 +1959,12 @@
   "PCI bus": "Barramento PCI",
   "GPU temperature is high. Check cooling and hardware limits.": "A temperatura da GPU está elevada. Verifica a refrigeração e os limites do fabricante.",
   "{count} GPUs detected": "{count} GPUs detetadas",
-  "Combined across GPUs": "Soma de todas as GPUs"
+  "Combined across GPUs": "Soma de todas as GPUs",
+  "ComfyUI memory": "Memória do ComfyUI",
+  "Release models and cache": "Libertar modelos e cache",
+  "Automatically release after generation": "Libertar automaticamente após a geração",
+  "Unloads cached ComfyUI models from RAM/VRAM when its queue is empty. Does not restart ComfyUI or guarantee all Python memory is returned. The automatic option affects only generations started here.": "Descarrega os modelos em cache da RAM/VRAM quando a fila está vazia. Não reinicia o ComfyUI nem garante libertar toda a memória do Python. A opção automática afeta apenas gerações iniciadas aqui.",
+  "Unload ComfyUI models and clear its cache? Only when all jobs are finished.": "Descarregar modelos do ComfyUI e limpar a cache? Apenas quando todos os trabalhos terminarem.",
+  "Requesting ComfyUI memory release...": "A solicitar libertação de memória ao ComfyUI...",
+  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "Pedido de limpeza aceite. A recuperação de RAM/VRAM pode ser parcial ou demorada."
 }

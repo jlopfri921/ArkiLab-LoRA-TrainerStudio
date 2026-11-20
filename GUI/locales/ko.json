@@ -1959,5 +1959,12 @@
   "PCI bus": "PCI 버스",
   "GPU temperature is high. Check cooling and hardware limits.": "GPU 온도가 높습니다. 냉각 상태와 하드웨어 한계를 확인하세요.",
   "{count} GPUs detected": "GPU {count}개 감지됨",
-  "Combined across GPUs": "전체 GPU 합계"
+  "Combined across GPUs": "전체 GPU 합계",
+  "ComfyUI memory": "ComfyUI 메모리",
+  "Release models and cache": "모델 및 캐시 해제",
+  "Automatically release after generation": "생성 후 자동 해제",
+  "Unloads cached ComfyUI models from RAM/VRAM when its queue is empty. Does not restart ComfyUI or guarantee all Python memory is returned. The automatic option affects only generations started here.": "대기열이 비어 있을 때 ComfyUI 모델 캐시를 RAM/VRAM에서 해제합니다. ComfyUI를 재시작하지 않으며 Python 메모리가 모두 반환된다는 보장은 없습니다. 자동 해제는 여기서 시작한 생성에만 적용됩니다.",
+  "Unload ComfyUI models and clear its cache? Only when all jobs are finished.": "ComfyUI 모델을 언로드하고 캐시를 비울까요? 모든 작업이 끝난 경우에만 실행합니다.",
+  "Requesting ComfyUI memory release...": "ComfyUI에 메모리 해제를 요청하는 중...",
+  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "정리 요청이 수락되었습니다. RAM/VRAM이 일부만 해제되거나 지연될 수 있습니다."
 }
