@@ -1843,7 +1843,7 @@
   "GPU metrics not available": "Métricas da GPU indisponíveis",
   "Video memory (VRAM)": "Memória de vídeo (VRAM)",
   "VRAM available": "VRAM disponível",
-  "GPU load": "Utilização da GPU",
+  "GPU load": "Carga da GPU",
   "Temperature": "Temperatura",
   "VRAM occupancy": "Ocupação de VRAM",
   "VRAM is nearly full. Avoid starting another demanding task.": "A VRAM está quase cheia. Evite iniciar outra tarefa exigente.",
@@ -1966,5 +1966,11 @@
   "Unloads cached ComfyUI models from RAM/VRAM when its queue is empty. Does not restart ComfyUI or guarantee all Python memory is returned. The automatic option affects only generations started here.": "Descarrega os modelos em cache da RAM/VRAM quando a fila está vazia. Não reinicia o ComfyUI nem garante libertar toda a memória do Python. A opção automática afeta apenas gerações iniciadas aqui.",
   "Unload ComfyUI models and clear its cache? Only when all jobs are finished.": "Descarregar modelos do ComfyUI e limpar a cache? Apenas quando todos os trabalhos terminarem.",
   "Requesting ComfyUI memory release...": "A solicitar libertação de memória ao ComfyUI...",
-  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "Pedido de limpeza aceite. A recuperação de RAM/VRAM pode ser parcial ou demorada."
+  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "Pedido de limpeza aceite. A recuperação de RAM/VRAM pode ser parcial ou demorada.",
+  "Resource history": "Histórico de recursos",
+  "Clear chart": "Limpar gráfico",
+  "Last 10 minutes while this screen is open · local session only": "Últimos 10 minutos com este ecrã aberto · apenas sessão local",
+  "RAM is system-wide available memory, not only ComfyUI. VRAM and GPU readings include all processes; missing samples are not treated as zero.": "A RAM representa a memória disponível do sistema, não apenas do ComfyUI. VRAM e GPU incluem todos os processos; amostras em falta não contam como zero.",
+  "No samples yet": "Ainda não há amostras",
+  "Power": "Potência"
 }
