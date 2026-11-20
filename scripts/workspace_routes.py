@@ -7,6 +7,8 @@ from workspace_store import ProjectStore
 import comfyui_connect
 import workflow_library
 import generation_studio
+import gpu_monitor
+import project_layout
 
 
 def register(app, base, load_config):
@@ -20,6 +22,14 @@ def register(app, base, load_config):
     @app.get("/workspace")
     def workspace_page():
         return send_from_directory(str(base / "GUI"), "workspace.html")
+
+    @app.get("/api/workspace/gpu/monitor")
+    def workspace_gpu_monitor():
+        if request.remote_addr not in ("127.0.0.1", "::1"):
+            return jsonify(error="GPU monitoring is available on the launcher PC only"), 403
+        data = gpu_monitor.get_gpu_metrics().copy()
+        data["training_active"] = bool(project_layout.training_in_progress(base))
+        return jsonify(data)
 
     @app.get("/api/workspace/overview")
     def workspace_overview():
