@@ -29,6 +29,20 @@ cd OrkiLab-LoRA-TrainerStudio
 
 On Windows, run `Install_LoRAlab-TrainerStudio.bat`, then `Start_LoRAlab-TrainerStudio.bat`. Linux instructions are in [the Linux guide](docs/Linux.md). Use the dedicated virtual environment; see the full installation and requirements sections below. The launcher opens at http://127.0.0.1:4990.
 
+## Engine gallery
+
+Original OrkiLab vector artwork for each trainer; illustrations are not generated training samples or screenshots.
+
+| Image & video | Generative models | Creative engines |
+| :---: | :---: | :---: |
+| ![LTX 2.3](assets/ltx23/orkilab-cover.svg) | ![LTX 2.5](assets/ltx25/orkilab-cover.svg) | ![Krea 2](assets/krea2/orkilab-cover.svg) |
+| ![MiniMax-H3](assets/minimaxh3/orkilab-cover.svg) | ![MiniMax-H3 Image](assets/minimaxh3image/orkilab-cover.svg) | ![Wan 2.2 (T2V-A14B)](assets/wan22/orkilab-cover.svg) |
+| ![Qwen-Image 2.1](assets/qwenimage21/orkilab-cover.svg) | ![Fibo 2.0](assets/fibo2/orkilab-cover.svg) | ![Qwen-Image 2512](assets/qwenimage2512/orkilab-cover.svg) |
+| ![Boogu Image Edit](assets/boogu/orkilab-cover.svg) | ![Z-Image](assets/zimage/orkilab-cover.svg) | ![Ming-Image](assets/mingimage/orkilab-cover.svg) |
+| ![Anima](assets/anima/orkilab-cover.svg) | ![YuE2-3B](assets/yue2/orkilab-cover.svg) | ![FLUX.1 Dev](assets/flux1/orkilab-cover.svg) |
+| ![FLUX.2 Klein 9B](assets/klein9b/orkilab-cover.svg) | ![FLUX.3 Image Klein](assets/flux3klein/orkilab-cover.svg) | ![ERNIE-Image](assets/ernie/orkilab-cover.svg) |
+| ![MOSS-Image](assets/mossimage/orkilab-cover.svg) | ![Ideogram 4](assets/ideogram4/orkilab-cover.svg) | ![SDXL](assets/sdxl/orkilab-cover.svg) |
+
 ## Training engines
 
 The following compatibility details and VRAM measurements are inherited from upstream; they have not all been independently reproduced by OrkiLab. Quantization and actual memory use depend on the model and settings.
