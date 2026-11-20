@@ -16,6 +16,7 @@ def register(app, base, load_config):
     generation_studio.register(app, base)
     store = ProjectStore(base / "settings" / "orkilab" / "projects.sqlite3")
 
+    @app.get("/workspace/comfyui")
     @app.get("/workspace")
     def workspace_page():
         return send_from_directory(str(base / "GUI"), "workspace.html")
