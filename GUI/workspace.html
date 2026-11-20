@@ -18,7 +18,7 @@
 "use strict";
 const $=id=>document.getElementById(id), el=(tag,txt,cls)=>{let n=document.createElement(tag);if(txt!==undefined)n.textContent=txt;if(cls)n.className=cls;return n;};
 let engines=[],filter="all";const notice=msg=>$("notice").textContent=t(msg);
-async function api(url,opts){const r=await fetch(url,opts);const data=await r.json();if(!r.ok)throw Error(t(data.error||"")||t("Request failed {status}",{status:r.status}));return data;}
+async function api(url,opts){const r=await fetch(url,opts);const data=await r.json();if(!r.ok)throw Error((t(data.error||"")||t("Request failed {status}",{status:r.status}))+(data.detail?" · "+data.detail:"")+(data.endpoint?" · "+data.endpoint:""));return data;}
 const post=(url,data)=>api(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
 function category(t){const d=t.description.toLowerCase();if((d.includes("video")&&d.includes("audio"))||t.id==="ltx25")return "multimodal";if(d.includes("music")||d.includes("audio"))return "audio";if(d.includes("video"))return "video";return "image";}
 function metric(name,value,note){const x=el("div",undefined,"metric");x.append(el("span",t(name),"muted no-i18n"),el("strong",t(value),"no-i18n"),el("span",t(note),"muted no-i18n"));$("metrics").append(x);}
