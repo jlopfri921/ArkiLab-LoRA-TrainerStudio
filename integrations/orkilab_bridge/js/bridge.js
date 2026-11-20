@@ -20,19 +20,31 @@ if (valid && /^[a-f0-9]{32}$/.test(token || "") && window.opener) {
                 if (consumed || event.source !== opener || event.origin !== origin ||
                     event.data?.token !== token || event.data?.type !== "orkilab.convert") return;
                 consumed = true;
+                const progress = (step) => {
+                    try {
+                        opener.postMessage({type:"orkilab.progress",token,step},origin);
+                    } catch (sendError) {
+                        // Optional progress must never interrupt conversion.
+                        console.debug("OrkiLab Bridge progress unavailable", sendError);
+                    }
+                };
                 let phase = "validate incoming workflow";
+                progress("received");
                 try {
                     if (!event.data.graph || !Array.isArray(event.data.graph.nodes)) throw Error("Invalid visual graph");
                     // Reject missing node types rather than silently accepting placeholders.
                     phase = "loadGraphData (ComfyUI frontend)";
+                    progress("loading");
                     await app.loadGraphData(event.data.graph, true, false);
                     phase = "graphToPrompt (ComfyUI frontend)";
+                    progress("converting");
                     const converted = await app.graphToPrompt();
                     if (!converted?.output || !Object.keys(converted.output).length) throw Error("No executable nodes returned");
                     // ComfyUI or custom-node widgets can return functions, proxies and
                     // other non-cloneable objects. Cross-window messages must carry
                     // JSON-only API prompt data, not live editor objects.
                     phase = "serialize converted prompt";
+                    progress("serializing");
                     let prompt;
                     try {
                         const serialized = JSON.stringify(converted.output, (_key, value) => {
@@ -50,6 +62,7 @@ if (valid && /^[a-f0-9]{32}$/.test(token || "") && window.opener) {
                         throw Error("Invalid converted API prompt");
                     }
                     phase = "postMessage API prompt";
+                    progress("returning");
                     opener.postMessage({type:"orkilab.result",token,prompt}, origin);
                 } catch (error) {
                     const message = "Bridge failed at " + phase + ": " + String(error?.message || error);
