@@ -1851,5 +1851,18 @@
   "Check application requirements before starting a GPU-intensive task.": "GPU 負荷の高い処理の前に必要条件を確認してください。",
   "OrkiLab training active": "OrkiLab でトレーニング中",
   "Updated at {time}": "{time} 更新",
-  "NVIDIA monitoring tool not found": "NVIDIA 監視ツールが見つかりません"
+  "NVIDIA monitoring tool not found": "NVIDIA 監視ツールが見つかりません",
+  "What can I do here?": "ここでは何ができますか？",
+  "View your system, storage, trainer count and current queue. Choose a section on the left to continue.": "システム、ストレージ、トレーナー、ジョブキューを確認できます。左のメニューから機能を選んでください。",
+  "Organize training project metadata. Archiving hides a project without deleting the underlying training files.": "学習プロジェクトの情報を整理します。アーカイブしても学習ファイルは削除されません。",
+  "Select a model family, then open the trainer to configure your training. Each trainer has its own requirements.": "モデルの種類を選んで対応するトレーナーを開きます。各トレーナーには個別の要件があります。",
+  "Monitor video memory, GPU utilization and temperature without closing or changing running programs. ComfyUI is not required.": "VRAM、GPU 使用率、温度を監視します。処理の終了や設定変更は行いません。ComfyUI は不要です。",
+  "Set the ComfyUI address and test your connection before importing or running workflows.": "ワークフローの取り込みや実行の前に ComfyUI の接続先を設定してテストします。",
+  "Browse read-only inventories of models and see where they are installed. Nothing is downloaded or moved here.": "モデルの場所を読み取り専用で確認できます。ダウンロードやファイル移動は行いません。",
+  "Inspect built-in and custom nodes installed in your ComfyUI. A detected node does not guarantee compatibility.": "ComfyUI の標準・カスタムノードを確認します。検出されたことは互換性を保証しません。",
+  "Import or index ComfyUI workflows, inspect nodes, mark favorites and open them in the generation or comparison tools.": "ワークフローの取り込みや一覧化、ノード確認、お気に入り登録、生成・比較への移動ができます。",
+  "Prepare and review a workflow, adjust editable parameters and explicitly confirm before running. Preparation alone does not generate.": "ワークフローを準備して確認し、編集可能な値を変更してから実行を承認します。準備だけでは生成されません。",
+  "See previously submitted workflows and output references. Media stays on the ComfyUI server.": "過去の生成と結果を確認します。メディアは ComfyUI サーバーに保存されています。",
+  "Select a compatible workflow and compare selected LoRA strengths with otherwise unchanged generation settings.": "互換ワークフローを選び、他の条件を固定して LoRA 強度を比較します。",
+  "Choose a trainer for its model family. All detailed training settings remain in its dedicated interface.": "モデルの種類に合うトレーナーを選択します。詳細設定は専用画面にあります。"
 }
