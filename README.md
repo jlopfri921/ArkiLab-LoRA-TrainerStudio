@@ -1,16 +1,37 @@
+<p align="center"><img src="assets/orkilab/orkilab-readme-banner.svg" alt="OrkiLab — LoRA Trainer Studio" width="100%"></p>
+
+<p align="center"><strong>Train. Adapt. Create.</strong><br>Local-first LoRA training for image, video and audio.</p>
+
+<p align="center">
+  <a href="VERSION_ARKILAB"><img alt="Version 0.1.0-rc.1" src="https://img.shields.io/badge/version-0.1.0--rc.1-087F91"></a>
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-315DB3"></a>
+  <img alt="Windows and Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-293C60">
+</p>
+
+<p align="center"><a href="#quick-start">Quick start</a> · <a href="#training-engines">Training engines</a> · <a href="docs/arkilab/ROADMAP.md">Roadmap</a> · <a href="CHANGELOG_ARKILAB.md">Changelog</a> · <a href="#credits">Credits</a></p>
+
 # OrkiLab — LoRA Trainer Studio
 
-![OrkiLab](assets/arkilab/arkilab-readme-banner.svg)
+Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Foundation is currently a release candidate, not a fully validated stable release.
 
-**Train. Adapt. Create.** · 0.1.0-rc.1 · Maintained by [jlopfri921](https://github.com/jlopfri921)
+## Workspace at a glance
 
-[Changelog](CHANGELOG_ARKILAB.md) · [Roadmap](docs/arkilab/ROADMAP.md) · [Architecture](docs/arkilab/ARCHITECTURE.md) · [Acceptance](docs/arkilab/FOUNDATION_ACCEPTANCE.md)
+| Dataset | Training | Export |
+| :--- | :--- | :--- |
+| Dataset manager, captions and Dataset Forge | Model-specific trainers, job queue, live previews and checkpoint resume | LoRA weights for compatible ComfyUI workflows |
 
-Technical descriptions and measurements below are inherited from upstream unless explicitly stated otherwise.
+## Quick start
 
-**OrkiLab** brings together local image, video and audio LoRA training engines. Each model is loaded in **4-bit NF4**, the text encoder and the VAE run only once in a **pre-cache** stage, and 100 % of the GPU goes to training. Every trainer has the same web interface: dataset manager with an automatic captioner, live previews, exact-step resume and one-click export to ComfyUI. It also works from another device on your network: upload the dataset and download the LoRA from the browser.
+```bash
+git clone https://github.com/jlopfri921/OrkiLab-LoRA-TrainerStudio.git
+cd OrkiLab-LoRA-TrainerStudio
+```
 
-New trainers are added **here**. One `Update_LoRAlab-TrainerStudio.bat` brings them to your existing installation, next to your models and projects — no new repository, no new environment.
+On Windows, run `Install_LoRAlab-TrainerStudio.bat`, then `Start_LoRAlab-TrainerStudio.bat`. Linux instructions are in [the Linux guide](docs/Linux.md). Use the dedicated virtual environment; see the full installation and requirements sections below. The launcher opens at http://127.0.0.1:4990.
+
+## Training engines
+
+The following compatibility details and VRAM measurements are inherited from upstream; they have not all been independently reproduced by OrkiLab. Quantization and actual memory use depend on the model and settings.
 
 | Trainer | Trains | Minimum VRAM |
 | :--- | :--- | :--- |
@@ -88,10 +109,10 @@ Python, Git and every library are installed by the installer. GTX 10xx and older
 **Option A — Git (recommended, makes updating easy).** Open the folder where you want to install it, type `cmd` in the address bar of the Windows Explorer, press Enter and run:
 
 ```bash
-git clone https://github.com/jlopfri921/ArkiLab-LoRA-TrainerStudio.git
+git clone https://github.com/jlopfri921/OrkiLab-LoRA-TrainerStudio.git
 ```
 
-**Option B — ZIP.** Press the green **Code** button → **Download ZIP** and unzip it where you want to install it (the folder is called `ArkiLab-LoRA-TrainerStudio-main`).
+**Option B — ZIP.** Press the green **Code** button → **Download ZIP** and unzip it where you want to install it (the folder is called `OrkiLab-LoRA-TrainerStudio-main`).
 
 Then, inside the folder:
 
@@ -912,7 +933,7 @@ Models and LoRAs downloaded at run time (not part of this repository): MelBandRo
 
 ## Community and support
 
-Report issues in the [OrkiLab issue tracker](https://github.com/jlopfri921/ArkiLab-LoRA-TrainerStudio/issues).
+Report issues in the [OrkiLab issue tracker](https://github.com/jlopfri921/OrkiLab-LoRA-TrainerStudio/issues).
 
 ## Credits
 
