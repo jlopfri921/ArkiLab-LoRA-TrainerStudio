@@ -1639,5 +1639,18 @@
   "Settings": "Einstellungen",
   "About OrkiLab": "Über OrkiLab",
   "Launcher connection lost. Check the console.": "Verbindung zum Launcher verloren. Konsole prüfen.",
-  "Check the launcher console.": "Launcher-Konsole prüfen."
+  "Check the launcher console.": "Launcher-Konsole prüfen.",
+  "ComfyUI Connect": "ComfyUI-Verbindung",
+  "Datasets and Models: planned": "Datensätze und Modelle: geplant",
+  "Connect to ComfyUI on this PC or a private network. No generation jobs are submitted.": "Verbinden Sie ComfyUI auf diesem PC oder im privaten Netzwerk. Es werden keine Generierungen gestartet.",
+  "ComfyUI address": "ComfyUI-Adresse",
+  "Use a local or private IP address and port. Configure ComfyUI on the launcher PC.": "Verwenden Sie eine lokale oder private IP-Adresse mit Port. Konfigurieren Sie ComfyUI auf dem Launcher-PC.",
+  "Save and test connection": "Speichern und Verbindung testen",
+  "Test saved connection": "Gespeicherte Verbindung testen",
+  "Checking connection...": "Verbindung wird geprüft...",
+  "Connected to ComfyUI": "Mit ComfyUI verbunden",
+  "Could not connect to ComfyUI": "Verbindung zu ComfyUI fehlgeschlagen",
+  "Use a local or private IP address and port": "Lokale oder private IP-Adresse mit Port verwenden",
+  "Configure ComfyUI on the launcher PC": "ComfyUI auf dem Launcher-PC konfigurieren",
+  "Invalid ComfyUI address": "Ungültige ComfyUI-Adresse"
 }
