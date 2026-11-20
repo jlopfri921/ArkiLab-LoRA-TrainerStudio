@@ -1652,5 +1652,17 @@
   "Could not connect to ComfyUI": "Impossibile connettersi a ComfyUI",
   "Use a local or private IP address and port": "Usa un IP locale o privato e la porta",
   "Configure ComfyUI on the launcher PC": "Configura ComfyUI sul PC del launcher",
-  "Invalid ComfyUI address": "Indirizzo ComfyUI non valido"
+  "Invalid ComfyUI address": "Indirizzo ComfyUI non valido",
+  "Engine mode": "Modalità di funzionamento",
+  "OrkiLab native": "OrkiLab nativo",
+  "ComfyUI connected": "ComfyUI connesso",
+  "Hybrid": "Ibrido",
+  "Shared model folder (optional)": "Cartella condivisa dei modelli (facoltativa)",
+  "Model folder is saved as a reference only. Training engines remain unchanged.": "La cartella viene salvata solo come riferimento. I motori di addestramento restano invariati.",
+  "Use OrkiLab without ComfyUI.": "Usa OrkiLab senza ComfyUI.",
+  "Use ComfyUI for compatible generation. Training remains in OrkiLab.": "Usa ComfyUI per la generazione compatibile. L’addestramento resta in OrkiLab.",
+  "Train in OrkiLab and use ComfyUI for compatible generation.": "Addestra in OrkiLab e usa ComfyUI per la generazione compatibile.",
+  "ComfyUI is disabled in native mode": "ComfyUI è disattivato in modalità nativa",
+  "Invalid engine mode": "Modalità non valida",
+  "Invalid model folder": "Cartella dei modelli non valida"
 }
