@@ -4,6 +4,16 @@ Last reviewed: 2026-11-20. **Development notes, not a stable release claim.** Th
 
 ## Navigation and usability
 
+### Focused Workspace navigation (current development branch)
+
+- The **Dashboard**, **Projects**, **Training engines** and **GPU Manager** links now open **separate views** within `/workspace`, rather than displaying unrelated sections together. Existing routes remain `/workspace#overview`, `#projects`, `#engines` and `#gpu-manager`.
+- The active Workspace and ComfyUI section is highlighted. Every section displays its title and a collapsible **What can I do here?** explanation. Help is contextual to the selected section; it is not an automatic explanation of every trainer setting.
+- The shared responsive page keeps one main content column beside the active navigation, with compact navigation on smaller screens and keyboard-visible focus indicators.
+- Contextual help strings have translations in Spanish, French, German, Portuguese, Italian, Japanese and Korean alongside English. User-generated model and node names retain their original text.
+- The project registry, existing trainer launchers and GPU monitoring continue to use their existing API endpoints. This iteration changes navigation and presentation, not training engine internals.
+- **Pending:** real browser regression testing on mobile/tablet, testing all trainer pages, checking language switching across all controls and removing obsolete legacy views only after modern equivalents are validated.
+
+
 - The modern Workspace at `/workspace` is the launcher hub, with project registry, training engines, queue, configuration and a dedicated **GPU Manager** (`/workspace#gpu-manager`).
 - **ComfyUI Zone** lives at `/workspace/comfyui` and has a separate left-hand navigation and a return-to-Workspace link. Modules are connection, model inventory, node explorer, workflow library, generation studio, generation history and LoRA comparator.
 - Workflow library can be collapsed, remembers its open/closed state in browser storage and scrolls internally when there are many entries. Import and folder synchronization panels are collapsible.
