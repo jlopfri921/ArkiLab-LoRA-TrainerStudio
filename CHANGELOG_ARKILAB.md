@@ -1,5 +1,14 @@
 # OrkiLab changelog
 
+## Unreleased — 0.3 ComfyUI release-candidate preparation (2026-11-21)
+
+- Add a welcome/introduction screen and verified-connection navigation gate for ComfyUI Zone.
+- Explain Projects and Training Engines with guided introductions, contextual actions and localized empty states.
+- Extend GPU Manager with bounded, session-only system RAM and GPU telemetry graphs.
+- Add per-generation RAM/VRAM snapshots (before, sampled peak, after completion and optionally after model/cache release). These are system-wide readings, not proof of memory leaks or per-process attribution.
+- Define the planned **0.3.0-rc.1** feature freeze and acceptance tests in [the roadmap](docs/arkilab/ROADMAP.md). Real-device verification has been reported by the user; specific pass/fail evidence remains to be filed.
+- No release version is changed yet. Model compatibility, unsupported ComfyUI custom nodes, complete trainer modern-view migration and final installer testing remain outside this candidate's guaranteed scope.
+
 ## Unreleased — Workspace and ComfyUI development (2026-11-20)
 
 ### Usability review: focused Workspace and contextual help
