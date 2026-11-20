@@ -8,6 +8,22 @@ from urllib.request import build_opener, ProxyHandler, HTTPRedirectHandler
 from flask import jsonify, request
 
 DEFAULT = "http://127.0.0.1:8188"
+MODES = ("native", "comfy", "hybrid")
+
+def validate_settings(body, previous):
+    if not isinstance(body, dict):
+        raise ValueError("Invalid request")
+    mode = body.get("mode", previous["mode"])
+    if mode not in MODES:
+        raise ValueError("Invalid engine mode")
+    folder = body.get("model_folder", previous["model_folder"])
+    if not isinstance(folder, str) or len(folder) > 1024 or any(ord(c) < 32 for c in folder):
+        raise ValueError("Invalid model folder")
+    result = {"mode": mode, "url": validate_url(body.get("url", previous["url"])),
+              "model_folder": folder.strip()}
+    return result
+
+DEFAULT_SETTINGS = {"mode": "hybrid", "url": DEFAULT, "model_folder": ""}
 
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
@@ -54,33 +70,33 @@ def register(app, base):
 
     def load():
         try:
-            return validate_url(json.loads(file.read_text(encoding="utf-8"))["url"])
+            return validate_settings(json.loads(file.read_text(encoding="utf-8")), DEFAULT_SETTINGS)
         except (OSError, ValueError, KeyError, TypeError):
-            return DEFAULT
+            return dict(DEFAULT_SETTINGS)
 
     @app.route("/api/workspace/comfyui", methods=["GET", "POST"])
     def comfyui_settings():
         if request.method == "GET":
-            return jsonify(url=load())
+            return jsonify(load())
         if request.remote_addr not in ("127.0.0.1", "::1"):
             return jsonify(error="Configure ComfyUI on the launcher PC"), 403
-        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 1024:
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 4096:
             return jsonify(error="Invalid request"), 400
         body = request.get_json(silent=True)
         try:
-            url = validate_url(body.get("url") if isinstance(body, dict) else None)
+            config = validate_settings(body, load())
         except ValueError as exc:
             return jsonify(error=str(exc)), 400
         file.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=file.parent, delete=False) as tmp:
-            json.dump({"url": url}, tmp)
+            json.dump(config, tmp)
             name = tmp.name
         try:
             os.replace(name, file)
         finally:
             if os.path.exists(name):
                 os.unlink(name)
-        return jsonify(url=url)
+        return jsonify(config)
 
     @app.post("/api/workspace/comfyui/check")
     def comfyui_check():
@@ -89,6 +105,9 @@ def register(app, base):
         if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 1024:
             return jsonify(error="Invalid request"), 400
         try:
-            return jsonify(probe(load()))
+            config = load()
+            if config["mode"] == "native":
+                return jsonify(error="ComfyUI is disabled in native mode"), 409
+            return jsonify(probe(config["url"]))
         except (OSError, ValueError):
             return jsonify(connected=False, error="Could not connect to ComfyUI"), 502
