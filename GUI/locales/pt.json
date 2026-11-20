@@ -1766,5 +1766,8 @@
   "ComfyUI rejected the request": "O ComfyUI rejeitou o pedido",
   "Generation submission could not be confirmed. Check ComfyUI before retrying.": "Envio não confirmado. Verifique o ComfyUI antes de tentar novamente.",
   "Generation job not found": "Trabalho não encontrado",
-  "Could not read generation status": "Não foi possível consultar o estado"
+  "Could not read generation status": "Não foi possível consultar o estado",
+  "ComfyUI Zone": "Zona ComfyUI",
+  "Back to Workspace": "Voltar ao espaço de trabalho",
+  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "Gerir a ligação ao ComfyUI, modelos, nós, workflows e geração num único lugar."
 }
