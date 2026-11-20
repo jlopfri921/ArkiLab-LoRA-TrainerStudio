@@ -1624,5 +1624,14 @@
   "Expert": "上級",
   "Basic mode hides advanced parameters without changing their values. Review Expert before training.": "基本モードは値を変更せず詳細設定を非表示にします。学習前に上級モードを確認してください。",
   "Classic layout": "従来の表示",
-  "Modern layout": "新しい表示"
+  "Modern layout": "新しい表示",
+  "Open trainer": "学習ツールを開く",
+  "Legacy settings (temporary)": "旧設定（一時的）",
+  "Open any training engine directly from your workspace.": "ワークスペースから各学習エンジンを直接開けます。",
+  "Another trainer is open. Open this trainer alongside it without closing it?": "別の学習ツールが開いています。閉じずに並行して開きますか？",
+  "Could not open trainer": "学習ツールを開けませんでした",
+  "Invalid trainer URL": "学習ツールのURLが無効です",
+  "{name} did not start in time.": "{name} の起動がタイムアウトしました。",
+  "Open trainer manually": "学習ツールを手動で開く",
+  "Workspace": "ワークスペース"
 }

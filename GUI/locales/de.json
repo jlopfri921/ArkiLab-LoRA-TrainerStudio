@@ -1624,5 +1624,14 @@
   "Expert": "Experte",
   "Basic mode hides advanced parameters without changing their values. Review Expert before training.": "Der Basismodus blendet erweiterte Parameter aus, ohne Werte zu ändern. Vor dem Training Expertenmodus prüfen.",
   "Classic layout": "Klassische Ansicht",
-  "Modern layout": "Moderne Ansicht"
+  "Modern layout": "Moderne Ansicht",
+  "Open trainer": "Trainer öffnen",
+  "Legacy settings (temporary)": "Alte Einstellungen (vorübergehend)",
+  "Open any training engine directly from your workspace.": "Öffnen Sie jedes Trainingsmodul direkt aus dem Arbeitsbereich.",
+  "Another trainer is open. Open this trainer alongside it without closing it?": "Ein Trainer ist geöffnet. Diesen parallel öffnen, ohne ihn zu schließen?",
+  "Could not open trainer": "Trainer konnte nicht geöffnet werden",
+  "Invalid trainer URL": "Ungültige Trainer-URL",
+  "{name} did not start in time.": "{name} wurde nicht rechtzeitig gestartet.",
+  "Open trainer manually": "Trainer manuell öffnen",
+  "Workspace": "Arbeitsbereich"
 }

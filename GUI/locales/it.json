@@ -1624,5 +1624,14 @@
   "Expert": "Esperto",
   "Basic mode hides advanced parameters without changing their values. Review Expert before training.": "La modalità base nasconde i parametri avanzati senza cambiarne i valori. Controlla la modalità esperto prima di addestrare.",
   "Classic layout": "Vista classica",
-  "Modern layout": "Vista moderna"
+  "Modern layout": "Vista moderna",
+  "Open trainer": "Apri motore",
+  "Legacy settings (temporary)": "Impostazioni precedenti (temporanee)",
+  "Open any training engine directly from your workspace.": "Apri ogni motore direttamente dall’area di lavoro.",
+  "Another trainer is open. Open this trainer alongside it without closing it?": "Un motore è aperto. Aprire questo in parallelo senza chiuderlo?",
+  "Could not open trainer": "Impossibile aprire il motore",
+  "Invalid trainer URL": "URL del motore non valido",
+  "{name} did not start in time.": "{name} non si è avviato in tempo.",
+  "Open trainer manually": "Apri motore manualmente",
+  "Workspace": "Area di lavoro"
 }

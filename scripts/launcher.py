@@ -415,6 +415,11 @@ def _launch_windows(run, env):
 
 @app.route("/")
 def index():
+    return send_from_directory(str(GUI_DIR), "workspace.html")
+
+
+@app.route("/legacy")
+def legacy_launcher():
     return send_from_directory(str(GUI_DIR), "launcher.html")
 
 

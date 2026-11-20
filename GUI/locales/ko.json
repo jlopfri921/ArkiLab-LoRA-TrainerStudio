@@ -1624,5 +1624,14 @@
   "Expert": "고급",
   "Basic mode hides advanced parameters without changing their values. Review Expert before training.": "기본 모드는 값을 바꾸지 않고 고급 설정을 숨깁니다. 학습 전 고급 모드를 확인하세요.",
   "Classic layout": "기존 레이아웃",
-  "Modern layout": "새 레이아웃"
+  "Modern layout": "새 레이아웃",
+  "Open trainer": "학습 도구 열기",
+  "Legacy settings (temporary)": "기존 설정(임시)",
+  "Open any training engine directly from your workspace.": "작업 공간에서 모든 학습 엔진을 바로 열 수 있습니다.",
+  "Another trainer is open. Open this trainer alongside it without closing it?": "다른 학습 도구가 열려 있습니다. 닫지 않고 함께 열까요?",
+  "Could not open trainer": "학습 도구를 열 수 없습니다",
+  "Invalid trainer URL": "학습 도구 URL이 잘못되었습니다",
+  "{name} did not start in time.": "{name} 시작 시간이 초과되었습니다.",
+  "Open trainer manually": "학습 도구 수동 열기",
+  "Workspace": "작업 공간"
 }
