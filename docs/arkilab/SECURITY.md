@@ -1,0 +1,7 @@
+# Security and data handling
+
+Local-first. Launcher defaults 127.0.0.1:4990, trainer 5000; remote access optional. Source remote_access.py uses HTTP Basic, password hash, loopback exemption and external_auth opt-out. This is not a hardened public service. Never forward ports to Internet; use trusted private LAN or VPN/SSH tunnel, or correctly authenticated HTTPS proxy. Proxy trust and loopback bypass must be reviewed before deployment. Use strong unique credentials. Stop training before updating code.
+
+Threat model: unauthenticated execution through remote endpoints, CSRF, path traversal/symlink escapes, unsafe archives, malicious model files, secret disclosure via logs/settings, accidental dataset upload and destructive Git updates. Prioritize route authorization and path confinement tests. No claim of verified security until tests pass. Prefer safetensors and verify publisher/license/hash; never load untrusted pickle. Do not expose tokens in API responses or logs in new modules. New outbound connectors require explicit target configuration and upload confirmation. Keep private data in ignored directories; audit git status before pushing. Preserve model-specific license requirements and rights/consent for training images; distinguish synthetic images where relevant.
+
+Report vulnerabilities privately to repository maintainer. Record affected version and minimal reproduction without publishing secrets.

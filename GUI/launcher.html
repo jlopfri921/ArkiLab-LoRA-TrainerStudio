@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcademiaSD LoRAlab Trainer Studio</title>
-    <link rel="icon" type="image/png" href="/assets/qwenimage21/logo_128.png">
+    <title>ArkiLab — LoRA Trainer Studio</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/arkilab/arkilab-icon.svg">
     <script src="/i18n.js"></script>
 
     <style>
         :root {
-            --bg-dark: #0f172a;
+            --bg-dark: #101C31;
             --panel-bg: #1e293b;
             --panel-border: #334155;
-            --accent: #6366f1;
-            --glow: #38bdf8;
+            --accent: #31D6C8;
+            --glow: #91A5FF;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -182,8 +182,8 @@
 </head>
 <body>
     <header>
-        <a href="https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio" target="_blank" title="GitHub">
-            <img id="title" src="/assets/banner_LoRAlab.png" alt="AcademiaSD LoRAlab Trainer Studio">
+        <a href="https://github.com/jlopfri921/ArkiLab-LoRA-TrainerStudio" target="_blank" rel="noopener noreferrer" title="ArkiLab on GitHub">
+            <img id="title" src="/assets/arkilab/arkilab-logo-dark.svg" alt="ArkiLab — LoRA Trainer Studio">
         </a>
         <p id="subtitle"></p>
     </header>
@@ -209,10 +209,11 @@
     <div id="status"></div>
 
     <footer>
-        <a href="https://www.youtube.com/@Academia_SD" target="_blank">▶ YouTube</a>
-        <a href="https://twitter.com/Academia_S_D" target="_blank">𝕏 X (Twitter)</a>
-        <a href="https://discord.gg/Syuaduy678" target="_blank">💬 Discord</a>
-        <a href="https://ko-fi.com/academiasd" target="_blank">☕ Ko-Fi</a>
+        <details class="no-i18n"><summary>About ArkiLab</summary><p>ArkiLab <span id="arkilab-version"></span> · Train. Adapt. Create.</p><p>Maintained by <a href="https://github.com/jlopfri921">jlopfri921</a>. Credits: independent fork of <a href="https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio" target="_blank" rel="noopener noreferrer">AcademiaSD LoRAlab Trainer Studio</a> · MIT · Original copyright Academia SD 2026.</p><p><a href="https://github.com/jlopfri921/ArkiLab-LoRA-TrainerStudio" target="_blank" rel="noopener noreferrer">ArkiLab repository</a></p></details>
+        
+        
+        
+        
         <button type="button" id="net-open" onclick="openNetwork()" hidden>🌐 Remote access</button>
         <button type="button" id="bye-open" class="bye-btn" onclick="pauseAllAndExit()"
                 title="Pauses the training in progress (saving its checkpoint), closes every trainer and their windows, and closes the launcher. Next time, the queue continues where it was.">⏻ Pause all and exit</button>
@@ -675,6 +676,7 @@
             fillGpus();
             cfg = await (await fetch('/launcher.json')).json();
             document.title = cfg.title || document.title;
+            document.getElementById('arkilab-version').textContent = cfg.arkilab_version || 'development';
             document.getElementById('title').alt = cfg.title || '';
             const scale = parseFloat(cfg.image_scale) || 0.2;
 

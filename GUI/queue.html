@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job queue · AcademiaSD LoRAlab</title>
-    <link rel="icon" type="image/png" href="/assets/qwenimage21/logo_128.png">
+    <title>Job queue · ArkiLab</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/arkilab/arkilab-icon.svg">
     <script src="/i18n.js"></script>
     <!--
         Cola de trabajos (scripts/job_queue.py): lo que entrena, lo que espera y lo terminado.
@@ -185,7 +185,7 @@
 <body>
 <div class="wrap">
     <div class="top">
-        <a href="/"><img src="/assets/banner_LoRAlab.png" alt="AcademiaSD LoRAlab"></a>
+        <a href="/"><img src="/assets/arkilab/arkilab-logo-dark.svg" alt="ArkiLab"></a>
         <div>
             <h1>Job queue</h1>
             <p>Trainings and pre-caches, one after another on the GPU</p>
@@ -248,7 +248,7 @@
     };
 
     function esc(s) { return String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
-    function cover(job) { const tr = trainers[job.trainer]; return tr ? '/' + tr.image : '/assets/banner_LoRAlab.png'; }
+    function cover(job) { const tr = trainers[job.trainer]; return tr ? '/' + tr.image : '/assets/arkilab/arkilab-logo-dark.svg'; }
     function trainerUrl(job) { return job.port ? `${location.protocol}//${location.hostname}:${job.port}` : ''; }
     function hms(sec) {
         if (!isFinite(sec) || sec < 0) return '–';

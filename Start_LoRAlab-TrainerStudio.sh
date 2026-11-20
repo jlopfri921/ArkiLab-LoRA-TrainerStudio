@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# AcademiaSD - LoRAlab Trainer Studio Launcher (Linux)
+# ArkiLab - LoRA Trainer Studio Launcher (Linux)
 # Equivalente Linux de / Linux equivalent of: Start_LoRAlab-TrainerStudio.bat
 set -euo pipefail
 
