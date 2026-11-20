@@ -43,6 +43,14 @@ class WorkspaceNavigationTests(unittest.TestCase):
         for link in ("#overview", "#projects", "#engines", "#gpu-manager"):
             self.assertIn(link, self.parsed.nav)
 
+    def test_launcher_root_and_legacy_routes_work(self):
+        # The same HTML is served by / and /legacy, not just /workspace.
+        self.assertIn('["/","/workspace","/legacy"]', self.html)
+        self.assertIn('window.addEventListener("hashchange",routeHome)', self.html)
+        self.assertIn('routeWorkspace();routeHome();', self.html)
+        for section in ('overview', 'projects', 'engines', 'gpu-manager'):
+            self.assertIn('"' + section + '"', self.html)
+
     def test_context_help_is_present(self):
         self.assertTrue(self.parsed.context)
         for value in ('id="context-toggle"', 'id="context-description"',

@@ -314,7 +314,8 @@ function gpuVisibility(){
  if(!$("gpu-manager").hidden&&!document.hidden&&$("gpu-auto").checked){refreshGpu();gpuTimer=setInterval(refreshGpu,5000);}
 }
 function routeHome(){
- if(location.pathname!=="/workspace"&&location.pathname!=="/workspace/")return;
+ // The launcher serves this same Workspace at /, /legacy and /workspace.
+ if(!["/","/workspace","/legacy"].includes(location.pathname.replace(/\/$/,"")||"/"))return;
  const hash=location.hash.slice(1);
  const chosen=["overview","projects","engines","gpu-manager"].includes(hash)?hash:"overview";
  for(const section of $("home-zone").children)section.hidden=(section.dataset.home||section.id)!==chosen;
