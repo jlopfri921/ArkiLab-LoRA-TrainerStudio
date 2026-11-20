@@ -1830,5 +1830,6 @@
   "Prepare the selected workflow to detect available LoRA loaders.": "ワークフローを準備して LoRA ローダーを検出してください。",
   "Ready: {count} LoRA loader(s) available for comparison.": "準備完了：{count} 件の LoRA ローダーを使用できます。",
   "No compatible standard LoRA loader found. Try a workflow with LoraLoader or LoraLoaderModelOnly.": "互換性のある標準 LoRA ローダーが見つかりません。LoraLoader などを使用してください。",
-  "LoRA": "LoRA"
+  "LoRA": "LoRA",
+  "Open in LoRA Comparator": "LoRA 比較で開く"
 }
