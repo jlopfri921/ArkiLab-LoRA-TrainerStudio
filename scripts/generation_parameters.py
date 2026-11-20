@@ -1,6 +1,7 @@
 """Expose editable scalar inputs without modifying the saved workflow."""
 import copy
 import math
+from workflow_conversion import combo_choices
 
 def editable_fields(graph, schemas):
     fields = []
@@ -15,8 +16,9 @@ def editable_fields(graph, schemas):
             opts = desc[1] if len(desc) > 1 and isinstance(desc[1], dict) else {}
             if opts.get("forceInput") or opts.get("defaultInput"):
                 continue
-            if isinstance(typ, list):
-                if not typ or len(typ) > 5000 or any(type(x) not in (str,int,float,bool) for x in typ) or value not in typ:
+            if isinstance(typ, list) or typ == "COMBO":
+                choices = combo_choices(desc)
+                if choices is None or not any(type(value) is type(x) and value == x for x in choices):
                     continue
                 kind = "choice"
             elif typ == "STRING" and isinstance(value,str):
@@ -31,7 +33,7 @@ def editable_fields(graph, schemas):
                 continue
             field = {"node":ident,"class_type":node["class_type"],"name":name,"kind":kind,"value":value}
             if kind == "choice":
-                field["choices"] = typ
+                field["choices"] = choices
             if kind in ("integer","number"):
                 for key in ("min","max","step"):
                     val = opts.get(key)
