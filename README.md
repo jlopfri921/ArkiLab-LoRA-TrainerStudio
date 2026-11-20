@@ -14,6 +14,12 @@
 
 Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Workspace is the default interface. This release candidate still requires comprehensive regression and GPU validation.
 
+## New Workspace tools (development)
+
+The Workspace includes a dedicated **GPU Manager** (`/workspace#gpu-manager`) and a separate **ComfyUI Zone** (`/workspace/comfyui`) for connection, inventories, workflows, generation, history and LoRA comparisons. These are in-development features, not a completed 0.3 release; a real ComfyUI Desktop restart and end-to-end GPU testing are still required.
+
+Read the [Workspace feature guide](docs/arkilab/WORKSPACE_FEATURES.md) for usage, implementation details, constraints, current support and testing requirements. Track changes in [CHANGELOG_ARKILAB.md](CHANGELOG_ARKILAB.md).
+
 ## Workspace at a glance
 
 Open **Workspace** at `/` or `/workspace` on the launcher host. Create and archive project metadata in local SQLite storage and launch the existing training engines from the modern interface.
