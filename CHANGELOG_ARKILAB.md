@@ -2,6 +2,14 @@
 
 ## Unreleased — Workspace and ComfyUI development (2026-11-20)
 
+### Usability review: focused Workspace and contextual help
+
+- Split the original Workspace overview into separate Dashboard, Projects, Training engines and GPU Manager views using existing hash navigation.
+- Add a reusable, collapsible contextual explanation for each Workspace and ComfyUI module, with eight-language coverage including English.
+- Highlight selected navigation sections, improve keyboard focus outlines and keep the main layout responsive.
+- Preserve project records, trainers and generation backend behaviour; **browser/mobile regression tests remain pending**.
+
+
 - Introduce a separate, multilingual ComfyUI Zone with its own navigation and a return-to-Workspace action.
 - Add ComfyUI connection modes, read-only model and node inventories, and a searchable/favouritable workflow library with folder synchronization and collapsible tools.
 - Add OrkiLab Bridge frontend integration for UI-workflow conversion through ComfyUI; requires a ComfyUI restart and real workflow testing.
