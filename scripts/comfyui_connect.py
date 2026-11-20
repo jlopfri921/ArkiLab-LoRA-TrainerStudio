@@ -4,6 +4,8 @@ import json
 import os
 import tempfile
 from urllib.parse import urlsplit
+from urllib.error import HTTPError, URLError
+import socket
 from urllib.request import build_opener, ProxyHandler, HTTPRedirectHandler
 from flask import jsonify, request
 
@@ -49,9 +51,9 @@ def validate_url(value):
     except (ValueError, TypeError):
         raise ValueError("Use a local or private IP address and port")
 
-def get_json(base, path, max_bytes=2_000_000):
+def get_json(base, path, max_bytes=2_000_000, timeout=4):
     opener = build_opener(ProxyHandler({}), NoRedirect())
-    with opener.open(base + path, timeout=4) as response:
+    with opener.open(base + path, timeout=timeout) as response:
         raw = response.read(max_bytes + 1)
     if len(raw) > max_bytes:
         raise ValueError("Response too large")
@@ -133,5 +135,11 @@ def register(app, base):
         from comfyui_nodes import fetch_nodes
         try:
             return jsonify(fetch_nodes(config["url"], get_json))
-        except (OSError, ValueError):
-            return jsonify(error="Could not read ComfyUI nodes"), 502
+        except HTTPError as exc:
+            return jsonify(error="Could not read ComfyUI nodes", detail=f"HTTP {exc.code}", endpoint=config["url"] + "/object_info"), 502
+        except (TimeoutError, socket.timeout):
+            return jsonify(error="Could not read ComfyUI nodes", detail="Timeout (60 s)", endpoint=config["url"] + "/object_info"), 502
+        except URLError as exc:
+            return jsonify(error="Could not read ComfyUI nodes", detail=str(exc.reason)[:300], endpoint=config["url"] + "/object_info"), 502
+        except (OSError, ValueError) as exc:
+            return jsonify(error="Could not read ComfyUI nodes", detail=str(exc)[:300], endpoint=config["url"] + "/object_info"), 502
