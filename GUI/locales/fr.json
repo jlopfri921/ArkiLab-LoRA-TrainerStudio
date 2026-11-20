@@ -2030,5 +2030,15 @@
   "Peak sampled": "Pic observé",
   "After generation": "Après génération",
   "After model unload": "Après déchargement des modèles",
-  "Change after generation": "Variation après génération"
+  "Change after generation": "Variation après génération",
+  "Image training checklist": "Préparation à l'entraînement image",
+  "Prepare a compatible image dataset and captions. Check the base-model family, LoRA rank, resolution, memory usage and checkpoint options in this trainer.": "Préparez des images et légendes compatibles. Vérifiez le modèle de base, le rang LoRA, la résolution, la mémoire et les checkpoints du moteur.",
+  "Video training checklist": "Préparation à l'entraînement vidéo",
+  "Prepare the clips and their captions in the format required by this trainer. Check frame count, resolution, base model, available VRAM and checkpoint settings.": "Préparez les séquences et légendes au format requis. Vérifiez les images par séquence, la résolution, le modèle, la VRAM et les checkpoints.",
+  "Audio training checklist": "Préparation à l'entraînement audio",
+  "Prepare audio files and any required transcriptions or labels. Review sample rate, model family, dataset structure, GPU memory and checkpoints in the trainer.": "Préparez les fichiers audio et les transcriptions ou étiquettes nécessaires. Vérifiez la fréquence d'échantillonnage, le modèle, les données, la mémoire GPU et les checkpoints.",
+  "Multimodal training checklist": "Préparation à l'entraînement multimodal",
+  "Check which input modalities and dataset structure this engine supports. Confirm compatible model weights, resolution or duration, GPU memory and checkpoints before training.": "Vérifiez les modalités et les données prises en charge, ainsi que les poids compatibles, la résolution ou durée, la mémoire GPU et les checkpoints.",
+  "Before opening this trainer": "Avant d'ouvrir ce moteur",
+  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "La compatibilité exacte, la mémoire GPU recommandée et les checkpoints doivent être confirmés dans le moteur. Cette aide ne change pas les paramètres."
 }
