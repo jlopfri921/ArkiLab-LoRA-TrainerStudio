@@ -1993,5 +1993,20 @@
   "ComfyUI is connected. All tools are available.": "ComfyUI connesso. Tutti gli strumenti sono disponibili.",
   "ComfyUI is not connected. Configure and test the connection to unlock the tools.": "ComfyUI non connesso. Configura e verifica la connessione per sbloccare gli strumenti.",
   "Welcome to ComfyUI Zone": "Benvenuto nella Zona ComfyUI",
-  "Discover what ComfyUI can do and connect your server to unlock workflow and generation tools.": "Scopri ComfyUI e collega il server per accedere a workflow e generazione."
+  "Discover what ComfyUI can do and connect your server to unlock workflow and generation tools.": "Scopri ComfyUI e collega il server per accedere a workflow e generazione.",
+  "Your AI training projects": "I tuoi progetti di addestramento IA",
+  "Keep each LoRA training idea organized in one place. Name the project, select a training engine, and note where your dataset lives. Open the matching trainer whenever you are ready to work.": "Organizza le idee di addestramento LoRA in un unico posto. Dai un nome al progetto, scegli un trainer e annota dove si trovano i dati. Apri il trainer quando vuoi lavorare.",
+  "1. Create a project": "1. Crea un progetto",
+  "Choose a meaningful name and the image, video or audio training engine that fits your goal.": "Scegli un nome significativo e un trainer per immagini, video o audio adatto all'obiettivo.",
+  "2. Keep your context": "2. Conserva il contesto",
+  "Save a dataset path and notes as references so you remember what belongs to each experiment.": "Salva il percorso dei dati e le note come riferimenti per ogni esperimento.",
+  "3. Train and revisit": "3. Addestra e riprendi",
+  "Open the relevant trainer from your project card. Archive completed ideas without deleting their files.": "Apri il trainer dalla scheda del progetto. Archivia le idee concluse senza eliminare i file.",
+  "Projects currently organize metadata only: they do not copy datasets, manage checkpoints or automatically restore an entire training session.": "Attualmente i progetti organizzano solo metadati: non copiano dataset, non gestiscono checkpoint né ripristinano automaticamente le sessioni.",
+  "Create, reopen or archive your project references.": "Crea, riapri o archivia i riferimenti ai progetti.",
+  "Create my first project": "Crea il mio primo progetto",
+  "No archived projects yet": "Ancora nessun progetto archiviato",
+  "Your first project starts here": "Il tuo primo progetto inizia qui",
+  "Projects you archive will appear here.": "I progetti archiviati appariranno qui.",
+  "Give your idea a name, choose an engine and keep your dataset reference together.": "Dai un nome all'idea, scegli un trainer e conserva il riferimento ai dati."
 }
