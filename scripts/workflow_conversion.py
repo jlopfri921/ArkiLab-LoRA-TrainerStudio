@@ -68,7 +68,18 @@ def validate_prompt(prompt, schema):
             if typ == "BOOLEAN" and type(value) is not bool:
                 raise ValueError(f"{kind} #{ident}: invalid boolean {name}")
             if isinstance(typ, str) and typ not in ("INT","FLOAT","STRING","BOOLEAN","*"):
-                raise ValueError(f"{kind} #{ident}: input {name} requires a link")
+                # A scalar may be valid in a different node version, but the
+                # *connected* ComfyUI node schema is authoritative. Do not
+                # silently coerce a sampler selector into an object link.
+                if kind == "KSamplerSelect" and name == "sampler_name":
+                    raise ValueError(
+                        f"{kind} #{ident}: sampler_name is {typ!r} in the connected ComfyUI "
+                        f"node schema but the workflow supplies a scalar. "
+                        "Check whether a custom node overrides KSamplerSelect, "
+                        "or export the workflow again from this ComfyUI installation "
+                        "in API format. A SAMPLER-type input needs a real node link."
+                    )
+                raise ValueError(f"{kind} #{ident}: input {name} requires a link (ComfyUI type: {typ})")
             opts = descriptor[1] if len(descriptor) > 1 and isinstance(descriptor[1], dict) else {}
             if type(value) in (int,float) and (("min" in opts and value < opts["min"]) or ("max" in opts and value > opts["max"])):
                 raise ValueError(f"{kind} #{ident}: out of range {name}")
