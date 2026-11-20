@@ -94,8 +94,19 @@ def convert_visual(graph, url, get_json):
     links = graph.get("links")
     if not isinstance(nodes,list) or not isinstance(links,list):
         raise ValueError("Unsupported visual graph structure")
-    if graph.get("definitions"):
-        raise ValueError("Subgraphs require ComfyUI API export")
+    definitions = graph.get("definitions") or {}
+    if not isinstance(definitions, dict):
+        raise ValueError("Unsupported workflow definitions")
+    subgraphs = definitions.get("subgraphs") or []
+    if not isinstance(subgraphs, list):
+        raise ValueError("Unsupported subgraph definitions")
+    subgraph_ids = {str(item.get("id")) for item in subgraphs if isinstance(item, dict)}
+    used = [n for n in nodes if str(n.get("type")) in subgraph_ids]
+    if used:
+        names = {str(item.get("id")): str(item.get("name") or item.get("id")) for item in subgraphs if isinstance(item, dict)}
+        raise ValueError("Subgraphs require ComfyUI API export: " + ", ".join(names[str(n.get("type"))] for n in used)[:300])
+    if any(value for key, value in definitions.items() if key != "subgraphs"):
+        raise ValueError("Unsupported workflow definitions")
     link_map = {}
     for link in links:
         if not isinstance(link,list) or len(link)<6 or type(link[2]) is not int or type(link[4]) is not int:
