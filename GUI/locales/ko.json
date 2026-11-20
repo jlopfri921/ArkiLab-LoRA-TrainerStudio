@@ -2023,5 +2023,12 @@
   "Each engine has its own dataset, model and hardware requirements. The category filters are a guide, not a guarantee of compatibility. Multimodal engines are listed separately.": "각 엔진의 데이터, 모델 및 하드웨어 요구 사항은 다릅니다. 분류는 참고용이며 호환성을 보장하지 않습니다. 멀티모달 엔진은 별도로 표시됩니다.",
   "Browse available engines": "사용 가능한 엔진 찾아보기",
   "Filter the trainers, inspect their descriptions and open the one you need.": "트레이너를 필터링하고 설명을 확인한 뒤 필요한 엔진을 여세요.",
-  "{count} training engines shown": "표시된 트레이너 {count}개"
+  "{count} training engines shown": "표시된 트레이너 {count}개",
+  "Generation memory diagnostics": "생성별 메모리 진단",
+  "System-wide RAM and VRAM; this cannot identify the exact process or prove a memory leak. Short peaks may be missed.": "시스템 전체 RAM 및 VRAM 수치로, 정확한 프로세스를 특정하거나 메모리 누수를 입증하지 않습니다. 짧은 사용량 급증은 놓칠 수 있습니다.",
+  "Before submission": "제출 전",
+  "Peak sampled": "관측된 최대값",
+  "After generation": "생성 후",
+  "After model unload": "모델 언로드 후",
+  "Change after generation": "생성 후 변화"
 }
