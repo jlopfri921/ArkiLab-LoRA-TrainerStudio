@@ -1909,5 +1909,18 @@
   "ComfyUI connection disabled": "Connexion ComfyUI désactivée",
   "{mode} · connection not yet tested": "{mode} · connexion non encore testée",
   "Configuration unavailable": "Configuration indisponible",
-  "Updated {time}": "Mis à jour à {time}"
+  "Updated {time}": "Mis à jour à {time}",
+  "Checking ComfyUI connection": "Vérification de la connexion à ComfyUI",
+  "Loading saved workflow": "Chargement du workflow enregistré",
+  "Opening ComfyUI Bridge": "Ouverture du Bridge ComfyUI",
+  "Workflow received by ComfyUI": "Workflow reçu par ComfyUI",
+  "Loading nodes in ComfyUI": "Chargement des nœuds dans ComfyUI",
+  "Converting workflow to API format": "Conversion du workflow au format API",
+  "Serializing converted graph": "Sérialisation du graphe converti",
+  "Returning converted workflow": "Renvoi du workflow converti",
+  "Validating workflow in OrkiLab": "Validation du workflow dans OrkiLab",
+  "Workflow prepared successfully": "Workflow préparé avec succès",
+  "Step {current} of {total}": "Étape {current} sur {total}",
+  "Bridge conversion is active. This is a step indicator, not an elapsed-time estimate.": "Conversion en cours. Indication d’étape, sans estimation du temps restant.",
+  "Bridge failed": "Erreur Bridge"
 }
