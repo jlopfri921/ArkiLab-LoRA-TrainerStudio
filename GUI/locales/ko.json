@@ -1851,5 +1851,18 @@
   "Check application requirements before starting a GPU-intensive task.": "고부하 GPU 작업 전에 애플리케이션 요구 사항을 확인하세요.",
   "OrkiLab training active": "OrkiLab 학습 진행 중",
   "Updated at {time}": "{time}에 업데이트됨",
-  "NVIDIA monitoring tool not found": "NVIDIA 모니터링 도구를 찾을 수 없음"
+  "NVIDIA monitoring tool not found": "NVIDIA 모니터링 도구를 찾을 수 없음",
+  "What can I do here?": "여기에서 무엇을 할 수 있나요?",
+  "View your system, storage, trainer count and current queue. Choose a section on the left to continue.": "시스템, 저장 공간, 트레이너와 작업 대기열을 확인합니다. 왼쪽 메뉴에서 항목을 선택하세요.",
+  "Organize training project metadata. Archiving hides a project without deleting the underlying training files.": "학습 프로젝트 정보를 정리합니다. 보관해도 학습 파일은 삭제되지 않습니다.",
+  "Select a model family, then open the trainer to configure your training. Each trainer has its own requirements.": "모델 계열을 선택하고 해당 트레이너를 엽니다. 각 트레이너의 요구 사항은 다릅니다.",
+  "Monitor video memory, GPU utilization and temperature without closing or changing running programs. ComfyUI is not required.": "프로세스를 종료하거나 변경하지 않고 VRAM, GPU 사용률과 온도를 확인합니다. ComfyUI는 필요하지 않습니다.",
+  "Set the ComfyUI address and test your connection before importing or running workflows.": "워크플로를 가져오거나 실행하기 전에 ComfyUI 주소를 설정하고 연결을 테스트하세요.",
+  "Browse read-only inventories of models and see where they are installed. Nothing is downloaded or moved here.": "모델과 설치 위치를 읽기 전용으로 확인합니다. 파일을 다운로드하거나 이동하지 않습니다.",
+  "Inspect built-in and custom nodes installed in your ComfyUI. A detected node does not guarantee compatibility.": "설치된 ComfyUI 기본 및 사용자 정의 노드를 확인합니다. 감지되었다고 호환성이 보장되지는 않습니다.",
+  "Import or index ComfyUI workflows, inspect nodes, mark favorites and open them in the generation or comparison tools.": "워크플로를 가져오거나 색인하고 노드를 확인하며 즐겨찾기로 지정한 뒤 생성이나 비교 도구에서 엽니다.",
+  "Prepare and review a workflow, adjust editable parameters and explicitly confirm before running. Preparation alone does not generate.": "워크플로를 준비하고 검토하며 수정 가능한 매개변수를 변경한 뒤 실행 전에 명시적으로 확인합니다. 준비만으로는 생성되지 않습니다.",
+  "See previously submitted workflows and output references. Media stays on the ComfyUI server.": "과거 생성 작업과 결과를 확인합니다. 미디어는 ComfyUI 서버에 남아 있습니다.",
+  "Select a compatible workflow and compare selected LoRA strengths with otherwise unchanged generation settings.": "호환되는 워크플로를 선택하고 다른 설정을 유지한 채 LoRA 강도를 비교합니다.",
+  "Choose a trainer for its model family. All detailed training settings remain in its dedicated interface.": "모델 계열에 맞는 트레이너를 선택합니다. 세부 학습 설정은 해당 화면에 있습니다."
 }
