@@ -121,5 +121,14 @@ class TrainerBrandingTests(unittest.TestCase):
             self.assertNotIn("https://www.youtube.com/@Academia_SD", content)
             self.assertNotIn('src="/assets/logo.jpg"', content)
 
+
+class RetiredArtworkTests(unittest.TestCase):
+    def test_no_legacy_promotional_assets(self):
+        assets = ROOT / "assets"
+        for name in ("AcademiaSD_LoRAlab_TrainerStudio_github.mp4", "banner_LoRAlab.png", "launcher_LoRAlab.jpg", "portada_LoRAlab.png"):
+            self.assertFalse((assets / name).exists(), name)
+        for name in ("portada.jpg", "logo.jpg", "logo_128.png", "interface.jpg"):
+            self.assertFalse(list(assets.glob("*/" + name)), name)
+
 if __name__ == "__main__":
     unittest.main()

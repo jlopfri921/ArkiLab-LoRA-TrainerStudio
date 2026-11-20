@@ -80,6 +80,6 @@ The code of the trainer is MIT licensed; the weights are not.
 
 - Model: [briaai/Fibo-2.0-dev](https://huggingface.co/briaai/Fibo-2.0-dev) (BRIA AI)
 - Trainer: [AcademiaSD LoRAlab Trainer Studio](https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio)
-- ▶ YouTube: [youtube.com/@Academia_SD](https://www.youtube.com/@Academia_SD)
-- 💬 Discord: [discord.gg/Syuaduy678](https://discord.gg/Syuaduy678)
-- ☕ Ko-Fi: [ko-fi.com/academiasd](https://ko-fi.com/academiasd)
+
+
+

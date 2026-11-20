@@ -150,7 +150,7 @@ Genéricos **sin tocar**: `i18n`/`locales` (los mensajes nuevos se traducen desp
 | `.gitignore` | — | ✅ `YuE2-3B_Raw/`, `YuE2-3B_NF4/`, `YuE2-Vae/`, `YuE2-Vae-legacy/`, `Qwen3-ASR/`, `SheetSage2/` |
 
 **Pruebas pasadas** (servidor arrancado desde venv, `LORALAB_SKIP_BROWSER=1`, puerto 5000):
-`GET /` devolvió la UI (110 576 b); `/api/settings`, `/api/system-stats`, `/api/dataset-info`, `/api/checkpoint-info`, `/api/hf-token`, `/api/status`, `/api/previews`, `/api/caption-settings` y los assets (`/assets/portada.jpg`, `/assets/logo_128.png`) responden 200. `/favicon.ico` 404 igual que en Anima (nadie tiene `logo.png`).
+`GET /` devolvió la UI (110 576 b); `/api/settings`, `/api/system-stats`, `/api/dataset-info`, `/api/checkpoint-info`, `/api/hf-token`, `/api/status`, `/api/previews`, `/api/caption-settings` y los assets (`/assets/portada.jpg`, `/assets/orkilab-icon.svg`) responden 200. `/favicon.ico` 404 igual que en Anima (nadie tiene `logo.png`).
 `POST /api/save-precache` y `/api/save-train` con proyecto `yue_smoke` escribieron `settings/pre_cache_settings_yue2.json`, `settings/train_settings_yue2.json` con `./cached_data_yue2_yue_smoke` y `./yue2_lora_output_yue_smoke`, más las copias dentro de las carpetas del proyecto; carpetas creadas y limpiadas tras la prueba.
 Integridad JS: **74 `getElementById`, 0 ids faltantes**; `launcher.json` JSON válido. Consola del servidor sin errores (el proceso se paró a mano).
 

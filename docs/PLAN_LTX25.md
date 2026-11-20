@@ -191,7 +191,7 @@ scripts/server_ltx25.py           Flask (base: server_ltx23 + endpoints de clips
 GUI/trainer_ui_ltx25.html         base: trainer_ui_minimaxh3 (dataset con vídeo/audio, perfiles VRAM) + <video> de Wan
 code/Run_LoRAlab-LTX25.bat / .sh
 GUI/launcher.json                 tarjeta "LTX 2.5": "Image, video and audio LoRAs"
-assets/ltx25/portada.jpg
+assets/ltx25/orkilab-cover.svg
 GUI/locales/*.json                cadenas nuevas en los 8 idiomas
 tools/Run_Conversor_LTX25.bat     conversor a NF4 → repo AcademiaSD/LTX25-NF4-for-LoRA-Training (con LICENSE)
 docs/README_LTX25.md, README.md   guía, tabla de VRAM, changelog; corregir la nota "(2.5)" de LTX 2.3
