@@ -1769,5 +1769,16 @@
   "Could not read generation status": "生成状態を取得できません",
   "ComfyUI Zone": "ComfyUI ゾーン",
   "Back to Workspace": "ワークスペースに戻る",
-  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "ComfyUI 接続、モデル、ノード、ワークフロー、生成を一か所で管理します。"
+  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "ComfyUI 接続、モデル、ノード、ワークフロー、生成を一か所で管理します。",
+  "Generation history": "生成履歴",
+  "Review saved generation parameters and outputs. Original media remains on ComfyUI.": "保存されたパラメーターと結果を確認します。元のファイルは ComfyUI に残ります。",
+  "Refresh history": "履歴を更新",
+  "Previous page": "前のページ",
+  "Next page": "次のページ",
+  "Media unavailable on ComfyUI": "ComfyUI でファイルを利用できません",
+  "Showing {count} generations": "{count} 件の生成を表示",
+  "No generations recorded": "生成履歴がありません",
+  "Saved generation parameters": "保存済み生成パラメーター",
+  "Download API JSON": "API JSON をダウンロード",
+  "Check generation status": "生成状態を確認"
 }
