@@ -1972,5 +1972,12 @@
   "Last 10 minutes while this screen is open · local session only": "この画面を開いている直近10分間・ローカルセッションのみ",
   "RAM is system-wide available memory, not only ComfyUI. VRAM and GPU readings include all processes; missing samples are not treated as zero.": "RAM は ComfyUI だけでなくシステム全体の空きメモリを示します。VRAM と GPU の数値はすべてのプロセスを含み、欠損値をゼロとして扱いません。",
   "No samples yet": "データはまだありません",
-  "Power": "消費電力"
+  "Power": "消費電力",
+  "Generation memory diagnostics": "生成ごとのメモリ診断",
+  "System-wide RAM and VRAM; this cannot identify the exact process or prove a memory leak. Short peaks may be missed.": "システム全体の RAM と VRAM です。特定のプロセスへの帰属やメモリリークの証明はできず、短時間のピークは記録されない場合があります。",
+  "Before submission": "送信前",
+  "Peak sampled": "観測された最大値",
+  "After generation": "生成後",
+  "After model unload": "モデルの解放後",
+  "Change after generation": "生成後の変化"
 }
