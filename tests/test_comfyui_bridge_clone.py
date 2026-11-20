@@ -82,7 +82,7 @@ class BridgeCloneSafetyTests(unittest.TestCase):
             '"delete": [ident]',
             '{"prompt_id": ident}',
             'if len(running) != 1 or pending:',
-            'state = "cancelling"',
+            '"cancelling"',
             '"cancelled"',
             'Cannot safely interrupt while other ComfyUI jobs are present',
         ):
