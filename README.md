@@ -3,7 +3,7 @@
 <p align="center"><strong>Train. Adapt. Create.</strong><br>Local-first LoRA training for image, video and audio.</p>
 
 <p align="center">
-  <a href="VERSION_ARKILAB"><img alt="Version 0.1.0-rc.2" src="https://img.shields.io/badge/version-0.1.0--rc.2-087F91"></a>
+  <a href="VERSION_ARKILAB"><img alt="Version 0.2.0-dev.1" src="https://img.shields.io/badge/version-0.2.0--dev.1-087F91"></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-315DB3"></a>
   <img alt="Windows and Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-293C60">
 </p>
@@ -12,9 +12,11 @@
 
 # OrkiLab — LoRA Trainer Studio
 
-Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Foundation is currently a release candidate, not a fully validated stable release.
+Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Workspace is a development preview. Foundation runtime validation remains pending.
 
 ## Workspace at a glance
+
+Open **Workspace** from the classic launcher, or visit `/workspace` on the launcher host. Create and archive project metadata in local SQLite storage. Training continues through the unchanged classic launcher.
 
 | Dataset | Training | Export |
 | :--- | :--- | :--- |

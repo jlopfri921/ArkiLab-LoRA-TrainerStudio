@@ -83,7 +83,7 @@ def _check():
         auth = request.authorization
         if not auth or auth.username != cfg["user"] or not check_password_hash(cfg["password_hash"], auth.password or ""):
             return Response(t("Login required") + "\n", 401,
-                            {"WWW-Authenticate": 'Basic realm="AcademiaSD LoRAlab", charset="UTF-8"'}, mimetype="text/plain")
+                            {"WWW-Authenticate": 'Basic realm="OrkiLab", charset="UTF-8"'}, mimetype="text/plain")
     if request.path in NATIVE_DIALOGS:
         return jsonify({"status": "error", "error": t("Remote access: type the path.")})
     return None

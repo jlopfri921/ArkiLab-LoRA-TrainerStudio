@@ -63,6 +63,9 @@ def load_config():
 # Cola de trabajos de todos los entrenadores (ver job_queue.py): rutas /api/queue... y su hilo.
 QUEUE = job_queue.register(app, lambda: load_config()["trainers"])
 
+import workspace_routes
+workspace_routes.register(app, BASE_DIR, load_config)
+
 
 def trainer_running():
     # Todos los entrenadores usan el mismo puerto: solo puede haber uno abierto a la vez.
@@ -781,7 +784,7 @@ if __name__ == "__main__":
     except Exception:
         pass
     print("=" * 70)
-    print("  ACADEMIASD — LORALAB TRAINER STUDIO LAUNCHER")
+    print("  ORKILAB — LORA TRAINER STUDIO LAUNCHER")
     print("=" * 70)
     url = remote_access.local_url("launcher_port")
     print(f"  URL : {url}")

@@ -1,5 +1,11 @@
 # OrkiLab changelog
 
+## 0.2.0-dev.1 — Workspace preview
+
+- Add opt-in dashboard, engine filters, hardware summary and local SQLite project metadata.
+- Create, archive and restore projects without modifying training files.
+- Preserve classic launcher and all existing trainers. Foundation runtime validation remains pending.
+
 ## 0.1.0-rc.2 — Foundation identity and validation candidate
 
 - Original OrkiLab engine covers and README banner.
