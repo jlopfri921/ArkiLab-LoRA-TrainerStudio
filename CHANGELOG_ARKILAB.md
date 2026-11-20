@@ -1,5 +1,19 @@
 # OrkiLab changelog
 
+## Unreleased — Workspace and ComfyUI development (2026-11-20)
+
+- Introduce a separate, multilingual ComfyUI Zone with its own navigation and a return-to-Workspace action.
+- Add ComfyUI connection modes, read-only model and node inventories, and a searchable/favouritable workflow library with folder synchronization and collapsible tools.
+- Add OrkiLab Bridge frontend integration for UI-workflow conversion through ComfyUI; requires a ComfyUI restart and real workflow testing.
+- Add Generation Studio graph review, editable parameters, random seed control and browser-local presets.
+- Add persistent generation history, safe media descriptors, image/audio/video previews and output downloads; mesh downloads do not yet have an interactive viewer.
+- Add sequential LoRA strength comparison for standard loader nodes and an integrated workflow picker with compatibility hints.
+- Add read-only GPU Manager using NVIDIA telemetry, automatic visible-page refresh, VRAM warnings and training-activity hints.
+- Extend interface translations to the new modules. Full translations of custom-node inputs are not guaranteed.
+- Document feature workflows, code map and validation limitations in [Workspace feature guide](docs/arkilab/WORKSPACE_FEATURES.md).
+
+**Status:** implemented on the default branch, not yet released as a new version. `VERSION_ARKILAB` remains `0.2.0-rc.1`. ComfyUI Desktop, GPU and end-to-end regression tests remain pending; the entries above are not claims of production validation.
+
 ## 0.2.0-rc.1 — Workspace closeout candidate
 
 - Make the modern Workspace the sole launcher entry point, including old `/legacy` bookmarks.
