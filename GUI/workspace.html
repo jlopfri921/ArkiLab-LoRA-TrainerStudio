@@ -761,7 +761,7 @@ function routeWorkspace(){
  if(onZone){
   let selected=comfyModules.includes(hash)?hash:"welcome";
   if(!comfyConnectionVerified&&!["welcome","comfyui"].includes(selected)){
-   selected="welcome";history.replaceState(null,"",location.pathname+"#welcome");
+   selected="welcome";if(comfyConnectionReady)history.replaceState(null,"",location.pathname+"#welcome");
   }
   updateWorkspaceContext(selected);
   for(const panel of document.querySelectorAll("[data-module]"))panel.hidden=panel.dataset.module!==selected;
