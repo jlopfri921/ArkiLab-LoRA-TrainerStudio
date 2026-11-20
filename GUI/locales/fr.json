@@ -2023,5 +2023,12 @@
   "Each engine has its own dataset, model and hardware requirements. The category filters are a guide, not a guarantee of compatibility. Multimodal engines are listed separately.": "Chaque moteur possède ses propres exigences en données, modèles et matériel. Les filtres orientent sans garantir la compatibilité. Les moteurs multimodaux sont à part.",
   "Browse available engines": "Parcourir les moteurs disponibles",
   "Filter the trainers, inspect their descriptions and open the one you need.": "Filtrez les moteurs, consultez leurs descriptions et ouvrez celui dont vous avez besoin.",
-  "{count} training engines shown": "{count} moteurs affichés"
+  "{count} training engines shown": "{count} moteurs affichés",
+  "Generation memory diagnostics": "Diagnostic mémoire par génération",
+  "System-wide RAM and VRAM; this cannot identify the exact process or prove a memory leak. Short peaks may be missed.": "RAM et VRAM de tout le système : ces données n'identifient pas le processus exact et ne prouvent pas une fuite mémoire. Des pics brefs peuvent être manqués.",
+  "Before submission": "Avant l'envoi",
+  "Peak sampled": "Pic observé",
+  "After generation": "Après génération",
+  "After model unload": "Après déchargement des modèles",
+  "Change after generation": "Variation après génération"
 }
