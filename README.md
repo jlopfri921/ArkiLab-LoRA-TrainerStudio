@@ -35,6 +35,8 @@ OrkiLab is growing beyond a collection of LoRA trainers into a unified **local-f
 | Generation history | [`#history`](http://127.0.0.1:4990/workspace/comfyui#history) | Review past jobs, output files and exact submitted API graphs |
 | LoRA Comparator | [`#compare`](http://127.0.0.1:4990/workspace/comfyui#compare) | Compare LoRA strengths in controlled, sequential generations |
 
+**Navigation update:** Dashboard, Projects, Training engines and GPU Manager each open in a **focused Workspace view**. The selected navigation item is highlighted. Each Workspace and ComfyUI screen has a collapsible **What can I do here?** explanation, available in all eight interface languages. Keyboard focus is more visible, and navigation adapts to narrower screens. This is an incremental UX improvement: individual trainer settings and legacy views still require separate review.
+
 **Navigation:** the Workspace has a single **ComfyUI Zone** entry. The Zone has its own sidebar; choosing an item shows only that module. Use **Back to Workspace** to return to training and projects. The workflow library is collapsible, its list has its own scroll area, and import/synchronization tools can be expanded only when needed.
 
 ### New and improved features
