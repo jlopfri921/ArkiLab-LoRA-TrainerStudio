@@ -1972,5 +1972,12 @@
   "Last 10 minutes while this screen is open · local session only": "Letzte 10 Minuten bei geöffnetem Bildschirm · nur lokale Sitzung",
   "RAM is system-wide available memory, not only ComfyUI. VRAM and GPU readings include all processes; missing samples are not treated as zero.": "RAM bezeichnet den systemweit verfügbaren Speicher, nicht nur ComfyUI. VRAM- und GPU-Werte umfassen alle Prozesse; fehlende Messwerte werden nicht als null gezählt.",
   "No samples yet": "Noch keine Messwerte",
-  "Power": "Leistung"
+  "Power": "Leistung",
+  "Generation memory diagnostics": "Speicherdiagnose pro Generierung",
+  "System-wide RAM and VRAM; this cannot identify the exact process or prove a memory leak. Short peaks may be missed.": "Systemweiter RAM- und VRAM-Verbrauch: Die Werte ordnen keinen Prozess eindeutig zu und beweisen kein Speicherleck. Kurze Spitzen können übersehen werden.",
+  "Before submission": "Vor Übermittlung",
+  "Peak sampled": "Gemessener Spitzenwert",
+  "After generation": "Nach Generierung",
+  "After model unload": "Nach Modellentladung",
+  "Change after generation": "Änderung nach Generierung"
 }
