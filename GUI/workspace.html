@@ -396,7 +396,7 @@ $("generation-form").onsubmit=async e=>{
    if(["http:","https:"].includes(base.protocol)&&d.client_id){
     const wsUrl=new URL(base.href);
     wsUrl.protocol=base.protocol==="https:"?"wss:":"ws:";
-    wsUrl.pathname=wsUrl.pathname.replace(/\\/$/,"")+"/ws";
+    wsUrl.pathname=(wsUrl.pathname.endsWith("/")?wsUrl.pathname.slice(0,-1):wsUrl.pathname)+"/ws";
     wsUrl.search=new URLSearchParams({clientId:d.client_id}).toString();
     executionSocket=new WebSocket(wsUrl.href);
     executionSocket.onmessage=event=>{
