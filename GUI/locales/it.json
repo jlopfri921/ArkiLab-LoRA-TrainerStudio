@@ -1086,7 +1086,7 @@
   "How many times cosine_with_restarts repeats the cosine curve.": "Quante volte cosine_with_restarts ripete la curva del coseno.",
   "Waiting for {name} to start...": "In attesa dell'avvio di {name}...",
   "{name} did not start in time. Open it manually at {url}.": "{name} non si è avviato in tempo. Aprilo a mano su {url}.",
-  "Switch trainer": "Cambia trainer",
+  "Switch trainer": "Cambia motore",
   "Another trainer": "Un altro trainer",
   "Closing {current}...": "Chiusura di {current}...",
   "{current} is open. Opening {next} will close the current trainer and its console window. Continue?": "{current} è aperto. Aprire {next} chiuderà il trainer attuale e la sua finestra della console. Continuare?",
@@ -1392,7 +1392,7 @@
   "Could not resume the queue.": "Impossibile riprendere la coda.",
   "Interrupted by Pause all and exit: it continues from its checkpoint.": "Interrotto da «Metti tutto in pausa ed esci»: riprende dal suo checkpoint.",
   "{current} is open. You can open {next} alongside it on another port, or close {current} and its console window and open {next} in its place.": "{current} è aperto. Puoi aprire {next} accanto, su un'altra porta, oppure chiudere {current} e la sua finestra della console e aprire {next} al suo posto.",
-  "Open alongside": "Apri accanto",
+  "Open alongside": "Apri in parallelo",
   "training area": "area di addestramento",
   "no face": "nessun volto",
   "Analyzing faces...": "Analisi dei volti...",
@@ -1633,5 +1633,7 @@
   "Invalid trainer URL": "URL del motore non valido",
   "{name} did not start in time.": "{name} non si è avviato in tempo.",
   "Open trainer manually": "Apri motore manualmente",
-  "Workspace": "Area di lavoro"
+  "Workspace": "Area di lavoro",
+  "{current} is open. Choose how to open {next}.": "{current} è aperto. Scegli come aprire {next}.",
+  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "È in corso un addestramento. La chiusura è disabilitata per proteggere i progressi. Puoi aprire un altro motore in parallelo."
 }

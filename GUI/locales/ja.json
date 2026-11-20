@@ -1086,11 +1086,11 @@
   "How many times cosine_with_restarts repeats the cosine curve.": "cosine_with_restarts がコサインカーブを繰り返す回数。",
   "Waiting for {name} to start...": "{name} の起動を待っています...",
   "{name} did not start in time. Open it manually at {url}.": "{name} が時間内に起動しませんでした。{url} で手動で開いてください。",
-  "Switch trainer": "トレーナーを切り替え",
+  "Switch trainer": "学習ツールの切り替え",
   "Another trainer": "別のトレーナー",
   "Closing {current}...": "{current} を閉じています...",
   "{current} is open. Opening {next} will close the current trainer and its console window. Continue?": "{current} が開いています。{next} を開くと、現在のトレーナーとそのコンソールウィンドウが閉じます。続行しますか？",
-  "Close and open": "閉じて開く",
+  "Close and open": "現在のツールを閉じて開く",
   "Could not close the running trainer.": "実行中のトレーナーを閉じられませんでした。",
   "{current} is training. Stop the training first, then switch.": "{current} は学習中です。先に学習を停止してから切り替えてください。",
   "Back": "戻る",
@@ -1392,7 +1392,7 @@
   "Could not resume the queue.": "キューを再開できませんでした。",
   "Interrupted by Pause all and exit: it continues from its checkpoint.": "「すべて一時停止して終了」で中断:チェックポイントから続きます。",
   "{current} is open. You can open {next} alongside it on another port, or close {current} and its console window and open {next} in its place.": "{current} が開いています。{next} を別のポートで並べて開くか、{current} とそのコンソールウィンドウを閉じて代わりに {next} を開けます。",
-  "Open alongside": "並べて開く",
+  "Open alongside": "並行して開く",
   "training area": "学習時の面積",
   "no face": "顔なし",
   "Analyzing faces...": "顔を解析中...",
@@ -1633,5 +1633,7 @@
   "Invalid trainer URL": "学習ツールのURLが無効です",
   "{name} did not start in time.": "{name} の起動がタイムアウトしました。",
   "Open trainer manually": "学習ツールを手動で開く",
-  "Workspace": "ワークスペース"
+  "Workspace": "ワークスペース",
+  "{current} is open. Choose how to open {next}.": "{current} は開いています。{next} の開き方を選んでください。",
+  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "学習中です。進捗を保護するため、現在のツールは閉じられません。別のツールを並行して開けます。"
 }

@@ -14,7 +14,7 @@
   "Another trainer": "Otro entrenador",
   "Closing {current}...": "Cerrando {current}...",
   "{current} is open. Opening {next} will close the current trainer and its console window. Continue?": "{current} está abierto. Abrir {next} cerrará el entrenador actual y su ventana de consola. ¿Continuar?",
-  "Close and open": "Cerrar y abrir",
+  "Close and open": "Cerrar anterior y abrir",
   "Could not close the running trainer.": "No se pudo cerrar el entrenador en marcha.",
   "{current} is training. Stop the training first, then switch.": "{current} está entrenando. Detén el entrenamiento antes de cambiar de entrenador.",
   "A trainer is already open at {url}. Close it before opening another.": "Ya hay un entrenador abierto en {url}. Ciérralo antes de abrir otro.",
@@ -1497,7 +1497,7 @@
   "Could not resume the queue.": "No se pudo reanudar la cola.",
   "Interrupted by Pause all and exit: it continues from its checkpoint.": "Cortado por «Pausar todo y salir»: sigue desde su checkpoint.",
   "{current} is open. You can open {next} alongside it on another port, or close {current} and its console window and open {next} in its place.": "{current} está abierto. Puedes abrir {next} al lado, en otro puerto, o cerrar {current} y su ventana de consola y abrir {next} en su lugar.",
-  "Open alongside": "Abrir al lado",
+  "Open alongside": "Abrir en paralelo",
   "AcademiaSD Wan 2.2 LoRAlab": "AcademiaSD Wan 2.2 LoRAlab",
   "1 (image)": "1 (imagen)",
   "1 (only the first frame)": "1 (solo el primer fotograma)",
@@ -1803,5 +1803,7 @@
   "Invalid trainer URL": "URL del entrenador no válida",
   "{name} did not start in time.": "{name} no se inició a tiempo.",
   "Open trainer manually": "Abrir entrenador manualmente",
-  "Workspace": "Espacio de trabajo"
+  "Workspace": "Espacio de trabajo",
+  "{current} is open. Choose how to open {next}.": "{current} está abierto. Elige cómo abrir {next}.",
+  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "Hay un entrenamiento en curso. No se puede cerrar el entrenador actual para proteger el progreso. Puedes abrir otro en paralelo."
 }

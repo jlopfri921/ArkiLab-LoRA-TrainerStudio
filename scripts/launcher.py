@@ -506,7 +506,7 @@ def launch():
             name = current if training or not job else job.get("trainer_name") or current
             return jsonify({"status": "queue_offer", "current": name, "url": trainer_url()})
         if not force:
-            return jsonify({"status": "busy", "url": trainer_url()})
+            return jsonify({"status": "busy", "current": current, "url": trainer_url()})
         # Cambiar de entrenador: cerrar el activo antes de abrir el nuevo.
         # Switching trainers: close the active one before opening the new one.
         if not kill_trainer():

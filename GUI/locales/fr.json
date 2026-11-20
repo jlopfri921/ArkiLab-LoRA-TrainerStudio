@@ -1086,7 +1086,7 @@
   "How many times cosine_with_restarts repeats the cosine curve.": "Combien de fois cosine_with_restarts répète la courbe du cosinus.",
   "Waiting for {name} to start...": "En attente du démarrage de {name}...",
   "{name} did not start in time. Open it manually at {url}.": "{name} n'a pas démarré à temps. Ouvre-le manuellement sur {url}.",
-  "Switch trainer": "Changer d'entraîneur",
+  "Switch trainer": "Changer de moteur",
   "Another trainer": "Un autre entraîneur",
   "Closing {current}...": "Fermeture de {current}...",
   "{current} is open. Opening {next} will close the current trainer and its console window. Continue?": "{current} est ouvert. Ouvrir {next} fermera l'entraîneur actuel et sa fenêtre de console. Continuer ?",
@@ -1392,7 +1392,7 @@
   "Could not resume the queue.": "Impossible de reprendre la file.",
   "Interrupted by Pause all and exit: it continues from its checkpoint.": "Interrompu par « Tout mettre en pause et quitter » : il reprend depuis son checkpoint.",
   "{current} is open. You can open {next} alongside it on another port, or close {current} and its console window and open {next} in its place.": "{current} est ouvert. Tu peux ouvrir {next} à côté, sur un autre port, ou fermer {current} et sa fenêtre de console et ouvrir {next} à sa place.",
-  "Open alongside": "Ouvrir à côté",
+  "Open alongside": "Ouvrir en parallèle",
   "training area": "surface d'entraînement",
   "no face": "aucun visage",
   "Analyzing faces...": "Analyse des visages...",
@@ -1633,5 +1633,7 @@
   "Invalid trainer URL": "URL du moteur invalide",
   "{name} did not start in time.": "{name} n’a pas démarré à temps.",
   "Open trainer manually": "Ouvrir le moteur manuellement",
-  "Workspace": "Espace de travail"
+  "Workspace": "Espace de travail",
+  "{current} is open. Choose how to open {next}.": "{current} est ouvert. Choisissez comment ouvrir {next}.",
+  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "Un entraînement est en cours. La fermeture est désactivée pour protéger sa progression. Vous pouvez ouvrir un autre moteur en parallèle."
 }

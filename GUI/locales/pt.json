@@ -1090,7 +1090,7 @@
   "Another trainer": "Outro treinador",
   "Closing {current}...": "A fechar {current}...",
   "{current} is open. Opening {next} will close the current trainer and its console window. Continue?": "{current} está aberto. Abrir {next} fechará o treinador atual e a sua janela de consola. Continuar?",
-  "Close and open": "Fechar e abrir",
+  "Close and open": "Fechar anterior e abrir",
   "Could not close the running trainer.": "Não foi possível fechar o treinador em execução.",
   "{current} is training. Stop the training first, then switch.": "{current} está a treinar. Para primeiro o treino e depois muda.",
   "Back": "Voltar",
@@ -1392,7 +1392,7 @@
   "Could not resume the queue.": "Não foi possível retomar a fila.",
   "Interrupted by Pause all and exit: it continues from its checkpoint.": "Interrompido por «Pausar tudo e sair»: continua a partir do seu checkpoint.",
   "{current} is open. You can open {next} alongside it on another port, or close {current} and its console window and open {next} in its place.": "{current} está aberto. Podes abrir {next} ao lado, noutra porta, ou fechar {current} e a sua janela de consola e abrir {next} no seu lugar.",
-  "Open alongside": "Abrir ao lado",
+  "Open alongside": "Abrir em paralelo",
   "training area": "área de treino",
   "no face": "sem rosto",
   "Analyzing faces...": "Analisando rostos...",
@@ -1633,5 +1633,7 @@
   "Invalid trainer URL": "URL do treinador inválido",
   "{name} did not start in time.": "{name} não iniciou a tempo.",
   "Open trainer manually": "Abrir treinador manualmente",
-  "Workspace": "Espaço de trabalho"
+  "Workspace": "Espaço de trabalho",
+  "{current} is open. Choose how to open {next}.": "{current} está aberto. Escolha como abrir {next}.",
+  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "Está a decorrer um treino. Fechar o treinador atual está desativado para proteger o progresso. Pode abrir outro em paralelo."
 }
