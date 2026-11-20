@@ -39,7 +39,7 @@ class GenerationHistory:
 
     def update(self, token, state, outputs):
         with closing(self.connect()) as con, con:
-            con.execute("UPDATE generations SET state=?,outputs=?,updated=? WHERE id=? AND state NOT IN ('completed','error')",
+            con.execute("UPDATE generations SET state=?,outputs=?,updated=? WHERE id=? AND state NOT IN ('completed','error','cancelled')",
                         (state,json.dumps(outputs,ensure_ascii=False),time.time(),token))
 
 MEDIA = {".png":"image/png",".jpg":"image/jpeg",".jpeg":"image/jpeg",".webp":"image/webp",".gif":"image/gif",".mp4":"video/mp4",".webm":"video/webm",".mp3":"audio/mpeg",".wav":"audio/wav",".ogg":"audio/ogg",".flac":"audio/flac",".m4a":"audio/mp4",".glb":"application/octet-stream",".gltf":"application/octet-stream",".obj":"application/octet-stream",".stl":"application/octet-stream",".ply":"application/octet-stream"}
