@@ -1993,5 +1993,20 @@
   "ComfyUI is connected. All tools are available.": "ComfyUI에 연결되었습니다. 모든 도구를 사용할 수 있습니다.",
   "ComfyUI is not connected. Configure and test the connection to unlock the tools.": "ComfyUI가 연결되지 않았습니다. 연결을 설정하고 테스트하세요.",
   "Welcome to ComfyUI Zone": "ComfyUI Zone에 오신 것을 환영합니다",
-  "Discover what ComfyUI can do and connect your server to unlock workflow and generation tools.": "ComfyUI를 알아보고 서버를 연결해 워크플로와 생성 도구를 사용하세요."
+  "Discover what ComfyUI can do and connect your server to unlock workflow and generation tools.": "ComfyUI를 알아보고 서버를 연결해 워크플로와 생성 도구를 사용하세요.",
+  "Your AI training projects": "AI 학습 프로젝트",
+  "Keep each LoRA training idea organized in one place. Name the project, select a training engine, and note where your dataset lives. Open the matching trainer whenever you are ready to work.": "LoRA 학습 아이디어를 한곳에 정리하세요. 프로젝트 이름, 학습 엔진, 데이터셋 위치를 기록하고 필요할 때 해당 트레이너를 실행할 수 있습니다.",
+  "1. Create a project": "1. 프로젝트 만들기",
+  "Choose a meaningful name and the image, video or audio training engine that fits your goal.": "목표에 맞는 이름과 이미지, 영상 또는 오디오 학습 엔진을 선택하세요.",
+  "2. Keep your context": "2. 정보 보관",
+  "Save a dataset path and notes as references so you remember what belongs to each experiment.": "데이터셋 경로와 메모를 참조 정보로 저장해 각 실험을 구분하세요.",
+  "3. Train and revisit": "3. 학습과 재방문",
+  "Open the relevant trainer from your project card. Archive completed ideas without deleting their files.": "프로젝트 카드에서 트레이너를 열고, 파일을 삭제하지 않은 채 완료된 아이디어를 보관하세요.",
+  "Projects currently organize metadata only: they do not copy datasets, manage checkpoints or automatically restore an entire training session.": "현재 프로젝트 기능은 메타데이터만 정리합니다. 데이터셋 복사, 체크포인트 관리, 학습 세션 자동 복원은 지원하지 않습니다.",
+  "Create, reopen or archive your project references.": "프로젝트 참조를 만들거나 다시 열고 보관하세요.",
+  "Create my first project": "첫 프로젝트 만들기",
+  "No archived projects yet": "보관된 프로젝트가 아직 없습니다",
+  "Your first project starts here": "첫 프로젝트를 시작하세요",
+  "Projects you archive will appear here.": "보관한 프로젝트가 여기에 나타납니다.",
+  "Give your idea a name, choose an engine and keep your dataset reference together.": "아이디어 이름을 정하고 엔진을 선택한 다음 데이터셋 참조를 저장하세요."
 }
