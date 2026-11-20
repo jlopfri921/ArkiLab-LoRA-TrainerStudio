@@ -1635,5 +1635,9 @@
   "Open trainer manually": "学習ツールを手動で開く",
   "Workspace": "ワークスペース",
   "{current} is open. Choose how to open {next}.": "{current} は開いています。{next} の開き方を選んでください。",
-  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "学習中です。進捗を保護するため、現在のツールは閉じられません。別のツールを並行して開けます。"
+  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "学習中です。進捗を保護するため、現在のツールは閉じられません。別のツールを並行して開けます。",
+  "Settings": "設定",
+  "About OrkiLab": "OrkiLab について",
+  "Launcher connection lost. Check the console.": "ランチャーとの接続が切れました。コンソールを確認してください。",
+  "Check the launcher console.": "ランチャーのコンソールを確認してください。"
 }

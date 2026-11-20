@@ -1805,5 +1805,9 @@
   "Open trainer manually": "Abrir entrenador manualmente",
   "Workspace": "Espacio de trabajo",
   "{current} is open. Choose how to open {next}.": "{current} está abierto. Elige cómo abrir {next}.",
-  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "Hay un entrenamiento en curso. No se puede cerrar el entrenador actual para proteger el progreso. Puedes abrir otro en paralelo."
+  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "Hay un entrenamiento en curso. No se puede cerrar el entrenador actual para proteger el progreso. Puedes abrir otro en paralelo.",
+  "Settings": "Ajustes",
+  "About OrkiLab": "Acerca de OrkiLab",
+  "Launcher connection lost. Check the console.": "Conexión con el lanzador perdida. Comprueba la consola.",
+  "Check the launcher console.": "Comprueba la consola del lanzador."
 }

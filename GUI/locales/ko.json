@@ -1635,5 +1635,9 @@
   "Open trainer manually": "학습 도구 수동 열기",
   "Workspace": "작업 공간",
   "{current} is open. Choose how to open {next}.": "{current}이(가) 열려 있습니다. {next}을(를) 여는 방식을 선택하세요.",
-  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "학습이 진행 중입니다. 진행 상황을 보호하기 위해 닫기가 비활성화되었습니다. 다른 도구를 병렬로 열 수 있습니다."
+  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "학습이 진행 중입니다. 진행 상황을 보호하기 위해 닫기가 비활성화되었습니다. 다른 도구를 병렬로 열 수 있습니다.",
+  "Settings": "설정",
+  "About OrkiLab": "OrkiLab 정보",
+  "Launcher connection lost. Check the console.": "런처 연결이 끊겼습니다. 콘솔을 확인하세요.",
+  "Check the launcher console.": "런처 콘솔을 확인하세요."
 }

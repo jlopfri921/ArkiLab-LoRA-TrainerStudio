@@ -1635,5 +1635,9 @@
   "Open trainer manually": "Ouvrir le moteur manuellement",
   "Workspace": "Espace de travail",
   "{current} is open. Choose how to open {next}.": "{current} est ouvert. Choisissez comment ouvrir {next}.",
-  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "Un entraînement est en cours. La fermeture est désactivée pour protéger sa progression. Vous pouvez ouvrir un autre moteur en parallèle."
+  "A training job is running. Closing the current trainer is disabled to protect progress. You can open another trainer alongside it.": "Un entraînement est en cours. La fermeture est désactivée pour protéger sa progression. Vous pouvez ouvrir un autre moteur en parallèle.",
+  "Settings": "Paramètres",
+  "About OrkiLab": "À propos d’OrkiLab",
+  "Launcher connection lost. Check the console.": "Connexion au lanceur perdue. Vérifiez la console.",
+  "Check the launcher console.": "Vérifiez la console du lanceur."
 }
