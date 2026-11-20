@@ -1735,5 +1735,13 @@
   "Invalid workflow request or file too large": "無効な要求またはファイルが大きすぎます",
   "Invalid or unsupported workflow JSON": "無効または未対応の JSON",
   "Workflow library limit reached": "ライブラリの上限に達しました",
-  "Workflow not found": "ワークフローが見つかりません"
+  "Workflow not found": "ワークフローが見つかりません",
+  "Link workflow folder": "ワークフローフォルダーをリンク",
+  "Select a folder on the launcher PC. Synchronization imports JSON files recursively without modifying originals.": "ランチャー PC のフォルダーを選択します。同期では元のファイルを変更せず、JSON を再帰的にインポートします。",
+  "Workflow folder path": "ワークフローフォルダーのパス",
+  "Synchronize folder": "フォルダーを同期",
+  "Scanning workflows...": "ワークフローを検索中...",
+  "Imported: {imported} · Updated: {updated} · Unchanged: {unchanged} · Skipped: {skipped}": "インポート: {imported} · 更新: {updated} · 変更なし: {unchanged} · スキップ: {skipped}",
+  "Invalid workflow folder": "無効なワークフローフォルダー",
+  "Linked folder": "リンク済みフォルダー"
 }
