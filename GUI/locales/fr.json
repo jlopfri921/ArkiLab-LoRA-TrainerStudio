@@ -1966,5 +1966,11 @@
   "Unloads cached ComfyUI models from RAM/VRAM when its queue is empty. Does not restart ComfyUI or guarantee all Python memory is returned. The automatic option affects only generations started here.": "Décharge les modèles en cache de la RAM/VRAM lorsque la file est vide. Ne redémarre pas ComfyUI et ne garantit pas la libération totale de la mémoire Python. L'option automatique ne concerne que les générations lancées ici.",
   "Unload ComfyUI models and clear its cache? Only when all jobs are finished.": "Décharger les modèles ComfyUI et vider le cache ? Seulement lorsque toutes les tâches sont terminées.",
   "Requesting ComfyUI memory release...": "Demande de libération de mémoire à ComfyUI...",
-  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "Nettoyage accepté. La récupération de RAM/VRAM peut être partielle ou différée."
+  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "Nettoyage accepté. La récupération de RAM/VRAM peut être partielle ou différée.",
+  "Resource history": "Historique des ressources",
+  "Clear chart": "Effacer le graphique",
+  "Last 10 minutes while this screen is open · local session only": "10 dernières minutes avec cet écran ouvert · session locale uniquement",
+  "RAM is system-wide available memory, not only ComfyUI. VRAM and GPU readings include all processes; missing samples are not treated as zero.": "La RAM correspond à la mémoire disponible du système, pas seulement à ComfyUI. Les mesures de VRAM et GPU incluent tous les processus ; les échantillons manquants ne valent pas zéro.",
+  "No samples yet": "Aucun échantillon",
+  "Power": "Puissance"
 }

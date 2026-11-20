@@ -246,7 +246,7 @@
   "Dataset folder does not exist: {path}": "データセットフォルダが存在しません：{path}",
   "Dataset": "データセット",
   "Mode": "モード",
-  "Samples": "サンプル",
+  "Samples": "サンプル数",
   "{n} to caption": "{n} 件が未作成",
   "(none)": "（なし）",
   "yes": "はい",
@@ -1596,7 +1596,7 @@
   "Multimodal": "マルチモーダル",
   "Unavailable": "利用不可",
   "Configured": "設定済み",
-  "System RAM": "システムRAM",
+  "System RAM": "システム RAM",
   "{amount} available": "{amount} 利用可能",
   "Storage": "ストレージ",
   "Free on installation drive": "インストール先の空き容量",
@@ -1966,5 +1966,11 @@
   "Unloads cached ComfyUI models from RAM/VRAM when its queue is empty. Does not restart ComfyUI or guarantee all Python memory is returned. The automatic option affects only generations started here.": "キューが空の場合に ComfyUI のモデルキャッシュを RAM/VRAM から解放します。ComfyUI は再起動せず、Python のメモリがすべて解放されるとは限りません。自動解放はここで開始した生成のみ対象です。",
   "Unload ComfyUI models and clear its cache? Only when all jobs are finished.": "ComfyUI のモデルとキャッシュを解放しますか？ すべてのジョブが終了している場合のみ実行します。",
   "Requesting ComfyUI memory release...": "ComfyUI にメモリ解放を要求しています...",
-  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "解放要求が受け付けられました。RAM/VRAM の解放は一部のみ、または遅延する場合があります。"
+  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "解放要求が受け付けられました。RAM/VRAM の解放は一部のみ、または遅延する場合があります。",
+  "Resource history": "リソース履歴",
+  "Clear chart": "グラフを消去",
+  "Last 10 minutes while this screen is open · local session only": "この画面を開いている直近10分間・ローカルセッションのみ",
+  "RAM is system-wide available memory, not only ComfyUI. VRAM and GPU readings include all processes; missing samples are not treated as zero.": "RAM は ComfyUI だけでなくシステム全体の空きメモリを示します。VRAM と GPU の数値はすべてのプロセスを含み、欠損値をゼロとして扱いません。",
+  "No samples yet": "データはまだありません",
+  "Power": "消費電力"
 }
