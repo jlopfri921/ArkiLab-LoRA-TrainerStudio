@@ -1922,5 +1922,22 @@
   "Workflow prepared successfully": "ワークフローの準備が完了しました",
   "Step {current} of {total}": "{total}ステップ中{current}ステップ目",
   "Bridge conversion is active. This is a step indicator, not an elapsed-time estimate.": "変換処理中です。残り時間ではなく現在の段階を示します。",
-  "Bridge failed": "Bridgeエラー"
+  "Bridge failed": "Bridgeエラー",
+  "Cancel preparation": "準備をキャンセル",
+  "Preparation cancelled": "準備をキャンセルしました",
+  "Cancel generation": "生成をキャンセル",
+  "Cancel the current OrkiLab generation? This may interrupt its running node.": "このOrkiLab生成をキャンセルしますか？実行中のノードが中断される場合があります。",
+  "Cancellation requested": "キャンセルを要求しました",
+  "Generation cancelled": "生成をキャンセルしました",
+  "ComfyUI is stopping this workflow.": "ComfyUIがワークフローを停止しています。",
+  "Waiting for ComfyUI to accept this workflow.": "ComfyUIの受け付けを待っています。",
+  "Waiting for ComfyUI execution": "ComfyUIでの実行待機中",
+  "Executing node {node}": "ノード{node}を実行中",
+  "Node type: {kind}": "ノードの種類: {kind}",
+  "Workflow execution in progress": "ワークフローを実行中",
+  "Sampling progress: {value} / {max}": "サンプリング進行状況: {value} / {max}",
+  "Progress within current node, not the whole workflow": "ワークフロー全体ではなく現在のノードの進行状況です",
+  "Check details in ComfyUI": "ComfyUIで詳細を確認",
+  "Workflow execution finished": "ワークフローの実行が完了しました",
+  "Workflow cancellation confirmed": "ワークフローのキャンセルを確認しました"
 }
