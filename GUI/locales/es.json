@@ -2021,5 +2021,18 @@
   "Check application requirements before starting a GPU-intensive task.": "Comprueba los requisitos de cada aplicación antes de iniciar tareas exigentes.",
   "OrkiLab training active": "Entrenamiento OrkiLab activo",
   "Updated at {time}": "Actualizado a las {time}",
-  "NVIDIA monitoring tool not found": "No se encuentra la herramienta de NVIDIA"
+  "NVIDIA monitoring tool not found": "No se encuentra la herramienta de NVIDIA",
+  "What can I do here?": "¿Qué puedo hacer aquí?",
+  "View your system, storage, trainer count and current queue. Choose a section on the left to continue.": "Consulta el estado del sistema, el almacenamiento, los entrenadores y la cola de trabajos. Elige una sección del menú para continuar.",
+  "Organize training project metadata. Archiving hides a project without deleting the underlying training files.": "Organiza los datos de tus proyectos de entrenamiento. Archivar un proyecto lo oculta sin borrar sus archivos de entrenamiento.",
+  "Select a model family, then open the trainer to configure your training. Each trainer has its own requirements.": "Selecciona una familia de modelos y abre su entrenador para configurarlo. Cada entrenador tiene requisitos específicos.",
+  "Monitor video memory, GPU utilization and temperature without closing or changing running programs. ComfyUI is not required.": "Consulta VRAM, carga y temperatura de la GPU sin cerrar ni modificar procesos. No requiere ComfyUI.",
+  "Set the ComfyUI address and test your connection before importing or running workflows.": "Introduce la dirección de ComfyUI y comprueba la conexión antes de importar o ejecutar workflows.",
+  "Browse read-only inventories of models and see where they are installed. Nothing is downloaded or moved here.": "Consulta los modelos y sus ubicaciones mediante inventarios de solo lectura. Aquí no se descargan ni mueven archivos.",
+  "Inspect built-in and custom nodes installed in your ComfyUI. A detected node does not guarantee compatibility.": "Consulta los nodos básicos y personalizados instalados en ComfyUI. Detectarlos no garantiza su compatibilidad.",
+  "Import or index ComfyUI workflows, inspect nodes, mark favorites and open them in the generation or comparison tools.": "Importa o indexa workflows de ComfyUI, inspecciona sus nodos, marca favoritos y ábrelos en generación o comparación.",
+  "Prepare and review a workflow, adjust editable parameters and explicitly confirm before running. Preparation alone does not generate.": "Prepara y revisa un workflow, ajusta los parámetros editables y confirma expresamente antes de ejecutarlo. Preparar no genera nada.",
+  "See previously submitted workflows and output references. Media stays on the ComfyUI server.": "Consulta las generaciones anteriores y sus resultados. Los archivos multimedia permanecen en el servidor ComfyUI.",
+  "Select a compatible workflow and compare selected LoRA strengths with otherwise unchanged generation settings.": "Selecciona un workflow compatible y compara diferentes intensidades de un LoRA, manteniendo constantes los demás parámetros.",
+  "Choose a trainer for its model family. All detailed training settings remain in its dedicated interface.": "Elige el entrenador de la familia de modelos correspondiente. Los ajustes detallados están en su propia interfaz."
 }
