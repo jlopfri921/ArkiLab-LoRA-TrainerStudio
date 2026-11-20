@@ -28,10 +28,34 @@ function init(){
  if(panels.some(p=>!mapped.has(p)))return;
  // Explicit, reviewed IDs only. Auto VRAM profile and core train settings stay visible.
  const commonAdvanced=["train_lr_scheduler","train_warmup_steps","train_lr_cycles","train_lora_alpha","train_use_rslora","train_use_loraplus","train_use_dora","train_dora_normfix","train_compute_precision","train_lora_targets","train_precision","train_grad_accum","train_save_every","train_seed","train_use_lokr","train_lokr_factor"];
+ const memoryAdvanced=["train_resident_blocks","train_park_mode","train_ram_limit_gb"];
+ const turboAdvanced=["train_turbo_strength"];
  const engineAdvanced={
-  "flux1":["train_resident_blocks","train_park_mode","train_ram_limit_gb","train_guidance"],
-  "qwenimage21":["train_turbo_strength"],
-  "sdxl":[]
+  // Image trainers: model-specific expert controls. The VRAM profile
+  // and use-turbo switch stay visible to first-time users.
+  flux1:[...memoryAdvanced,"train_guidance"],
+  flux3klein:[],
+  klein9b:[...memoryAdvanced,...turboAdvanced],
+  krea2:[...turboAdvanced,"precache_max_seq_len"],
+  zimage:[...turboAdvanced],
+  qwenimage21:[...turboAdvanced],
+  qwenimage2512:[...turboAdvanced,"train_blocks_on_gpu"],
+  ideogram4:[...memoryAdvanced],
+  mossimage:[...turboAdvanced],
+  ernie:[...turboAdvanced],
+  anima:[],
+  boogu:[...memoryAdvanced],
+  mingimage:[...memoryAdvanced],
+  fibo2:[...memoryAdvanced,...turboAdvanced],
+  sdxl:[],
+  // Video trainers: keep duration/frame count and the audio toggle
+  // visible. Manual VRAM budgets and weight tuning belong to Expert.
+  wan22:[...memoryAdvanced,...turboAdvanced,"train_preview_turbo"],
+  ltx23:[...memoryAdvanced,...turboAdvanced],
+  ltx25:[...memoryAdvanced,...turboAdvanced,"train_audio_loss_weight","precache_ref_downscale"],
+  minimaxh3:[...memoryAdvanced,...turboAdvanced,"train_vram_budget_gb","train_vram_swap_gb","train_vram_headroom_gb","train_adapter_strength","train_preview_lora_strength","train_caption_dropout","train_preview_turbo"],
+  // Audio uses a different dataset and keeps its specific options.
+  yue2:[]
  };
  const engine=document.body.dataset.orkiEngine||"sdxl";
  const advancedIds=[...commonAdvanced,...(engineAdvanced[engine]||[])];
