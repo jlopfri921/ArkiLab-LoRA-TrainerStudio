@@ -51,6 +51,40 @@ function init(){
  const row=document.createElement("div");row.className="orki-mode-row";
  for(const label of ["Basic","Expert"]){const b=btn(label,()=>{mode=label;try{localStorage.setItem(preference,mode);}catch{}render();});modes.set(label,b);row.append(b);}
  nav.append(row,mk("p","Basic mode hides advanced parameters without changing their values. Review Expert before training."));
+
+ // Search existing model-specific controls without replacing or altering them.
+ const searchWrap=document.createElement("div");searchWrap.className="orki-setting-search";
+ const search=document.createElement("input");search.type="search";search.className="no-i18n";
+ const searchResults=document.createElement("div");searchResults.className="orki-setting-results";
+ searchResults.setAttribute("role","list");searchResults.setAttribute("aria-live","polite");
+ const updatePlaceholder=()=>{search.placeholder=tr("Find setting");search.setAttribute("aria-label",tr("Find setting"));};
+ updatePlaceholder();document.addEventListener("orkilab:language-changed",updatePlaceholder);
+ const searchable=Array.from(sidebar.querySelectorAll(".form-group")).map(group=>{
+   const label=group.querySelector("label"),control=group.querySelector("input[id],select[id],textarea[id]");
+   if(!label||!control)return null;
+   const panel=group.closest(".panel");
+   const target=stages.find(([,items])=>items.includes(panel));
+   return target?{label:label.textContent.trim(),control,stage:target[0]}:null;
+ }).filter(Boolean);
+ search.addEventListener("input",()=>{
+   searchResults.replaceChildren();
+   const q=search.value.trim().toLocaleLowerCase();
+   if(q.length<2)return;
+   for(const entry of searchable.filter(x=>x.label.toLocaleLowerCase().includes(q)||x.control.id.toLocaleLowerCase().includes(q)).slice(0,8)){
+     const b=document.createElement("button");b.type="button";
+     b.textContent=entry.label+" · "+tr(entry.stage);
+     b.addEventListener("click",()=>{
+       stage=entry.stage;mode="Expert";render();
+       searchResults.replaceChildren();search.value="";
+       entry.control.scrollIntoView({block:"center",behavior:"auto"});
+       entry.control.focus({preventScroll:true});
+     });
+     searchResults.append(b);
+   }
+ });
+ searchWrap.append(search,searchResults);
+ nav.append(searchWrap);
+
  const classic=btn("Classic layout",()=>{
    document.body.classList.remove("orki-pilot");grid.classList.remove("orki-monitor-only");nav.hidden=true;nav.style.display="none";
    for(const p of panels)delete p.dataset.orkiStageHidden;
