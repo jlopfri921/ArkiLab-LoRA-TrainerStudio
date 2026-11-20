@@ -32,6 +32,28 @@ def node_schema(url, kind, get_json):
             pass
     raise ValueError("Node metadata unavailable: " + kind)
 
+def combo_choices(descriptor):
+    """Return an explicit finite option list for legacy and V3 ComfyUI COMBOs.
+
+    None means there is no recognized/usable dropdown schema. Never accept
+    arbitrary scalars when an advertised options list is missing or invalid.
+    """
+    if not isinstance(descriptor, list) or not descriptor:
+        return None
+    typ = descriptor[0]
+    if isinstance(typ, list):
+        choices = typ
+    elif typ == "COMBO":
+        opts = descriptor[1] if len(descriptor) > 1 else None
+        choices = opts.get("options") if isinstance(opts, dict) else None
+    else:
+        return None
+    if (not isinstance(choices, list) or not 0 < len(choices) <= 5000
+            or any(type(x) not in (str, int, float, bool) for x in choices)):
+        return None
+    return choices
+
+
 def validate_prompt(prompt, schema):
     for ident, node in prompt.items():
         kind = node["class_type"]
@@ -57,8 +79,13 @@ def validate_prompt(prompt, schema):
                 if isinstance(typ, str) and typ not in ("*", outputs[value[1]]):
                     raise ValueError(f"{kind} #{ident}: incompatible link {name}")
                 continue
-            if isinstance(typ, list) and value not in typ:
-                raise ValueError(f"{kind} #{ident}: unavailable option {name}: {value}")
+            if isinstance(typ, list) or typ == "COMBO":
+                choices = combo_choices(descriptor)
+                if choices is None:
+                    raise ValueError(f"{kind} #{ident}: invalid dropdown metadata for {name}")
+                if not any(type(value) is type(option) and value == option for option in choices):
+                    raise ValueError(f"{kind} #{ident}: unavailable option {name}: {value}")
+                continue
             if typ == "INT" and type(value) is not int:
                 raise ValueError(f"{kind} #{ident}: invalid integer {name}")
             if typ == "FLOAT" and type(value) not in (int, float):
@@ -67,7 +94,7 @@ def validate_prompt(prompt, schema):
                 raise ValueError(f"{kind} #{ident}: invalid text {name}")
             if typ == "BOOLEAN" and type(value) is not bool:
                 raise ValueError(f"{kind} #{ident}: invalid boolean {name}")
-            if isinstance(typ, str) and typ not in ("INT","FLOAT","STRING","BOOLEAN","*"):
+            if isinstance(typ, str) and typ not in ("INT","FLOAT","STRING","BOOLEAN","*","COMBO"):
                 # A scalar may be valid in a different node version, but the
                 # *connected* ComfyUI node schema is authoritative. Do not
                 # silently coerce a sampler selector into an object link.
