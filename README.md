@@ -14,6 +14,14 @@
 
 Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Workspace is the default interface. This release candidate still requires comprehensive regression and GPU validation.
 
+## Ecosystem spotlight — owner-managed announcement
+
+The Dashboard includes a small, dismissible **OrkiLab ecosystem** announcement currently restricted to OrkiLab and OrkiCAD AI. It is a first-party editorial promotion, never an advertising network. One announcement is shown at a time, rotated daily, with a session-level dismiss control.
+
+**To change it remotely for installations:** edit `GUI/promotions.json` on the repository's **main** branch. A local OrkiLab installation fetches the fixed HTTPS file through its own backend and caches a validated result for six hours; it does **not** need a software update for future copy changes. A brand-new announcement becomes visible after the next successful refresh. While offline, the last successful announcement is retained for the running server process; otherwise the slot stays hidden. Pull requests and changes on other branches have no impact until merged into `main`.
+
+The manifest uses `{"version":1,"items":[...]}`. Items support `id`, `enabled`, multilingual `title` and `description` objects (`es`, `en`, etc.) and an HTTPS `url`. Links are limited to the project's approved domains in `scripts/promotions_feed.py`; updating that allowlist requires shipping a code change. The UI uses text only (no HTML, third-party JavaScript, embedded images, cookies or tracking). Remote requests are made by the local server to the fixed file, not directly from visitors' browsers; no visitor identifiers are sent.
+
 ## What's new in OrkiLab — modern Workspace and ComfyUI integration
 
 > **Development status (November 20, 2026).** The features below have been implemented on the repository's default branch, but **have not yet passed end-to-end tests with real ComfyUI Desktop workflows and GPU jobs**. The current version identifier remains **0.2.0-rc.1**; do not interpret the 0.3.x development milestones as released versions. Keep backups of important workflows and datasets.

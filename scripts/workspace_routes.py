@@ -9,10 +9,12 @@ import workflow_library
 import generation_studio
 import gpu_monitor
 import project_layout
+import promotions_feed
 
 
 def register(app, base, load_config):
     base = Path(base)
+    promotions_feed.register(app)
     comfyui_connect.register(app, base)
     workflow_library.register(app, base)
     generation_studio.register(app, base)
