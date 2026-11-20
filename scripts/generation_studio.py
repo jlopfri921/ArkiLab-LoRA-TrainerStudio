@@ -244,6 +244,43 @@ def register(app, base):
         except (OSError, ValueError, TypeError) as exc:
             return jsonify(error="Generation submission could not be confirmed. Check ComfyUI before retrying.", detail=str(exc)[:300]), 502
 
+    @app.post("/api/workspace/comfyui/memory/release")
+    def release_comfyui_memory():
+        """Explicit cache/model unload; refuse when shared ComfyUI is busy."""
+        if not local():
+            return jsonify(error="Manage ComfyUI on the launcher PC"), 403
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 128:
+            return jsonify(error="Invalid request"), 400
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict) or body.get("confirm") is not True:
+            return jsonify(error="Explicit memory release confirmation required"), 400
+        cfg = config()
+        if cfg["mode"] == "native":
+            return jsonify(error="ComfyUI is disabled in native mode"), 409
+        try:
+            with lock:
+                if project_layout.training_in_progress(base):
+                    return jsonify(error="Training is active. Finish training before releasing memory."), 409
+                queue = get_json(cfg["url"], "/queue")
+                if not isinstance(queue, dict) or not all(
+                        isinstance(queue.get(key), list) for key in ("queue_running", "queue_pending")):
+                    return jsonify(error="Could not verify ComfyUI queue"), 502
+                if queue["queue_running"] or queue["queue_pending"]:
+                    return jsonify(error="ComfyUI has queued or running jobs. Memory release refused."), 409
+                # Fixed URL/path and payload; never kill Python processes or clear the shared queue.
+                req = Request(cfg["url"] + "/free",
+                              data=b'{"unload_models":true,"free_memory":true}',
+                              headers={"Content-Type": "application/json"}, method="POST")
+                with build_opener(ProxyHandler({}), NoRedirect()).open(req, timeout=10) as response:
+                    if response.status != 200:
+                        raise ValueError("ComfyUI did not accept memory release")
+                    response.read(1024)
+            return jsonify(accepted=True, detail="ComfyUI accepted model unload and cache release; actual RAM/VRAM reclamation may be delayed or partial")
+        except HTTPError as exc:
+            return jsonify(error="ComfyUI rejected memory release", detail=f"HTTP {exc.code}"), 502
+        except (OSError, ValueError, TypeError) as exc:
+            return jsonify(error="Could not request memory release", detail=str(exc)[:300]), 502
+
     @app.post("/api/workspace/generation/<token>/cancel")
     def generation_cancel(token):
         """Cancel this job only, never clear the entire shared ComfyUI queue."""
