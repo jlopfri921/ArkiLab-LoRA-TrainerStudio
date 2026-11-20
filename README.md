@@ -1,4 +1,16 @@
-# AcademiaSD LoRAlab Trainer Studio
+# ArkiLab — LoRA Trainer Studio
+
+<p align="center"><img src="assets/arkilab/arkilab-logo-light.svg" alt="ArkiLab" width="580"></p>
+
+**Train. Adapt. Create.** · ArkiLab 0.1.0-dev (Foundation)
+
+ArkiLab is an independent fork of [AcademiaSD LoRAlab Trainer Studio](https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio). Original copyright, MIT license, contributors and model-specific licenses remain intact. The material below documents inherited functionality; ArkiLab-specific changes are tracked separately in [CHANGELOG_ARKILAB.md](CHANGELOG_ARKILAB.md).
+
+[Architecture](docs/arkilab/ARCHITECTURE.md) · [Audit](docs/arkilab/AUDIT.md) · [Roadmap](docs/arkilab/ROADMAP.md) · [Development](docs/arkilab/DEVELOPMENT_GUIDELINES.md) · [Security](docs/arkilab/SECURITY.md)
+
+**Fork updates:** clone this repository with Git. Our updater preserves origin and the current branch, refuses dirty tracked files and permits fast-forward only. Stop training before updating. Do not use an older AcademiaSD updater in this fork. ZIP installations must be replaced by a Git clone before using the updater.
+
+## Original project documentation
 
 <p align="center">
   <img src="assets/launcher_LoRAlab.jpg" alt="AcademiaSD LoRAlab Trainer Studio" width="900">

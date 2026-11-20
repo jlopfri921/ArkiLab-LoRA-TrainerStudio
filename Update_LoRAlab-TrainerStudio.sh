@@ -6,7 +6,7 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 echo "================================================================"
-echo "  ACADEMIASD - LORALAB TRAINER STUDIO UPDATER"
+echo "  ARKILAB - LORA TRAINER STUDIO UPDATER"
 echo "  [EN] Repository Update Utility"
 echo "  [ES] Utilidad de Actualizacion del Repositorio"
 echo "================================================================"
@@ -27,80 +27,17 @@ if ! command -v git >/dev/null 2>&1; then
     exit 1
 fi
 
-# 2. Check .git
-if [ ! -d ".git" ]; then
-    echo "[INFO] Initializing Git repository..."
-    echo "[INFO] Inicializando repositorio Git..."
-    echo
-    git init
-    git remote add origin https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio.git 2>/dev/null || true
-fi
-
-# 3. Ensure remote URL
-git remote set-url origin https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio.git 2>/dev/null || true
-
-echo "[EN] Syncing latest updates from GitHub..."
-echo "[ES] Sincronizando ultimas actualizaciones desde GitHub..."
-echo
-
-# Version actual, para listar despues los cambios nuevos / Current version, to list the new changes afterwards
-OLD_HEAD="$(git rev-parse -q --verify HEAD 2>/dev/null || true)"
-
-# 4. Rama a actualizar: la de esta carpeta (main, dev...); main si no hay ninguna, master como ultimo recurso
-#    Branch to update: this folder's branch (main, dev...); main if there is none, master as a last resort
-BRANCH="$(git symbolic-ref --short -q HEAD 2>/dev/null || true)"
-BRANCH="${BRANCH:-main}"
-if ! git fetch origin "${BRANCH}" 2>/dev/null; then
-    if git fetch origin main 2>/dev/null; then
-        BRANCH="main"
-    elif git fetch origin master 2>/dev/null; then
-        BRANCH="master"
-    else
-        echo
-        echo "[ERROR] Failed to update repository from GitHub (fetch failed)."
-        echo "[ERROR] No se pudo actualizar el repositorio desde GitHub (fallo fetch)."
-        echo "Revisa tu conexion a internet / Check your internet connection."
-        exit 1
-    fi
-fi
-echo "[EN] Branch: ${BRANCH}"
-echo "[ES] Rama: ${BRANCH}"
-echo
-
-# 5. Force reset to remote branch
-git checkout -f "${BRANCH}"
-git reset --hard "origin/${BRANCH}" || {
-    echo
-    echo "[ERROR] Failed to update repository from GitHub (reset failed)."
-    echo "[ERROR] No se pudo actualizar el repositorio desde GitHub (fallo reset)."
-    exit 1
-}
-
-echo
-echo "================================================================"
-echo "[OK] Repository updated successfully! / Repositorio actualizado!"
-echo "================================================================"
-echo
-echo "[EN] Update process completed."
-echo "[ES] Proceso de actualizacion completado."
-echo
-echo "[EN] Your models, datasets, projects, LoRAs and settings were kept."
-echo "[ES] Tus modelos, datasets, proyectos, LoRAs y ajustes se han conservado."
-
-# Cambios desde la version anterior (titulos de los commits) / Changes since the previous version (commit titles)
-if [ -n "${OLD_HEAD}" ]; then
-    NEW_COUNT="$(git rev-list --no-merges --count "${OLD_HEAD}..HEAD" 2>/dev/null || true)"
-    if [ "${NEW_COUNT}" = "0" ]; then
-        echo
-        echo "[EN] You already had the latest version: no new changes."
-        echo "[ES] Ya tenias la ultima version: no hay cambios nuevos."
-    elif [ -n "${NEW_COUNT}" ]; then
-        echo
-        echo "[EN] Changes since your previous version (${NEW_COUNT}, newest first):"
-        echo "[ES] Cambios desde tu version anterior (${NEW_COUNT}, los mas recientes primero):"
-        git --no-pager log --no-merges -n 40 --format="  - %s" "${OLD_HEAD}..HEAD"
-    fi
-fi
+# Safe fork update: never rewrite remotes or discard changes.
+fail() { echo "[ERROR] Update refused. Check origin, branch, local changes and remote history." >&2; exit 1; }
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 || fail
+git remote get-url origin >/dev/null 2>&1 || fail
+git diff --quiet || fail
+git diff --cached --quiet || fail
+BRANCH="$(git symbolic-ref --short -q HEAD)" || fail
+[ -n "$BRANCH" ] || fail
+git fetch origin "$BRANCH" || fail
+git merge --ff-only FETCH_HEAD || fail
+echo "[OK] Safe fast-forward update / Actualizacion segura."
 
 # 6. Librerias nuevas o actualizadas de requirements.txt / New or updated libraries from requirements.txt
 PY_EXE="${LORALAB_PYTHON:-./venv/bin/python}"
