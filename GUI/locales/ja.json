@@ -1766,5 +1766,8 @@
   "ComfyUI rejected the request": "ComfyUI が要求を拒否しました",
   "Generation submission could not be confirmed. Check ComfyUI before retrying.": "送信を確認できません。再試行前に ComfyUI を確認してください。",
   "Generation job not found": "生成ジョブが見つかりません",
-  "Could not read generation status": "生成状態を取得できません"
+  "Could not read generation status": "生成状態を取得できません",
+  "ComfyUI Zone": "ComfyUI ゾーン",
+  "Back to Workspace": "ワークスペースに戻る",
+  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "ComfyUI 接続、モデル、ノード、ワークフロー、生成を一か所で管理します。"
 }
