@@ -1,5 +1,9 @@
 """Local workflow library. Import and inspect only; never execute a graph."""
 import json
+import os
+import time
+import hashlib
+from contextlib import closing
 import sqlite3
 import uuid
 from pathlib import Path
@@ -43,6 +47,9 @@ def register(app, base):
         con = sqlite3.connect(path)
         con.row_factory = sqlite3.Row
         con.execute("CREATE TABLE IF NOT EXISTS workflows (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL, favorite INTEGER NOT NULL DEFAULT 0, graph TEXT NOT NULL, summary TEXT NOT NULL)")
+        con.execute("CREATE TABLE IF NOT EXISTS workflow_sources (workflow_id TEXT PRIMARY KEY, root TEXT NOT NULL, relative TEXT NOT NULL, digest TEXT NOT NULL, UNIQUE(root,relative))")
+        con.execute("CREATE TABLE IF NOT EXISTS workflow_settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)")
+        con.commit()
         return con
 
     def allowed():
@@ -50,15 +57,15 @@ def register(app, base):
 
     def public(row):
         return {"id": row["id"], "name": row["name"], "category": row["category"],
-                "favorite": bool(row["favorite"]), **json.loads(row["summary"])}
+                "favorite": bool(row["favorite"]), **json.loads(row["summary"]), "source": row["relative"] if "relative" in row.keys() else None}
 
     @app.route("/api/workspace/workflows", methods=["GET", "POST"])
     def workflows():
         if not allowed():
             return jsonify(error="Manage workflows on the launcher PC"), 403
         if request.method == "GET":
-            with db() as con:
-                rows = con.execute("SELECT id,name,category,favorite,summary FROM workflows ORDER BY favorite DESC,name COLLATE NOCASE").fetchall()
+            with closing(db()) as con, con:
+                rows = con.execute("SELECT w.id,w.name,w.category,w.favorite,w.summary,s.relative FROM workflows w LEFT JOIN workflow_sources s ON w.id=s.workflow_id ORDER BY w.favorite DESC,w.name COLLATE NOCASE").fetchall()
                 return jsonify(workflows=[public(row) for row in rows])
         if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= MAX_BYTES:
             return jsonify(error="Invalid workflow request or file too large"), 400
@@ -97,3 +104,94 @@ def register(app, base):
                 return jsonify(error="Invalid request"), 400
             con.execute("UPDATE workflows SET favorite=? WHERE id=?", (int(body["favorite"]), ident))
             return jsonify(ok=True)
+
+    @app.route("/api/workspace/workflows/folder", methods=["GET", "POST"])
+    def workflow_folder():
+        if not allowed():
+            return jsonify(error="Manage workflows on the launcher PC"), 403
+        with closing(db()) as con, con:
+            if request.method == "GET":
+                row = con.execute("SELECT value FROM workflow_settings WHERE key='folder'").fetchone()
+                return jsonify(folder=row[0] if row else "")
+            if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 4096:
+                return jsonify(error="Invalid request"), 400
+            body = request.get_json(silent=True)
+            raw = body.get("folder") if isinstance(body, dict) else None
+            if not isinstance(raw, str) or not raw.strip() or len(raw) > 1024:
+                return jsonify(error="Invalid workflow folder"), 400
+            try:
+                root = Path(raw.strip()).expanduser()
+                if not root.is_absolute() or not root.is_dir():
+                    raise ValueError()
+                root = root.resolve()
+            except (OSError, ValueError):
+                return jsonify(error="Invalid workflow folder"), 400
+            con.execute("INSERT OR REPLACE INTO workflow_settings VALUES ('folder',?)", (str(root),))
+            stats = dict(imported=0, updated=0, unchanged=0, skipped=0, limited=False)
+            deadline = time.monotonic() + 15
+            total = con.execute("SELECT COUNT(*) FROM workflows").fetchone()[0]
+            visited = 0
+            read_bytes = 0
+            def linked(p):
+                return p.is_symlink() or getattr(p, "is_junction", lambda: False)()
+            for current, dirs, files in os.walk(root, followlinks=False):
+                if time.monotonic() > deadline:
+                    stats["limited"] = True
+                    break
+                dirs[:] = sorted(d for d in dirs if not d.startswith(".") and not linked(Path(current,d)))
+                for name in sorted(files):
+                    visited += 1
+                    if visited > 10000 or time.monotonic() > deadline or read_bytes >= 64_000_000:
+                        stats["limited"] = True
+                        break
+                    p = Path(current, name)
+                    if p.suffix.lower() != ".json" or linked(p):
+                        continue
+                    try:
+                        with p.open("rb") as handle:
+                            raw_data = handle.read(MAX_BYTES + 1)
+                        read_bytes += len(raw_data)
+                        if len(raw_data) > MAX_BYTES:
+                            raise ValueError()
+                        graph = json.loads(raw_data)
+                        summary = inspect_graph(graph)
+                        rel = p.relative_to(root).as_posix()
+                        digest = hashlib.sha256(json.dumps(graph,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode("utf-8")).hexdigest()
+                    except (OSError, ValueError, RecursionError, TypeError):
+                        stats["skipped"] += 1
+                        continue
+                    previous = con.execute("SELECT workflow_id,digest FROM workflow_sources WHERE root=? AND relative=?", (str(root),rel)).fetchone()
+                    if previous:
+                        if previous["digest"] == digest:
+                            stats["unchanged"] += 1
+                            continue
+                        con.execute("UPDATE workflows SET graph=?,summary=? WHERE id=?", (json.dumps(graph,ensure_ascii=False),json.dumps(summary),previous["workflow_id"]))
+                        con.execute("UPDATE workflow_sources SET digest=? WHERE workflow_id=?", (digest,previous["workflow_id"]))
+                        stats["updated"] += 1
+                        continue
+                    if con.execute("SELECT 1 FROM workflow_sources WHERE digest=?", (digest,)).fetchone():
+                        stats["unchanged"] += 1
+                        continue
+                    if total >= 500:
+                        stats["limited"] = True
+                        continue
+                    category = body.get("category", "other")
+                    if category not in CATEGORIES:
+                        category = "other"
+                    segments = rel.lower().replace("-", " ").split("/")
+                    for segment in segments[:-1]:
+                        for candidate, words in (("image",("image","imagen","imagem")),("video",("video","vídeo")),("music",("music","música")),("audio",("audio","sonido")),("3d",("3d",))):
+                            if any(word in segment for word in words):
+                                category = candidate
+                                break
+                        else:
+                            continue
+                        break
+                    ident = uuid.uuid4().hex
+                    con.execute("INSERT INTO workflows VALUES (?,?,?,?,?,?)",(ident,p.stem[:120],category,0,json.dumps(graph,ensure_ascii=False),json.dumps(summary)))
+                    con.execute("INSERT INTO workflow_sources VALUES (?,?,?,?)",(ident,str(root),rel,digest))
+                    total += 1
+                    stats["imported"] += 1
+                if visited > 10000 or time.monotonic() > deadline or read_bytes >= 64_000_000:
+                    break
+            return jsonify(folder=str(root), **stats)
