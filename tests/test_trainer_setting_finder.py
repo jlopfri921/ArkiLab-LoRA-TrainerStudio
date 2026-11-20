@@ -41,6 +41,33 @@ class TrainerSettingFinderTests(unittest.TestCase):
         # Automatic VRAM profile remains in the Basic view.
         self.assertNotIn('"train_vram_profile"', self.js)
 
+    def test_all_engines_have_modern_navigation_and_safe_field_classification(self):
+        engines = (
+            "sdxl", "flux1", "flux3klein", "klein9b", "krea2",
+            "zimage", "qwenimage21", "qwenimage2512", "ideogram4",
+            "mossimage", "ernie", "anima", "boogu", "mingimage",
+            "fibo2", "wan22", "ltx23", "ltx25", "minimaxh3", "yue2",
+        )
+        for engine in engines:
+            with self.subTest(engine=engine):
+                html = (ROOT / "GUI" / ("trainer_ui_" + engine + ".html")).read_text(encoding="utf-8")
+                self.assertIn('data-orki-engine="' + engine + '"', html)
+                self.assertIn('orkilab-pilot.js', html)
+                for required in ("precache_cache_dir", "train_total_steps", "export_final_name", "train_preview_every"):
+                    self.assertIn('id="' + required + '"', html)
+                self.assertIn(engine + ":", self.js)
+
+    def test_memory_presets_and_model_essentials_remain_visible(self):
+        self.assertIn('const memoryAdvanced=', self.js)
+        self.assertIn('const turboAdvanced=', self.js)
+        for setting in ("train_vram_profile", "train_use_turbo", "precache_num_frames",
+                        "precache_max_frames", "train_total_steps", "train_lr",
+                        "train_lora_rank", "train_batch_size", "train_train_audio"):
+            self.assertNotIn('"' + setting + '"', self.js)
+        self.assertIn("train_vram_budget_gb", self.js)
+        self.assertIn("train_blocks_on_gpu", self.js)
+        self.assertIn("train_audio_loss_weight", self.js)
+
     def test_accessible_and_responsive(self):
         self.assertIn('search.type="search"', self.js)
         self.assertIn('search.setAttribute("aria-label"', self.js)
