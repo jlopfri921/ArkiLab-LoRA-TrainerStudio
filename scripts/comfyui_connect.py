@@ -111,3 +111,12 @@ def register(app, base):
             return jsonify(probe(config["url"]))
         except (OSError, ValueError):
             return jsonify(connected=False, error="Could not connect to ComfyUI"), 502
+
+    @app.post("/api/workspace/models")
+    def workspace_models():
+        if request.remote_addr not in ("127.0.0.1", "::1"):
+            return jsonify(error="Configure ComfyUI on the launcher PC"), 403
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 1024:
+            return jsonify(error="Invalid request"), 400
+        from model_inventory import inventory
+        return jsonify(inventory(base, load(), get_json))
