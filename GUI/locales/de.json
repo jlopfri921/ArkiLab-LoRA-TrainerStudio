@@ -1769,5 +1769,16 @@
   "Could not read generation status": "Generierungsstatus konnte nicht gelesen werden",
   "ComfyUI Zone": "ComfyUI-Bereich",
   "Back to Workspace": "Zurück zum Arbeitsbereich",
-  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "Verwalten Sie ComfyUI-Verbindung, Modelle, Knoten, Workflows und Generierung an einem Ort."
+  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "Verwalten Sie ComfyUI-Verbindung, Modelle, Knoten, Workflows und Generierung an einem Ort.",
+  "Generation history": "Generierungsverlauf",
+  "Review saved generation parameters and outputs. Original media remains on ComfyUI.": "Gespeicherte Parameter und Ergebnisse prüfen. Originaldateien bleiben in ComfyUI.",
+  "Refresh history": "Verlauf aktualisieren",
+  "Previous page": "Vorherige Seite",
+  "Next page": "Nächste Seite",
+  "Media unavailable on ComfyUI": "Medium in ComfyUI nicht verfügbar",
+  "Showing {count} generations": "{count} Generierungen angezeigt",
+  "No generations recorded": "Keine Generierungen gespeichert",
+  "Saved generation parameters": "Gespeicherte Generierungsparameter",
+  "Download API JSON": "API-JSON herunterladen",
+  "Check generation status": "Generierungsstatus prüfen"
 }
