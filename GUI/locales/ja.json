@@ -1959,5 +1959,12 @@
   "PCI bus": "PCIバス",
   "GPU temperature is high. Check cooling and hardware limits.": "GPU温度が高くなっています。冷却状態とハードウェアの上限を確認してください。",
   "{count} GPUs detected": "{count}基のGPUを検出",
-  "Combined across GPUs": "すべてのGPUの合計"
+  "Combined across GPUs": "すべてのGPUの合計",
+  "ComfyUI memory": "ComfyUI のメモリ",
+  "Release models and cache": "モデルとキャッシュを解放",
+  "Automatically release after generation": "生成後に自動解放",
+  "Unloads cached ComfyUI models from RAM/VRAM when its queue is empty. Does not restart ComfyUI or guarantee all Python memory is returned. The automatic option affects only generations started here.": "キューが空の場合に ComfyUI のモデルキャッシュを RAM/VRAM から解放します。ComfyUI は再起動せず、Python のメモリがすべて解放されるとは限りません。自動解放はここで開始した生成のみ対象です。",
+  "Unload ComfyUI models and clear its cache? Only when all jobs are finished.": "ComfyUI のモデルとキャッシュを解放しますか？ すべてのジョブが終了している場合のみ実行します。",
+  "Requesting ComfyUI memory release...": "ComfyUI にメモリ解放を要求しています...",
+  "Memory release accepted. Actual RAM/VRAM recovery may be partial or delayed.": "解放要求が受け付けられました。RAM/VRAM の解放は一部のみ、または遅延する場合があります。"
 }
