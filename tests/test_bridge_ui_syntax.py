@@ -12,7 +12,7 @@ class BridgeSyntaxTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("node"), "node is not installed")
     def test_workspace_inline_javascript_parses(self):
         html = (ROOT / "GUI" / "workspace.html").read_text(encoding="utf-8")
-        scripts = re.findall(r"<script(?:\\s[^>]*)?>([\\s\\S]*?)</script>", html, flags=re.I)
+        scripts = re.findall(r"<script[^>]*>(.*?)</script>", html, flags=re.I | re.S)
         self.assertTrue(scripts, "No inline Workspace script found")
         for script in scripts:
             if not script.strip():
