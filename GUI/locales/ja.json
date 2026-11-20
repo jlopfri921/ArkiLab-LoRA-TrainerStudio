@@ -1864,5 +1864,9 @@
   "Prepare and review a workflow, adjust editable parameters and explicitly confirm before running. Preparation alone does not generate.": "ワークフローを準備して確認し、編集可能な値を変更してから実行を承認します。準備だけでは生成されません。",
   "See previously submitted workflows and output references. Media stays on the ComfyUI server.": "過去の生成と結果を確認します。メディアは ComfyUI サーバーに保存されています。",
   "Select a compatible workflow and compare selected LoRA strengths with otherwise unchanged generation settings.": "互換ワークフローを選び、他の条件を固定して LoRA 強度を比較します。",
-  "Choose a trainer for its model family. All detailed training settings remain in its dedicated interface.": "モデルの種類に合うトレーナーを選択します。詳細設定は専用画面にあります。"
+  "Choose a trainer for its model family. All detailed training settings remain in its dedicated interface.": "モデルの種類に合うトレーナーを選択します。詳細設定は専用画面にあります。",
+  "Find setting": "設定を検索",
+  "No matching settings": "一致する設定がありません",
+  "Settings complexity": "設定の詳細度",
+  "advanced settings hidden": "件の詳細設定を非表示"
 }
