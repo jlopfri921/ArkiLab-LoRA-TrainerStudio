@@ -1922,5 +1922,22 @@
   "Workflow prepared successfully": "Workflow préparé avec succès",
   "Step {current} of {total}": "Étape {current} sur {total}",
   "Bridge conversion is active. This is a step indicator, not an elapsed-time estimate.": "Conversion en cours. Indication d’étape, sans estimation du temps restant.",
-  "Bridge failed": "Erreur Bridge"
+  "Bridge failed": "Erreur Bridge",
+  "Cancel preparation": "Annuler la préparation",
+  "Preparation cancelled": "Préparation annulée",
+  "Cancel generation": "Annuler la génération",
+  "Cancel the current OrkiLab generation? This may interrupt its running node.": "Annuler cette génération OrkiLab ? Le nœud actif pourrait être interrompu.",
+  "Cancellation requested": "Annulation demandée",
+  "Generation cancelled": "Génération annulée",
+  "ComfyUI is stopping this workflow.": "ComfyUI arrête ce workflow.",
+  "Waiting for ComfyUI to accept this workflow.": "En attente de l’acceptation par ComfyUI.",
+  "Waiting for ComfyUI execution": "En attente de l’exécution dans ComfyUI",
+  "Executing node {node}": "Exécution du nœud {node}",
+  "Node type: {kind}": "Type de nœud : {kind}",
+  "Workflow execution in progress": "Workflow en cours",
+  "Sampling progress: {value} / {max}": "Échantillonnage : {value} / {max}",
+  "Progress within current node, not the whole workflow": "Progression du nœud actuel, pas du workflow entier",
+  "Check details in ComfyUI": "Voir les détails dans ComfyUI",
+  "Workflow execution finished": "Exécution du workflow terminée",
+  "Workflow cancellation confirmed": "Annulation du workflow confirmée"
 }
