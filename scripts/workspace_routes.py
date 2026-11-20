@@ -8,6 +8,7 @@ import comfyui_connect
 import workflow_library
 import generation_studio
 import gpu_monitor
+import gpu_stats
 import project_layout
 import promotions_feed
 
@@ -31,6 +32,7 @@ def register(app, base, load_config):
             return jsonify(error="GPU monitoring is available on the launcher PC only"), 403
         data = gpu_monitor.get_gpu_metrics().copy()
         data["training_active"] = bool(project_layout.training_in_progress(base))
+        data["selected_gpu"] = gpu_stats.saved_gpu() or None
         return jsonify(data)
 
     @app.get("/api/workspace/overview")

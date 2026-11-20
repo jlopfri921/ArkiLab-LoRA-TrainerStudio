@@ -101,6 +101,16 @@ class WorkspaceNavigationTests(unittest.TestCase):
                       'aria-controls="context-description"', 'function updateWorkspaceContext('):
             self.assertIn(value, self.html)
 
+    def test_gpu_manager_shows_multiple_cards_and_hardware_metrics(self):
+        for needle in ('id="gpu-overview"', 'id="gpu-cards"', 'id="gpu-choose"',
+                       'gpu.memory_utilization_percent', 'gpu.power_draw_w',
+                       'gpu.fan_percent', 'gpu.graphics_clock_mhz',
+                       'gpu.memory_clock_mhz', 'gpu.driver_version',
+                       'gpu.temperature_c', 'gpu-selected',
+                       'gpuList=val(2)?.gpus||[]'):
+            self.assertIn(needle, self.html)
+        self.assertIn('gpuStat("Highest GPU temperature"', self.html)
+
     def test_comfyui_remains_separate(self):
         self.assertIn('id="comfy-navigation"', self.html)
         self.assertIn('data-module="compare"', self.html)
