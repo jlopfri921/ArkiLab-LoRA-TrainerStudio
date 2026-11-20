@@ -9,11 +9,12 @@ function init(){
  const terminal=document.getElementById("terminal"),dataset=document.getElementById("ds-grid"),gallery=document.getElementById("gallery");
  const datasetSection=dataset?.parentElement, gallerySection=gallery?.parentElement;
  const consoleTitle=terminal?.previousElementSibling;
- if(panels.length!==5||!terminal||!datasetSection||!gallerySection||!consoleTitle||datasetSection.parentElement!==monitor||gallerySection.parentElement!==monitor)return;
+ if(panels.length<5||!terminal||!datasetSection||!gallerySection||!consoleTitle||datasetSection.parentElement!==monitor||gallerySection.parentElement!==monitor)return;
  // Exact control IDs identify stages, independent of translated headings.
  const find=id=>document.getElementById(id)?.closest(".panel");
  const cache=find("precache_cache_dir"),training=find("train_total_steps"),exportPanel=find("export_final_name"),preview=find("train_preview_every");
- const token=panels.find(p=>![cache,training,exportPanel,preview].includes(p));
+ const refmod=document.getElementById("pnl_refmod");
+ const token=panels.find(p=>![cache,training,exportPanel,preview,refmod].includes(p));
  if(new Set([cache,training,exportPanel,preview,token]).size!==5||![cache,training,exportPanel,preview,token].every(Boolean))return;
  const nav=document.createElement("nav");nav.className="orki-tools orki-pilot-nav no-i18n";nav.setAttribute("aria-label",tr("Training navigation"));
  const localized=[];
@@ -21,6 +22,10 @@ function init(){
  document.addEventListener("orkilab:language-changed",()=>{for(const [e,key] of localized)e.textContent=tr(key);nav.setAttribute("aria-label",tr("Training navigation"));});
  const btn=(label,action)=>{const b=mk("button",label);b.type="button";b.addEventListener("click",action);return b;};
  const stages=[["Project and pre-cache",[cache]],["Dataset",[]],["Training",[training]],["Previews",[preview]],["Export",[exportPanel]],["Logs",[]],["Credentials",[token]]];
+ if(refmod&&panels.includes(refmod))stages.splice(4,0,["RefMod",[refmod]]);
+ const mapped=new Set(stages.flatMap(x=>x[1]));
+ // Fail open if an unfamiliar panel would otherwise become inaccessible.
+ if(panels.some(p=>!mapped.has(p)))return;
  const advancedIds=["train_lr_scheduler","train_warmup_steps","train_lr_cycles","train_lora_alpha","train_use_rslora","train_use_loraplus","train_use_dora","train_dora_normfix","train_compute_precision","train_lora_targets","train_precision","train_grad_accum","train_save_every","train_seed","train_use_lokr","train_lokr_factor"];
  const advanced=new Set(advancedIds.map(id=>document.getElementById(id)?.closest(".form-group")).filter(Boolean));
  // A shared container may also contain a basic setting; never conceal that container.

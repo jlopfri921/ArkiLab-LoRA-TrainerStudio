@@ -1,0 +1,24 @@
+/* Shared trainer layout: presentation only; original controls, IDs and callbacks remain intact. */
+body.orki-pilot > .orki-tools:not(.orki-pilot-nav){display:none}
+body.orki-pilot header .orki-tools{display:flex;margin:0;padding:6px 10px}
+body.orki-pilot header .orki-tools label{color:#a7bad2}
+body.orki-pilot header .banner-container{display:none}
+body.orki-pilot header{position:sticky;top:0;z-index:12;padding:12px 18px;margin-bottom:12px;background:#142239}
+body.orki-pilot .main-grid{display:grid;grid-template-columns:210px minmax(0,1fr);gap:16px;align-items:start}
+body.orki-pilot .sidebar{display:flex;width:auto;min-width:0;grid-column:2;grid-row:1;gap:12px}
+body.orki-pilot .side-group,body.orki-pilot .side-col{display:contents}
+body.orki-pilot .console-container{grid-column:2;grid-row:2;min-width:0}
+body.orki-pilot .main-grid.orki-monitor-only .console-container{grid-row:1}
+body.orki-pilot .main-grid.orki-monitor-only .sidebar{display:none}
+body.orki-pilot [data-orki-stage-hidden="1"],body.orki-pilot [data-orki-basic-hidden="1"]{display:none!important}
+body.orki-pilot .orki-pilot-nav{grid-column:1;grid-row:1 / span 2;align-self:start;display:flex;flex-direction:column;align-items:stretch;gap:7px;position:sticky;top:150px;padding:12px;margin:0;max-height:calc(100vh - 170px);overflow:auto}
+.orki-pilot-nav button{text-align:start;min-height:38px}
+.orki-pilot-nav button[aria-pressed="true"]{background:#20434f;border-color:#3cdbd0;color:#bdfcf7}
+.orki-pilot-nav .orki-mode-row{display:flex;gap:6px;flex-wrap:wrap}
+.orki-pilot-nav .orki-mode-row button{flex:1;text-align:center}
+.orki-pilot-nav p{font:12px/1.45 system-ui;color:#a7bad2;margin:4px 0}
+body.orki-pilot .sidebar .panel{width:100%;max-width:none}
+body.orki-pilot .sidebar .panel-body{max-width:1000px}
+body.orki-pilot .terminal{height:clamp(180px,30vh,320px)}
+body.orki-pilot .panel-title{scroll-margin-top:155px}
+@media(max-width:960px){body.orki-pilot header{position:static}body.orki-pilot .main-grid{grid-template-columns:minmax(0,1fr)}body.orki-pilot .orki-pilot-nav{position:static;grid-column:1;grid-row:1;max-height:none;display:flex;flex-direction:row;flex-wrap:wrap}body.orki-pilot .orki-pilot-nav p{flex-basis:100%}body.orki-pilot .sidebar{grid-column:1;grid-row:2}body.orki-pilot .console-container{grid-column:1;grid-row:3}body.orki-pilot .main-grid.orki-monitor-only .console-container{grid-row:2}}
