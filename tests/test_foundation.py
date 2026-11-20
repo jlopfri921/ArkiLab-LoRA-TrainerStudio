@@ -106,3 +106,19 @@ class UpdaterTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TrainerBrandingTests(unittest.TestCase):
+    def test_trainer_branding_and_assets(self):
+        cfg = json.loads((ROOT / "GUI/launcher.json").read_text(encoding="utf-8"))
+        for trainer in cfg["trainers"]:
+            cover = ROOT / trainer["image"]
+            self.assertTrue(cover.is_file(), str(cover))
+            self.assertIn("OrkiLab", cover.read_text(encoding="utf-8"))
+            for name in ("orkilab-logo.svg", "orkilab-icon.svg"):
+                self.assertTrue(ET.parse(cover.parent / name).getroot().tag.endswith("svg"))
+        for html in (ROOT / "GUI").glob("trainer_ui_*.html"):
+            content = html.read_text(encoding="utf-8")
+            self.assertIn("OrkiLab", content, str(html))
+            self.assertNotIn("https://www.youtube.com/@Academia_SD", content)
+            self.assertNotIn('src="/assets/logo.jpg"', content)

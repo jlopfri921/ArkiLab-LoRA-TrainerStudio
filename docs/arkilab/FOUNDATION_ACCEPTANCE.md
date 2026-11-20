@@ -14,3 +14,7 @@ Run `python -m unittest discover -s tests -v` with standard Python and Git. CI r
 
 ## Release gate
 Merge only after reviewing diff and CI status; stable 0.1.0 requires local checks. Record failures and open issues. Roll back by reverting the merge commit (do not reset user work). Do not remove models, settings or outputs. External deployment security and full trainer validation remain outside Foundation.
+
+## Branding follow-up
+
+All 20 trainer HTML interfaces (21 launcher engine entries) now use OrkiLab vector assets in model-local asset directories. The original image files remain available for backward compatibility and historical documentation. The selected PNG has not yet been imported. Test the live trainer and Dataset Forge asset routing on the installed environment. Automated checks do not establish GPU readiness.

@@ -30,3 +30,6 @@ Status: development snapshot; runtime validation pending. No training engine cha
 
 - Unify the launcher, queue and all 21 launcher covers with the orbital O vector identity.
 - Preserve legacy asset paths as compatibility aliases; use OrkiLab paths for new UI links.
+
+- Rebrand all trainer interfaces and Dataset Forge; remove inherited promotional social links from trainer pages.
+- Add regression checks for model-local branding assets and engine covers.
