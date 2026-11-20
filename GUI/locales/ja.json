@@ -2030,5 +2030,15 @@
   "Peak sampled": "観測された最大値",
   "After generation": "生成後",
   "After model unload": "モデルの解放後",
-  "Change after generation": "生成後の変化"
+  "Change after generation": "生成後の変化",
+  "Image training checklist": "画像学習の準備",
+  "Prepare a compatible image dataset and captions. Check the base-model family, LoRA rank, resolution, memory usage and checkpoint options in this trainer.": "対応する画像データとキャプションを準備します。基本モデルの種類、LoRA ランク、解像度、メモリ使用量、チェックポイント設定を確認してください。",
+  "Video training checklist": "動画学習の準備",
+  "Prepare the clips and their captions in the format required by this trainer. Check frame count, resolution, base model, available VRAM and checkpoint settings.": "指定形式の動画とキャプションを準備します。フレーム数、解像度、基本モデル、VRAM、チェックポイントを確認してください。",
+  "Audio training checklist": "音声学習の準備",
+  "Prepare audio files and any required transcriptions or labels. Review sample rate, model family, dataset structure, GPU memory and checkpoints in the trainer.": "音声ファイルと必要な文字起こし・ラベルを用意します。サンプリングレート、モデル、データ構造、GPU メモリ、チェックポイントを確認してください。",
+  "Multimodal training checklist": "マルチモーダル学習の準備",
+  "Check which input modalities and dataset structure this engine supports. Confirm compatible model weights, resolution or duration, GPU memory and checkpoints before training.": "対応する入力形式とデータ構造を確認します。モデル重み、解像度または長さ、GPU メモリ、チェックポイントも確認してください。",
+  "Before opening this trainer": "トレーナーを開く前に",
+  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "正確な互換性、推奨 GPU メモリ、チェックポイント機能は各トレーナーで確認してください。この説明は設定を変更しません。"
 }
