@@ -11,6 +11,10 @@ import time
 import threading
 
 _FIELDS = ("index", "name", "memory.total", "memory.used", "memory.free", "utilization.gpu", "temperature.gpu")
+# Optional metrics are isolated: older GPUs may lack individual sensors.
+_EXTRA_FIELDS = ("index", "uuid", "pci.bus_id", "driver_version", "pstate",
+                 "utilization.memory", "power.draw", "power.limit", "fan.speed",
+                 "clocks.current.graphics", "clocks.current.memory")
 _CACHE_SECONDS = 3.0
 _cache_lock = threading.Lock()
 _cache_value = None
@@ -65,6 +69,42 @@ def get_gpu_metrics():
                         "utilization_percent": load,
                         "temperature_c": temp,
                     })
+                if gpus:
+                    # Fetch extra telemetry separately so older drivers never
+                    # lose the basic VRAM/load/temperature overview.
+                    try:
+                        extra = subprocess.run(
+                            [exe, "--query-gpu=" + ",".join(_EXTRA_FIELDS),
+                             "--format=csv,noheader,nounits"],
+                            capture_output=True, text=True, encoding="utf-8",
+                            errors="replace", timeout=5, check=False, shell=False,
+                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                        )
+                        if extra.returncode == 0 and len(extra.stdout) <= 20000:
+                            by_index = {gpu["index"]: gpu for gpu in gpus}
+                            names = {
+                                "uuid": "uuid", "pci.bus_id": "pci_bus_id",
+                                "driver_version": "driver_version", "pstate": "performance_state",
+                                "utilization.memory": "memory_utilization_percent",
+                                "power.draw": "power_draw_w", "power.limit": "power_limit_w",
+                                "fan.speed": "fan_percent",
+                                "clocks.current.graphics": "graphics_clock_mhz",
+                                "clocks.current.memory": "memory_clock_mhz",
+                            }
+                            for values in list(csv.reader(io.StringIO(extra.stdout)))[:16]:
+                                if len(values) != len(_EXTRA_FIELDS):
+                                    continue
+                                idx = _num(values[0])
+                                if idx is None or not idx.is_integer() or int(idx) not in by_index:
+                                    continue
+                                gpu = by_index[int(idx)]
+                                for label, val in zip(_EXTRA_FIELDS[1:], values[1:]):
+                                    key = names[label]
+                                    gpu[key] = val.strip()[:100] if label in (
+                                        "uuid", "pci.bus_id", "driver_version", "pstate"
+                                    ) else _num(val)
+                    except (OSError, ValueError, subprocess.TimeoutExpired):
+                        pass
                 result = {"available": bool(gpus), "reason": None if gpus else "GPU metrics not available", "gpus": gpus}
             except (OSError, ValueError, subprocess.TimeoutExpired):
                 result = {"available": False, "reason": "GPU metrics not available", "gpus": []}
