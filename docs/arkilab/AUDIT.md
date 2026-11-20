@@ -16,3 +16,7 @@ Scope: repository tree, README, launcher HTML/JSON and Python, two representativ
 Existing features: dataset forge, captions, queue, preview scoring, export path, HF upload, GPU selector, block swap, DoRA/LoKr/rsLoRA. Avoid duplicates.
 
 Acceptance: unchanged trainer scripts, original UI behavior retained, all branding served from existing assets route, no destructive Git commands in updated scripts, no data uploads, original LICENSE unchanged. Pending: actual launcher smoke test, Windows batch behavior, representative GPU training, comprehensive route/security review.
+
+## Foundation RC follow-up
+
+Reviewed Windows/Linux installer and launcher scripts, queue and Dataset Forge pages, launcher configuration and existing smoke harness. Installers do not show origin-reset commands in the reviewed matches. Added explicit dependency-update opt-in and local Git regression tests. Trainer-specific branding remains intact to avoid changing model-specific asset routing. Static review does not certify security, performance or all trainer behaviors.

@@ -151,5 +151,6 @@
       "image": "assets/sdxl/portada.jpg",
       "run": "Run_LoRAlab-SDXL.bat"
     }
-  ]
+  ],
+  "arkilab_version": "0.1.0-rc.1"
 }

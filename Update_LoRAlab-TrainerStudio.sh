@@ -39,14 +39,24 @@ git fetch origin "$BRANCH" || fail
 git merge --ff-only FETCH_HEAD || fail
 echo "[OK] Safe fast-forward update / Actualizacion segura."
 
+if [ "${1:-}" != "--deps" ]; then
+    echo "[INFO] Code updated. Use --deps to update Python packages explicitly."
+    exit 0
+fi
+if [ -n "${LORALAB_PYTHON:-}" ]; then
+    echo "[ERROR] External Python environment. Update its dependencies manually." >&2
+    exit 1
+fi
+
 # 6. Librerias nuevas o actualizadas de requirements.txt / New or updated libraries from requirements.txt
 PY_EXE="${LORALAB_PYTHON:-./venv/bin/python}"
 echo
 echo "Actualizando librerias de Python... / Updating Python libraries..."
 if [ -x "${PY_EXE}" ]; then
-    "${PY_EXE}" -m pip install -r requirements.txt || echo "[AVISO] No se pudieron actualizar las librerias / [WARNING] Could not update the libraries."
+    "${PY_EXE}" -m pip install -r requirements.txt
     # pip no reinstala diffusers si solo cambia el commit de la URL: lo hace este script.
-    "${PY_EXE}" scripts/sync_pinned.py || echo "[AVISO] No se pudo actualizar diffusers / [WARNING] Could not update diffusers."
+    "${PY_EXE}" scripts/sync_pinned.py
 else
-    echo "[AVISO] No hay entorno: ejecuta ./Install_LoRAlab-TrainerStudio.sh / [WARNING] No environment: run ./Install_LoRAlab-TrainerStudio.sh"
+    echo "[ERROR] No environment: run ./Install_LoRAlab-TrainerStudio.sh" >&2
+    exit 1
 fi

@@ -47,20 +47,29 @@ pause
 exit /b 1
 :SAFE_DONE
 
+if /I not "%~1"=="--deps" (
+    echo [INFO] Code updated. Run this updater with --deps to update Python packages explicitly.
+    exit /b 0
+)
+
 rem 6. Librerias nuevas o actualizadas de requirements.txt / New or updated libraries from requirements.txt
 echo Actualizando librerias de Python... / Updating Python libraries...
 set "PY_EXE=%~dp0venv\Scripts\python.exe"
-if defined LORALAB_PYTHON set "PY_EXE=%LORALAB_PYTHON%"
+if defined LORALAB_PYTHON (
+    echo [ERROR] External Python environment detected. Update its dependencies manually.
+    exit /b 1
+)
 if exist "!PY_EXE!" (
     "!PY_EXE!" -m pip install -r "%~dp0requirements.txt"
-    if errorlevel 1 echo [AVISO] No se pudieron actualizar las librerias / [WARNING] Could not update the libraries.
+    if errorlevel 1 exit /b 1
     rem AMD: amd-adlx lee la VRAM de toda la GPU / AMD: amd-adlx reads the VRAM of the whole GPU
     "!PY_EXE!" -c "import sys, importlib.metadata as m; sys.exit(0 if 'rocm' in m.version('torch') else 1)" >nul 2>&1 && "!PY_EXE!" -m pip install -q amd-adlx
     rem pip no reinstala diffusers si solo cambia el commit de la URL: lo hace este script.
     "!PY_EXE!" "%~dp0scripts\sync_pinned.py"
-    if errorlevel 1 echo [AVISO] No se pudo actualizar diffusers / [WARNING] Could not update diffusers.
+    if errorlevel 1 exit /b 1
 ) else (
-    echo [AVISO] No hay entorno: ejecuta Install_LoRAlab-TrainerStudio.bat / [WARNING] No environment: run Install_LoRAlab-TrainerStudio.bat
+    echo [ERROR] No environment: run Install_LoRAlab-TrainerStudio.bat
+    exit /b 1
 )
 echo.
 pause
