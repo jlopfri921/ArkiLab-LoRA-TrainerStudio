@@ -32,6 +32,7 @@ const I18N = {
         }
         document.documentElement.lang = this.lang;
         this.apply(document.body);
+        document.dispatchEvent(new CustomEvent('orkilab:language-changed'));
     },
 
     // "  Project Name:  " -> se traduce "Project Name" y se conservan los espacios y los ":".
