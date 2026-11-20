@@ -369,13 +369,15 @@ Keep every `{marker}` of the English text, in the same order when it has no name
 
 Some of these models are slow to generate, so it pays to see where an image is going early on, while it is still sampling, and cancel it if it is not working. That needs a good preview, and ComfyUI's default one for Qwen-Image 2.1, Krea 2 and FLUX.2 is Latent2RGB, a blurry, blocky color projection.
 
-My recommendation: **kijai's KJNodes** plus **AcademiaSD's tiny decoders (TAE)**. They show a real image at every step, in milliseconds and without loading the full VAE:
+**Optional third-party preview resources (not developed or hosted by OrkiLab):** [KJNodes by kijai](https://github.com/kijai/ComfyUI-KJNodes) together with the tiny decoders (TAE) published by **AcademiaSD**. The original Hugging Face links and filenames are retained to credit their publisher and point to the actual download sources. OrkiLab does not claim ownership of these weights. They can provide sharper previews at sampling steps without loading the full VAE:
 
 | Model | TAE | File |
 | :--- | :--- | :--- |
 | Qwen-Image 2.1 | [AcademiaSD/TAE-Qwen-Image-2.1](https://huggingface.co/AcademiaSD/TAE-Qwen-Image-2.1) | `TAEQwenImage21_AcademiaSD.safetensors` |
 | Krea 2 | [AcademiaSD/TAE-Krea-2](https://huggingface.co/AcademiaSD/TAE-Krea-2) | `TAE_Krea2_AcademiaSD.safetensors` |
 | FLUX.2 and Ideogram4 | [AcademiaSD/TAE_Flux2_AcademiaSD](https://huggingface.co/AcademiaSD/TAE_Flux2_AcademiaSD) | `TAE_Flux2_AcademiaSD.safetensors` |
+
+> **Attribution:** These are external AcademiaSD assets. Linking to their Hugging Face pages does not mean OrkiLab is an AcademiaSD service or that these files have been rebranded. Check each model repository for its own licensing terms before redistribution.
 
 1. Download the file to `ComfyUI/models/vae_approx/`.
 2. Install [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes) by kijai.
