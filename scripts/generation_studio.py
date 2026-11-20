@@ -244,6 +244,53 @@ def register(app, base):
         except (OSError, ValueError, TypeError) as exc:
             return jsonify(error="Generation submission could not be confirmed. Check ComfyUI before retrying.", detail=str(exc)[:300]), 502
 
+    @app.post("/api/workspace/generation/<token>/cancel")
+    def generation_cancel(token):
+        """Cancel this job only, never clear the entire shared ComfyUI queue."""
+        if not local():
+            return jsonify(error="Manage workflows on the launcher PC"), 403
+        if request.mimetype != "application/json" or (request.content_length or 0) > 128:
+            return jsonify(error="Invalid request"), 400
+        with lock:
+            job = jobs.get(token)
+        saved = records.get(token)
+        if saved and saved["state"] in ("completed", "error", "cancelled"):
+            return jsonify(error="Generation already finished"), 409
+        if not job and saved:
+            job = (saved["url"], saved["prompt_id"])
+        if not job:
+            return jsonify(error="Generation job not found"), 404
+        url, ident = job
+        try:
+            url = validate_settings({"url": url}, DEFAULT_SETTINGS)["url"]
+            queue = get_json(url, "/queue")
+            if not isinstance(queue, dict):
+                raise ValueError("Invalid ComfyUI queue")
+            running = [x for x in queue.get("queue_running", [])
+                       if isinstance(x, list) and len(x) > 1]
+            pending = [x for x in queue.get("queue_pending", [])
+                       if isinstance(x, list) and len(x) > 1]
+            if any(x[1] == ident for x in pending):
+                path, data, state = "/queue", {"delete": [ident]}, "cancelled"
+            elif any(x[1] == ident for x in running):
+                # Older servers ignore prompt_id and may interrupt globally.
+                # Refuse if another job could be affected.
+                if len(running) != 1 or pending:
+                    return jsonify(error="Cannot safely interrupt while other ComfyUI jobs are present"), 409
+                path, data, state = "/interrupt", {"prompt_id": ident}, "cancelling"
+            else:
+                return jsonify(error="Job no longer in ComfyUI queue; refresh status"), 409
+            req = Request(url + path, data=json.dumps(data).encode("utf-8"),
+                          headers={"Content-Type": "application/json"}, method="POST")
+            with build_opener(ProxyHandler({}), NoRedirect()).open(req, timeout=10) as response:
+                if response.status != 200:
+                    raise ValueError("Cancellation not accepted by ComfyUI")
+                response.read(1024)
+            records.update(token, state, [])
+            return jsonify(state=state, cancelled=state == "cancelled")
+        except (OSError, ValueError, TypeError) as exc:
+            return jsonify(error="Could not cancel generation safely", detail=str(exc)[:300]), 502
+
     @app.get("/api/workspace/generation/<token>")
     def generation_status(token):
         if not local():
@@ -251,7 +298,7 @@ def register(app, base):
         with lock:
             job = jobs.get(token)
         saved = records.get(token)
-        if saved and saved["state"] in ("completed","error"):
+        if saved and saved["state"] in ("completed","error","cancelled"):
             return jsonify(state=saved["state"], outputs=json.loads(saved["outputs"]))
         if not job and saved:
             job = (saved["url"], saved["prompt_id"])
@@ -268,11 +315,18 @@ def register(app, base):
                     raise ValueError("Invalid queue")
                 for key, state in (("queue_running", "running"), ("queue_pending", "queued")):
                     if any(isinstance(item, list) and len(item) > 1 and item[1] == ident for item in queue.get(key, [])):
+                        if saved and saved["state"] == "cancelling":
+                            return jsonify(state="cancelling", outputs=[])
                         records.update(token,state,[])
                         return jsonify(state=state, outputs=[])
+                if saved and saved["state"] == "cancelling":
+                    records.update(token,"cancelled",[])
+                    return jsonify(state="cancelled", outputs=[])
                 return jsonify(state="unknown", outputs=[])
             status = entry.get("status") or {}
             state = "error" if status.get("status_str") == "error" else "completed" if status.get("completed") else "unknown"
+            if saved and saved["state"] == "cancelling" and state == "error":
+                state = "cancelled"
             outputs = describe_outputs(entry)
             records.update(token,state,outputs)
             return jsonify(state=state, outputs=outputs)
