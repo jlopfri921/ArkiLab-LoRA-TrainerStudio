@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "orkilab",
+      "enabled": true,
+      "title": {
+        "es": "OrkiLab · Tu espacio de entrenamiento con IA",
+        "en": "OrkiLab · Your AI training workspace",
+        "pt": "OrkiLab · O teu espaço de treino com IA"
+      },
+      "description": {
+        "es": "Entrena modelos LoRA, organiza proyectos y supervisa tus recursos desde un mismo espacio.",
+        "en": "Train LoRA models, organize projects and monitor resources in one workspace.",
+        "pt": "Treina modelos LoRA, organiza projetos e monitoriza recursos num só espaço."
+      },
+      "url": "https://github.com/jlopfri921/OrkiLab-LoRA-TrainerStudio"
+    },
+    {
+      "id": "orkicad-ai",
+      "enabled": true,
+      "title": {
+        "es": "OrkiCAD AI · Diseño CAD asistido por IA",
+        "en": "OrkiCAD AI · AI-assisted CAD design",
+        "pt": "OrkiCAD AI · Desenho CAD assistido por IA"
+      },
+      "description": {
+        "es": "Descubre nuestro proyecto de diseño 2D y 3D paramétrico con inteligencia artificial.",
+        "en": "Explore AI-assisted parametric 2D and 3D CAD design.",
+        "pt": "Descobre o desenho CAD 2D e 3D paramétrico assistido por IA."
+      },
+      "url": "https://github.com/jlopfri921/orkicad-ai"
+    }
+  ]
+}
