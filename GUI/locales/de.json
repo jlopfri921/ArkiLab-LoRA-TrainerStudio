@@ -1692,5 +1692,21 @@
   "Embedding": "Embedding",
   "Upscaler": "Hochskalierer",
   "Audio encoder": "Audioencoder",
-  "Vision encoder": "Bildencoder"
+  "Vision encoder": "Bildencoder",
+  "ComfyUI nodes": "ComfyUI-Knoten",
+  "Discover installed nodes and possible capabilities. Detection is based on metadata, not a generation test.": "Installierte Knoten und mögliche Fähigkeiten erkennen. Die Erkennung basiert auf Metadaten, nicht auf einem Generierungstest.",
+  "Discover nodes": "Knoten erkennen",
+  "Search nodes": "Knoten suchen",
+  "All origins": "Alle Ursprünge",
+  "Built-in": "Integriert",
+  "Unknown": "Unbekannt",
+  "All capabilities": "Alle Fähigkeiten",
+  "Capabilities": "Fähigkeiten",
+  "Module": "Modul",
+  "Matching nodes": "Passende Knoten",
+  "{shown} of {total} nodes": "{shown} von {total} Knoten",
+  "Scanning nodes...": "Knoten werden gesucht...",
+  "Could not read ComfyUI nodes": "ComfyUI-Knoten konnten nicht gelesen werden",
+  "Conditioning": "Konditionierung",
+  "Sampling": "Sampling"
 }
