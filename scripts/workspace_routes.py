@@ -4,10 +4,12 @@ import shutil
 from pathlib import Path
 
 from workspace_store import ProjectStore
+import comfyui_connect
 
 
 def register(app, base, load_config):
     base = Path(base)
+    comfyui_connect.register(app, base)
     store = ProjectStore(base / "settings" / "orkilab" / "projects.sqlite3")
 
     @app.get("/workspace")
