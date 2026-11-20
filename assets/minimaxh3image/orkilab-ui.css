@@ -1,0 +1,29 @@
+/* OrkiLab shared interface layer. Existing controls and state remain authoritative. */
+:root{color-scheme:dark;--orki-bg:#0b1221;--orki-panel:#142239;--orki-border:#30445e;--orki-accent:#3cdbd0;--orki-text:#e8f0fb;--orki-muted:#a7bad2;--bg-dark:var(--orki-bg);--panel-bg:var(--orki-panel);--panel-border:var(--orki-border);--text-main:var(--orki-text);--text-muted:var(--orki-muted);--accent:#258d91;--accent-hover:#18767b;--bg:var(--orki-bg);--panel:var(--orki-panel);--border:var(--orki-border);--text:var(--orki-text);--muted:var(--orki-muted)}
+body{font-family:system-ui,"Segoe UI",sans-serif;background-color:var(--orki-bg)}
+body header{border-radius:14px;box-shadow:0 8px 26px #0003}
+body .panel,body .card,body .hw-card{border-radius:12px;border-color:var(--orki-border)}
+body .panel-title{font-weight:700;letter-spacing:.01em;color:var(--orki-text)}
+body .banner-container{max-height:64px;border:0;background:transparent;justify-content:flex-start}
+body .banner-img{max-height:64px;width:auto;max-width:100%;object-fit:contain}
+body .header-content{gap:12px}
+body .hardware-monitor{flex-wrap:wrap}
+body .social-links:empty{display:none}
+body input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),body select,body textarea{border-radius:8px}
+body button:focus-visible,body a:focus-visible,body input:focus-visible,body select:focus-visible,body textarea:focus-visible{outline:2px solid var(--orki-accent);outline-offset:3px}
+body button:disabled{cursor:not-allowed}
+.orki-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#142239;border:1px solid #30445e;border-radius:12px;padding:10px 12px;margin:0 0 14px;color:#e8f0fb}
+.orki-tools strong{font-size:.9rem;color:#b7cbe2}
+.orki-tools button,.orki-tools select,.orki-tools input,.orki-help-dialog button{background:#0c1729;color:#e8f0fb;border:1px solid #39516e;border-radius:8px;padding:7px 11px;font:inherit;font-size:.82rem;cursor:pointer;max-width:100%}
+.orki-tools input{cursor:text;min-width:130px;flex:1 1 150px}
+.orki-tools button:hover,.orki-help-dialog button:hover{border-color:#3cdbd0}
+.orki-section-links{display:flex;flex:1 1 100%;gap:6px;flex-wrap:wrap}
+.orki-section-links button{color:#a7e7e5;border-color:#2b4a5e}
+.orki-help-group{position:relative}
+.orki-help-group>label{padding-inline-end:26px}
+body .orki-help-button{position:absolute;inset-inline-end:0;top:0;width:21px;height:21px;min-height:0;padding:0;border:1px solid #45647f;border-radius:50%;background:#101e33;color:#80e2dc;font:700 12px/19px system-ui;text-align:center;cursor:pointer;z-index:1}
+.orki-help-dialog{box-sizing:border-box;width:min(540px,92vw);max-height:85vh;overflow:auto;background:#142239;color:#e8f0fb;border:1px solid #45647f;border-radius:14px;padding:20px;margin:auto;box-shadow:0 16px 60px #0009;font:15px/1.6 system-ui}
+.orki-help-dialog::backdrop{background:#020617a8}
+.orki-help-dialog h2{font-size:1.15rem;margin:0 0 10px}.orki-help-dialog p{margin:0 0 16px;white-space:pre-wrap}.orki-help-dialog button{display:block;margin-inline-start:auto}
+@media(max-width:960px){body .hardware-monitor{justify-content:flex-start}body .hw-card{min-width:0;flex:1 1 110px}body .banner-container{justify-content:center}}
+@media(prefers-reduced-motion:reduce){.orki-tools *, .orki-help-dialog *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
