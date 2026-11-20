@@ -1,6 +1,6 @@
-# ArkiLab — LoRA Trainer Studio
+# OrkiLab — LoRA Trainer Studio
 
-![ArkiLab](assets/arkilab/arkilab-readme-banner.svg)
+![OrkiLab](assets/arkilab/arkilab-readme-banner.svg)
 
 **Train. Adapt. Create.** · 0.1.0-rc.1 · Maintained by [jlopfri921](https://github.com/jlopfri921)
 
@@ -8,7 +8,7 @@
 
 Technical descriptions and measurements below are inherited from upstream unless explicitly stated otherwise.
 
-**ArkiLab** brings together local image, video and audio LoRA training engines. Each model is loaded in **4-bit NF4**, the text encoder and the VAE run only once in a **pre-cache** stage, and 100 % of the GPU goes to training. Every trainer has the same web interface: dataset manager with an automatic captioner, live previews, exact-step resume and one-click export to ComfyUI. It also works from another device on your network: upload the dataset and download the LoRA from the browser.
+**OrkiLab** brings together local image, video and audio LoRA training engines. Each model is loaded in **4-bit NF4**, the text encoder and the VAE run only once in a **pre-cache** stage, and 100 % of the GPU goes to training. Every trainer has the same web interface: dataset manager with an automatic captioner, live previews, exact-step resume and one-click export to ComfyUI. It also works from another device on your network: upload the dataset and download the LoRA from the browser.
 
 New trainers are added **here**. One `Update_LoRAlab-TrainerStudio.bat` brings them to your existing installation, next to your models and projects — no new repository, no new environment.
 
@@ -912,8 +912,8 @@ Models and LoRAs downloaded at run time (not part of this repository): MelBandRo
 
 ## Community and support
 
-Report issues in the [ArkiLab issue tracker](https://github.com/jlopfri921/ArkiLab-LoRA-TrainerStudio/issues).
+Report issues in the [OrkiLab issue tracker](https://github.com/jlopfri921/ArkiLab-LoRA-TrainerStudio/issues).
 
 ## Credits
 
-Maintained by [jlopfri921](https://github.com/jlopfri921). Independent fork of [AcademiaSD LoRAlab Trainer Studio](https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio). Original copyright Academia SD (2026), MIT. All original contributors, third-party credits and model-specific licenses are retained. Historical measurements are inherited, not independently verified by ArkiLab.
+Maintained by [jlopfri921](https://github.com/jlopfri921). Independent fork of [AcademiaSD LoRAlab Trainer Studio](https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio). Original copyright Academia SD (2026), MIT. All original contributors, third-party credits and model-specific licenses are retained. Historical measurements are inherited, not independently verified by OrkiLab.

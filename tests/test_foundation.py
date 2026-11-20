@@ -20,7 +20,7 @@ class BrandingTests(unittest.TestCase):
         version = (ROOT / "VERSION_ARKILAB").read_text().strip()
         self.assertEqual(cfg["arkilab_version"], version)
         self.assertIn(version, (ROOT / "README.md").read_text(encoding="utf-8"))
-        self.assertIn("arkilab-version", html)
+        self.assertIn("orkilab-version", html)
         for name in ("arkilab-icon.svg", "arkilab-logo-dark.svg", "arkilab-logo-light.svg"):
             path = ROOT / "assets/arkilab" / name
             self.assertTrue(ET.parse(path).getroot().tag.endswith("svg"))

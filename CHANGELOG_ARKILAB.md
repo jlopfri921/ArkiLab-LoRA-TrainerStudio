@@ -1,8 +1,8 @@
-# ArkiLab changelog
+# OrkiLab changelog
 
 ## Unreleased — personal identity
 
-- Original ArkiLab engine covers and README banner.
+- Original OrkiLab engine covers and README banner.
 - English public README and personal maintainer attribution.
 - Remove promotional links from launcher; retain original credits and model identifiers.
 
@@ -18,7 +18,7 @@ Release candidate: CI and local hardware validation still required before stable
 
 ## 0.1.0-dev — Foundation (2026-11-20)
 
-- Introduce independent ArkiLab SVG branding, launcher title, palette, favicon and About panel.
+- Introduce independent OrkiLab SVG branding, launcher title, palette, favicon and About panel.
 - Preserve upstream documentation and MIT copyright.
 - Document architecture, audit, roadmap, integration contracts, dataset plan, security and development rules.
 - Replace destructive updater synchronization with fast-forward-only updates of the current origin branch; ZIP installations require a clone. Dependency updates retain upstream behavior.
