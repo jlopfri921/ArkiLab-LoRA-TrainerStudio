@@ -1864,5 +1864,9 @@
   "Prepare and review a workflow, adjust editable parameters and explicitly confirm before running. Preparation alone does not generate.": "워크플로를 준비하고 검토하며 수정 가능한 매개변수를 변경한 뒤 실행 전에 명시적으로 확인합니다. 준비만으로는 생성되지 않습니다.",
   "See previously submitted workflows and output references. Media stays on the ComfyUI server.": "과거 생성 작업과 결과를 확인합니다. 미디어는 ComfyUI 서버에 남아 있습니다.",
   "Select a compatible workflow and compare selected LoRA strengths with otherwise unchanged generation settings.": "호환되는 워크플로를 선택하고 다른 설정을 유지한 채 LoRA 강도를 비교합니다.",
-  "Choose a trainer for its model family. All detailed training settings remain in its dedicated interface.": "모델 계열에 맞는 트레이너를 선택합니다. 세부 학습 설정은 해당 화면에 있습니다."
+  "Choose a trainer for its model family. All detailed training settings remain in its dedicated interface.": "모델 계열에 맞는 트레이너를 선택합니다. 세부 학습 설정은 해당 화면에 있습니다.",
+  "Find setting": "설정 검색",
+  "No matching settings": "일치하는 설정이 없습니다",
+  "Settings complexity": "설정 복잡도",
+  "advanced settings hidden": "개의 고급 설정 숨김"
 }
