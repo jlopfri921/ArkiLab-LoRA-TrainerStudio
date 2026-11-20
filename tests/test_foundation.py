@@ -104,8 +104,6 @@ class UpdaterTests(unittest.TestCase):
         self.assertNotEqual(self.update().returncode, 0)
 
 
-if __name__ == "__main__":
-    unittest.main()
 
 
 class TrainerBrandingTests(unittest.TestCase):
@@ -122,3 +120,6 @@ class TrainerBrandingTests(unittest.TestCase):
             self.assertIn("OrkiLab", content, str(html))
             self.assertNotIn("https://www.youtube.com/@Academia_SD", content)
             self.assertNotIn('src="/assets/logo.jpg"', content)
+
+if __name__ == "__main__":
+    unittest.main()

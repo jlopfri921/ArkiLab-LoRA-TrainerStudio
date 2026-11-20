@@ -1,6 +1,6 @@
 # OrkiLab changelog
 
-## Unreleased — personal identity
+## 0.1.0-rc.2 — Foundation identity and validation candidate
 
 - Original OrkiLab engine covers and README banner.
 - English public README and personal maintainer attribution.
@@ -26,7 +26,7 @@ Release candidate: CI and local hardware validation still required before stable
 
 Status: development snapshot; runtime validation pending. No training engine changes.
 
-## Foundation branding follow-up
+### Interface branding follow-up
 
 - Unify the launcher, queue and all 21 launcher covers with the orbital O vector identity.
 - Preserve legacy asset paths as compatibility aliases; use OrkiLab paths for new UI links.

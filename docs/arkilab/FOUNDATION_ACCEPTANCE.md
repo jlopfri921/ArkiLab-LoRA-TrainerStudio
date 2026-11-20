@@ -1,6 +1,6 @@
 # Foundation release candidate acceptance
 
-Version 0.1.0-rc.1. Scope: documentation, branding, safe fork update and non-GPU tests; no changes to trainer engines or external ComfyUI.
+Version 0.1.0-rc.2. Scope: documentation, branding, safe fork update and non-GPU tests; no changes to trainer engines or external ComfyUI.
 
 ## Automated gates
 Run `python -m unittest discover -s tests -v` with standard Python and Git. CI runs on Windows and Ubuntu. Tests check SVG parsing, launcher links, version consistency, license attribution, update script guards, and actual local fast-forward/rejection behavior using disposable repositories. No network or model downloads in tests.

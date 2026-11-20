@@ -7,3 +7,5 @@
 - Do not install packages into ComfyUI or download models during unit tests. Never commit datasets, secrets, weights or caches.
 - Test new logic with synthetic fixtures. Run existing tools/smoke_test_ui.py in the project environment before merging UI changes; hardware tests require explicit local validation.
 - Clearly distinguish planned, implemented and measured features. Update CHANGELOG_ARKILAB.md and VERSION_ARKILAB with releases.
+
+- Use English for new documentation. Keep upstream attribution and technical publisher IDs intact. Use OrkiLab for all visible branding.

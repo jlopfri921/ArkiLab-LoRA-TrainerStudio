@@ -3,7 +3,7 @@
 <p align="center"><strong>Train. Adapt. Create.</strong><br>Local-first LoRA training for image, video and audio.</p>
 
 <p align="center">
-  <a href="VERSION_ARKILAB"><img alt="Version 0.1.0-rc.1" src="https://img.shields.io/badge/version-0.1.0--rc.1-087F91"></a>
+  <a href="VERSION_ARKILAB"><img alt="Version 0.1.0-rc.2" src="https://img.shields.io/badge/version-0.1.0--rc.2-087F91"></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-315DB3"></a>
   <img alt="Windows and Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-293C60">
 </p>
@@ -781,7 +781,7 @@ The NAR loss depends on the clips' latent amplitude (the latent is not normalize
 
 ## ☁️ RunPod
 
-No suitable GPU at home? Train in the cloud with the ready-made template:
+The following upstream cloud template is provided for historical compatibility; it is not an OrkiLab cloud release:
 
 <a href="https://console.runpod.io/deploy?template=lfxvtg5rrb&ref=jbvdshm0"><img src="https://img.shields.io/badge/Deploy%20on-RunPod-673ab7.svg?style=for-the-badge" alt="Deploy on RunPod"></a>
 
@@ -791,7 +791,7 @@ No suitable GPU at home? Train in the cloud with the ready-made template:
 4. Pick a trainer, upload your dataset with **⬆ Upload** (images and captions, or a `.zip`), pre-cache, train and save the result with **⬇ Download LoRA**.
 5. **When you finish, Stop and then Terminate the pod.** Closing the browser does not stop billing, and a stopped pod still pays for its volume.
 
-The image ([`ghcr.io/academiasd/loralab-trainerstudio`](https://github.com/AcademiaSD/AcademiaSD_LoRAlab-TrainerStudio/pkgs/container/loralab-trainerstudio)) only holds the environment; the code comes from this repository on every start, so the pod always runs the latest version. `LORALAB_REF` pins a branch or tag. The image is built from `docker/` by GitHub Actions. The deploy link includes the AcademiaSD referral code, which gives the channel RunPod credit at no cost to you.
+This inherited deployment uses the upstream container and source repository, not the OrkiLab fork. A dedicated OrkiLab cloud deployment is not yet published.
 
 ## 🌐 Remote access
 
@@ -842,7 +842,7 @@ venv\Scripts\python tools\smoke_test_ui.py --only sdxl    # one or more trainers
 ## 📁 Structure
 
 ```text
-AcademiaSD_LoRAlab-TrainerStudio/
+OrkiLab-LoRA-TrainerStudio/
 ├── Start_LoRAlab-TrainerStudio.bat   # Launcher (.sh on Linux)
 ├── Update_LoRAlab-TrainerStudio.bat  # Updater (.sh on Linux)
 ├── Install_LoRAlab-TrainerStudio.bat, Install_Triton_SageAtten220.bat (and their .sh)
