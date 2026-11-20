@@ -1692,5 +1692,21 @@
   "Embedding": "Embedding",
   "Upscaler": "Agrandisseur",
   "Audio encoder": "Encodeur audio",
-  "Vision encoder": "Encodeur visuel"
+  "Vision encoder": "Encodeur visuel",
+  "ComfyUI nodes": "Nœuds ComfyUI",
+  "Discover installed nodes and possible capabilities. Detection is based on metadata, not a generation test.": "Découvrez les nœuds installés et leurs capacités possibles. La détection repose sur les métadonnées, pas sur un test de génération.",
+  "Discover nodes": "Découvrir les nœuds",
+  "Search nodes": "Rechercher des nœuds",
+  "All origins": "Toutes les origines",
+  "Built-in": "Intégré",
+  "Unknown": "Inconnu",
+  "All capabilities": "Toutes les capacités",
+  "Capabilities": "Capacités",
+  "Module": "Module",
+  "Matching nodes": "Nœuds correspondants",
+  "{shown} of {total} nodes": "{shown} sur {total} nœuds",
+  "Scanning nodes...": "Analyse des nœuds...",
+  "Could not read ComfyUI nodes": "Impossible de lire les nœuds ComfyUI",
+  "Conditioning": "Conditionnement",
+  "Sampling": "Échantillonnage"
 }
