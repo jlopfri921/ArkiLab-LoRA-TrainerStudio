@@ -2008,5 +2008,20 @@
   "No archived projects yet": "Aucun projet archivé pour le moment",
   "Your first project starts here": "Votre premier projet commence ici",
   "Projects you archive will appear here.": "Les projets archivés apparaîtront ici.",
-  "Give your idea a name, choose an engine and keep your dataset reference together.": "Nommez votre idée, choisissez un moteur et conservez la référence aux données."
+  "Give your idea a name, choose an engine and keep your dataset reference together.": "Nommez votre idée, choisissez un moteur et conservez la référence aux données.",
+  "Choose your training engine": "Choisissez votre moteur d’entraînement",
+  "Train a LoRA to adapt a compatible base model to your images, clips or audio. Start with the type of media you want to teach the model, then select the training engine that matches its architecture.": "Entraînez un LoRA pour adapter un modèle de base compatible à vos images, vidéos ou sons. Choisissez le type de média, puis le moteur adapté à l’architecture du modèle.",
+  "Image LoRA": "LoRA d’image",
+  "Teach compatible image models a visual style, subject or concept with a prepared image dataset and captions.": "Apprenez aux modèles d’image compatibles un style, un sujet ou un concept avec des images et légendes préparées.",
+  "Explore image trainers": "Explorer les moteurs d’image",
+  "Video LoRA": "LoRA vidéo",
+  "Use a video-focused training engine for motion and temporal examples. Video training may require substantial GPU memory.": "Utilisez un moteur vidéo pour le mouvement et les séquences. L’entraînement peut demander beaucoup de mémoire GPU.",
+  "Explore video trainers": "Explorer les moteurs vidéo",
+  "Audio and music": "Audio et musique",
+  "Work with compatible audio or music training engines. Dataset format and model requirements vary by engine.": "Utilisez des moteurs audio ou musicaux compatibles. Les formats et exigences varient selon le modèle.",
+  "Explore audio trainers": "Explorer les moteurs audio",
+  "Each engine has its own dataset, model and hardware requirements. The category filters are a guide, not a guarantee of compatibility. Multimodal engines are listed separately.": "Chaque moteur possède ses propres exigences en données, modèles et matériel. Les filtres orientent sans garantir la compatibilité. Les moteurs multimodaux sont à part.",
+  "Browse available engines": "Parcourir les moteurs disponibles",
+  "Filter the trainers, inspect their descriptions and open the one you need.": "Filtrez les moteurs, consultez leurs descriptions et ouvrez celui dont vous avez besoin.",
+  "{count} training engines shown": "{count} moteurs affichés"
 }

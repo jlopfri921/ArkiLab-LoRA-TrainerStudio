@@ -2178,5 +2178,20 @@
   "No archived projects yet": "Todavía no hay proyectos archivados",
   "Your first project starts here": "Tu primer proyecto empieza aquí",
   "Projects you archive will appear here.": "Los proyectos que archives aparecerán aquí.",
-  "Give your idea a name, choose an engine and keep your dataset reference together.": "Pon nombre a tu idea, elige un entrenador y guarda la referencia a tus datos."
+  "Give your idea a name, choose an engine and keep your dataset reference together.": "Pon nombre a tu idea, elige un entrenador y guarda la referencia a tus datos.",
+  "Choose your training engine": "Elige tu entrenador de IA",
+  "Train a LoRA to adapt a compatible base model to your images, clips or audio. Start with the type of media you want to teach the model, then select the training engine that matches its architecture.": "Entrena un LoRA para adaptar un modelo base compatible a tus imágenes, vídeos o audio. Comienza por el tipo de contenido y selecciona un entrenador adecuado para la arquitectura del modelo.",
+  "Image LoRA": "LoRA de imagen",
+  "Teach compatible image models a visual style, subject or concept with a prepared image dataset and captions.": "Enseña a los modelos de imagen compatibles un estilo visual, sujeto o concepto mediante imágenes preparadas y descripciones.",
+  "Explore image trainers": "Explorar entrenadores de imagen",
+  "Video LoRA": "LoRA de vídeo",
+  "Use a video-focused training engine for motion and temporal examples. Video training may require substantial GPU memory.": "Utiliza un entrenador de vídeo para ejemplos de movimiento y secuencias. El entrenamiento puede necesitar mucha memoria GPU.",
+  "Explore video trainers": "Explorar entrenadores de vídeo",
+  "Audio and music": "Audio y música",
+  "Work with compatible audio or music training engines. Dataset format and model requirements vary by engine.": "Trabaja con entrenadores compatibles de audio o música. Los formatos de datos y requisitos cambian según el modelo.",
+  "Explore audio trainers": "Explorar entrenadores de audio",
+  "Each engine has its own dataset, model and hardware requirements. The category filters are a guide, not a guarantee of compatibility. Multimodal engines are listed separately.": "Cada entrenador tiene requisitos propios de datos, modelos y hardware. Los filtros orientan, pero no garantizan compatibilidad. Los entrenadores multimodales aparecen aparte.",
+  "Browse available engines": "Explorar los entrenadores disponibles",
+  "Filter the trainers, inspect their descriptions and open the one you need.": "Filtra, consulta las descripciones y abre el entrenador que necesites.",
+  "{count} training engines shown": "{count} entrenadores disponibles"
 }

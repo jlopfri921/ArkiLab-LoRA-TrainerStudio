@@ -2008,5 +2008,20 @@
   "No archived projects yet": "Ancora nessun progetto archiviato",
   "Your first project starts here": "Il tuo primo progetto inizia qui",
   "Projects you archive will appear here.": "I progetti archiviati appariranno qui.",
-  "Give your idea a name, choose an engine and keep your dataset reference together.": "Dai un nome all'idea, scegli un trainer e conserva il riferimento ai dati."
+  "Give your idea a name, choose an engine and keep your dataset reference together.": "Dai un nome all'idea, scegli un trainer e conserva il riferimento ai dati.",
+  "Choose your training engine": "Scegli il motore di addestramento",
+  "Train a LoRA to adapt a compatible base model to your images, clips or audio. Start with the type of media you want to teach the model, then select the training engine that matches its architecture.": "Addestra un LoRA per adattare un modello base compatibile alle tue immagini, video o audio. Parti dal tipo di contenuto e scegli il motore adatto all’architettura.",
+  "Image LoRA": "LoRA per immagini",
+  "Teach compatible image models a visual style, subject or concept with a prepared image dataset and captions.": "Insegna a modelli d’immagine compatibili uno stile, soggetto o concetto con immagini e descrizioni preparate.",
+  "Explore image trainers": "Esplora i trainer per immagini",
+  "Video LoRA": "LoRA per video",
+  "Use a video-focused training engine for motion and temporal examples. Video training may require substantial GPU memory.": "Usa un trainer video per movimento e sequenze temporali. Può richiedere molta memoria GPU.",
+  "Explore video trainers": "Esplora i trainer video",
+  "Audio and music": "Audio e musica",
+  "Work with compatible audio or music training engines. Dataset format and model requirements vary by engine.": "Usa trainer audio o musicali compatibili. Formati e requisiti variano a seconda del modello.",
+  "Explore audio trainers": "Esplora i trainer audio",
+  "Each engine has its own dataset, model and hardware requirements. The category filters are a guide, not a guarantee of compatibility. Multimodal engines are listed separately.": "Ogni motore ha requisiti specifici per dati, modelli e hardware. I filtri aiutano a scegliere ma non garantiscono compatibilità. I motori multimodali sono separati.",
+  "Browse available engines": "Sfoglia i trainer disponibili",
+  "Filter the trainers, inspect their descriptions and open the one you need.": "Filtra i trainer, leggi le descrizioni e apri quello desiderato.",
+  "{count} training engines shown": "{count} trainer visualizzati"
 }

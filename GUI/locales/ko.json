@@ -2008,5 +2008,20 @@
   "No archived projects yet": "보관된 프로젝트가 아직 없습니다",
   "Your first project starts here": "첫 프로젝트를 시작하세요",
   "Projects you archive will appear here.": "보관한 프로젝트가 여기에 나타납니다.",
-  "Give your idea a name, choose an engine and keep your dataset reference together.": "아이디어 이름을 정하고 엔진을 선택한 다음 데이터셋 참조를 저장하세요."
+  "Give your idea a name, choose an engine and keep your dataset reference together.": "아이디어 이름을 정하고 엔진을 선택한 다음 데이터셋 참조를 저장하세요.",
+  "Choose your training engine": "학습 엔진 선택",
+  "Train a LoRA to adapt a compatible base model to your images, clips or audio. Start with the type of media you want to teach the model, then select the training engine that matches its architecture.": "호환되는 기본 모델을 이미지, 영상 또는 오디오에 맞게 조정하는 LoRA를 학습합니다. 콘텐츠 유형을 선택한 후 모델 구조에 맞는 엔진을 고르세요.",
+  "Image LoRA": "이미지 LoRA",
+  "Teach compatible image models a visual style, subject or concept with a prepared image dataset and captions.": "준비된 이미지와 캡션으로 호환 이미지 모델에 스타일, 대상 또는 개념을 학습시킵니다.",
+  "Explore image trainers": "이미지 트레이너 보기",
+  "Video LoRA": "영상 LoRA",
+  "Use a video-focused training engine for motion and temporal examples. Video training may require substantial GPU memory.": "움직임과 시간적 흐름을 위한 영상 트레이너입니다. GPU 메모리가 많이 필요할 수 있습니다.",
+  "Explore video trainers": "영상 트레이너 보기",
+  "Audio and music": "오디오 및 음악",
+  "Work with compatible audio or music training engines. Dataset format and model requirements vary by engine.": "호환되는 오디오 및 음악 트레이너를 사용하세요. 데이터 형식과 요구 사항은 엔진마다 다릅니다.",
+  "Explore audio trainers": "오디오 트레이너 보기",
+  "Each engine has its own dataset, model and hardware requirements. The category filters are a guide, not a guarantee of compatibility. Multimodal engines are listed separately.": "각 엔진의 데이터, 모델 및 하드웨어 요구 사항은 다릅니다. 분류는 참고용이며 호환성을 보장하지 않습니다. 멀티모달 엔진은 별도로 표시됩니다.",
+  "Browse available engines": "사용 가능한 엔진 찾아보기",
+  "Filter the trainers, inspect their descriptions and open the one you need.": "트레이너를 필터링하고 설명을 확인한 뒤 필요한 엔진을 여세요.",
+  "{count} training engines shown": "표시된 트레이너 {count}개"
 }
