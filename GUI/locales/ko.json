@@ -1769,5 +1769,16 @@
   "Could not read generation status": "생성 상태를 읽을 수 없습니다",
   "ComfyUI Zone": "ComfyUI 영역",
   "Back to Workspace": "작업 공간으로 돌아가기",
-  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "ComfyUI 연결, 모델, 노드, 워크플로 및 생성을 한 곳에서 관리합니다."
+  "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "ComfyUI 연결, 모델, 노드, 워크플로 및 생성을 한 곳에서 관리합니다.",
+  "Generation history": "생성 기록",
+  "Review saved generation parameters and outputs. Original media remains on ComfyUI.": "저장된 매개변수와 결과를 확인합니다. 원본 파일은 ComfyUI에 남습니다.",
+  "Refresh history": "기록 새로 고침",
+  "Previous page": "이전 페이지",
+  "Next page": "다음 페이지",
+  "Media unavailable on ComfyUI": "ComfyUI에서 파일을 사용할 수 없음",
+  "Showing {count} generations": "생성 {count}개 표시",
+  "No generations recorded": "기록된 생성 없음",
+  "Saved generation parameters": "저장된 생성 매개변수",
+  "Download API JSON": "API JSON 다운로드",
+  "Check generation status": "생성 상태 확인"
 }
