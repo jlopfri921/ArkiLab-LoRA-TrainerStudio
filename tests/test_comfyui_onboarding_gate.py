@@ -47,7 +47,7 @@ class ComfyWelcomeTests(unittest.TestCase):
                         'updateComfyAccess(false)',
                         'const comfyModules=["welcome","comfyui"',
                         '!comfyConnectionVerified&&!["welcome","comfyui"].includes(selected)',
-                        'history.replaceState(null,"",location.pathname+"#welcome")',
+                        'if(comfyConnectionReady)history.replaceState(null,"",location.pathname+"#welcome")',
                         'link.hidden=!verified'):
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet,HTML)
