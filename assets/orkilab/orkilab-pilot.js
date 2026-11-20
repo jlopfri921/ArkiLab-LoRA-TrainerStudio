@@ -32,7 +32,7 @@ function init(){
  for(const group of advanced){if(Array.from(group.querySelectorAll("input,select,textarea")).some(e=>e.id&&!advancedIds.includes(e.id)))advanced.delete(group);}
  const engine=document.body.dataset.orkiEngine||"sdxl";
  const preference="orkilab."+engine+".mode";
- let stage="Training",mode="Expert";
+ let stage="Training",mode="Basic";
  try{const saved=localStorage.getItem(preference);if(saved==="Basic"||saved==="Expert")mode=saved;}catch{}
  const buttons=new Map(), modes=new Map();
  const hide=(e,on)=>{if(e)e.dataset.orkiStageHidden=on?"1":"0";};
@@ -43,14 +43,17 @@ function init(){
    // Keep the actual status and console visible in every stage.
    hide(datasetSection,stage!=="Dataset");hide(gallerySection,stage!=="Previews");
    for(const group of advanced)group.dataset.orkiBasicHidden=mode==="Basic"?"1":"0";
+   const hiddenAdvanced=mode==="Basic"?Array.from(advanced).filter(g=>selected.some(p=>p.contains(g))).length:0;
+   stageSummary.textContent=tr(stage)+" · "+(mode==="Basic"?tr("Basic"):tr("Expert"))+(hiddenAdvanced?" · "+hiddenAdvanced+" "+tr("advanced settings hidden"):"");
    for(const [k,b] of buttons)b.setAttribute("aria-pressed",String(k===stage));
    for(const [k,b] of modes)b.setAttribute("aria-pressed",String(k===mode));
  }
  nav.append(mk("strong","Training navigation"));
  for(const [label] of stages){const b=btn(label,()=>{stage=label;render();});buttons.set(label,b);nav.append(b);}
- const row=document.createElement("div");row.className="orki-mode-row";
+ const row=document.createElement("div");row.className="orki-mode-row";row.setAttribute("role","group");row.setAttribute("aria-label",tr("Settings complexity"));
  for(const label of ["Basic","Expert"]){const b=btn(label,()=>{mode=label;try{localStorage.setItem(preference,mode);}catch{}render();});modes.set(label,b);row.append(b);}
  nav.append(row,mk("p","Basic mode hides advanced parameters without changing their values. Review Expert before training."));
+ const stageSummary=mk("p","");stageSummary.className="orki-stage-summary";stageSummary.setAttribute("role","status");nav.append(stageSummary);
 
  // Search existing model-specific controls without replacing or altering them.
  const searchWrap=document.createElement("div");searchWrap.className="orki-setting-search";
@@ -64,15 +67,17 @@ function init(){
    if(!label||!control)return null;
    const panel=group.closest(".panel");
    const target=stages.find(([,items])=>items.includes(panel));
-   return target?{label:label.textContent.trim(),control,stage:target[0]}:null;
+   return target?{label,control,stage:target[0]}:null;
  }).filter(Boolean);
  search.addEventListener("input",()=>{
    searchResults.replaceChildren();
    const q=search.value.trim().toLocaleLowerCase();
    if(q.length<2)return;
-   for(const entry of searchable.filter(x=>x.label.toLocaleLowerCase().includes(q)||x.control.id.toLocaleLowerCase().includes(q)).slice(0,8)){
+   const matches=searchable.filter(x=>x.label.textContent.trim().toLocaleLowerCase().includes(q)||x.control.id.toLocaleLowerCase().includes(q)).slice(0,8);
+   if(!matches.length){const hint=document.createElement("p");hint.textContent=tr("No matching settings");searchResults.append(hint);return;}
+   for(const entry of matches){
      const b=document.createElement("button");b.type="button";
-     b.textContent=entry.label+" · "+tr(entry.stage);
+     b.textContent=entry.label.textContent.trim()+" · "+tr(entry.stage);
      b.addEventListener("click",()=>{
        stage=entry.stage;mode="Expert";render();
        searchResults.replaceChildren();search.value="";
