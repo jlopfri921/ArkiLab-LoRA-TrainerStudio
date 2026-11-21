@@ -725,10 +725,9 @@ function updateCompareRunState(){
  const selected=checkMode()?chosenCheckpoints().length:0;
  const checkpointOk=!checkMode()||(
   !!$("compare-checkpoint-project").value&&selected>=2&&selected<=6);
- const scoped=checkMode()&&!!$("compare-checkpoint-project").value;
- const projectWorkflow=projectCompareWorkflows.find(w=>w.id===$("compare-workflow").value);
- const familyOk=!scoped||(projectCompatibilityId===$("compare-checkpoint-project").value&&projectWorkflow?.compatibility?.status==="candidate");
- $("compare-run").disabled=compareRunning||!ready||!usable||!checkpointOk||!familyOk
+ // Compatibility must be verified using the Bridge-converted API graph on
+ // the server. The original UI workflow may contain opaque subgraphs.
+ $("compare-run").disabled=compareRunning||!ready||!usable||!checkpointOk
   ||!$("compare-confirm").checked;
 }
 function refreshCompare(){
