@@ -65,6 +65,8 @@ class LocalCaptionPreviewTests(unittest.TestCase):
                 self.assertEqual(body["model"], "vision-local:latest")
                 self.assertEqual(body["images"], [base64.b64encode(self.data).decode()])
                 self.assertEqual(body["keep_alive"], "0")
+                self.assertIs(body["think"], False)
+                self.assertEqual(body["options"]["num_predict"], 640)
                 self.assertFalse(body["stream"])
         fake = FakeOpener()
         fake.assertEqual = self.assertEqual
@@ -166,6 +168,8 @@ class LocalCaptionPreviewTests(unittest.TestCase):
                 selftest.assertEqual(path, "/api/generate")
                 selftest.assertTrue(self.payload["stream"])
                 selftest.assertEqual(self.payload["keep_alive"], "0")
+                selftest.assertIs(self.payload["think"], False)
+                selftest.assertEqual(self.payload["options"]["num_predict"], 640)
         selftest = self
         with patch("dataset_caption_vision.http.client.HTTPConnection", TestingConnection):
             result = self.client.post(self.endpoint, json={
