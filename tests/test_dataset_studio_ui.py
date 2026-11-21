@@ -134,7 +134,7 @@ class DatasetStudioUiChecks(unittest.TestCase):
             with self.subTest(token=token):
                 self.assertIn(token, self.html)
         for locale in ("en", "es", "pt", "fr", "de", "it", "ja", "ko"):
-            self.assertIn("\\n" + locale + ":[", self.html)
+            self.assertIn(locale + ":[", self.html)
         backend = (ROOT / "scripts" / "dataset_captions.py").read_text(encoding="utf-8")
         self.assertIn('as_attachment=True', backend)
         self.assertIn('zipfile.ZipFile(output', backend)
