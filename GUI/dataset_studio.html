@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OrkiLab — Dataset Studio alpha</title>
+<style>
+:root{color-scheme:dark;font:15px system-ui,sans-serif;background:#0b1221;color:#e8f0fb}
+*{box-sizing:border-box}body{margin:0 auto;max-width:1400px;padding:24px}a{color:#3cdbd0}
+h1{margin:12px 0 6px}p{line-height:1.5}section{background:#152238;border:1px solid #293e58;border-radius:14px;padding:20px;margin:16px 0}
+input,button,select{background:#101d30;color:inherit;border:1px solid #49617e;padding:10px;border-radius:8px;font:inherit}
+button{cursor:pointer}button:disabled{opacity:.55}input{width:100%}label{display:grid;gap:8px}
+.toolbar{display:grid;grid-template-columns:minmax(180px,1fr) minmax(230px,2fr) auto;gap:12px;align-items:end}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px}
+.card{background:#101d30;border:1px solid #324762;border-radius:12px;overflow:hidden}
+.card img{display:block;width:100%;height:150px;object-fit:contain;background:#090f1b}
+.card .meta{padding:12px}.card strong{display:block;overflow-wrap:anywhere}
+.card button{font-size:13px;margin-top:8px}
+.muted{color:#a4b4cc}.status{min-height:24px;color:#f6c17d}
+@media(max-width:780px){.toolbar{grid-template-columns:1fr}body{padding:12px}}
+</style></head><body>
+<header><a href="/workspace">← OrkiLab Workspace</a><h1>Dataset Studio <small class="muted">0.4 alpha</small></h1>
+<p class="muted">Organize image datasets by project. Indexed by reference: source files are never modified, moved or deleted.</p></header>
+<main><section aria-labelledby="help"><h2 id="help">Getting started</h2>
+<p>1. Select an existing image project. 2. Enter an absolute folder on this computer. 3. Import supported images (JPG, PNG, WebP, GIF or BMP), review them and remove references as needed. Subfolders and video/audio are not included yet.</p>
+<p class="muted">This is an early development preview. Thumbnails display source images through a local-only endpoint; no image processing or AI captioning is performed.</p></section>
+<section aria-labelledby="library"><h2 id="library">Image library</h2>
+<div class="toolbar"><label>Project<select id="project"><option value="">Choose a project</option></select></label>
+<label>Folder on this computer<input id="folder" placeholder="D:\\datasets\\example" autocomplete="off"></label>
+<button id="import" type="button">Import images</button></div>
+<div class="toolbar" style="margin-top:16px"><label>Search images<input id="search" type="search" placeholder="Filter by name"></label>
+<p id="count" class="muted">No project selected</p><button type="button" id="refresh">Refresh</button></div>
+<p role="status" aria-live="polite" class="status" id="status"></p>
+<div class="grid" id="images"></div></section></main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id), project=$("project"), images=$("images"), status=$("status");
+const translate={es:["Elige un proyecto","Carpeta en este equipo","Importar imágenes","Buscar imágenes","Actualizar","Sin proyecto seleccionado","No hay imágenes. Importa una carpeta para empezar.","Referencia eliminada; archivo original conservado."],
+en:["Choose a project","Folder on this computer","Import images","Search images","Refresh","No project selected","No images yet. Import a folder to begin.","Reference removed; original preserved."]};
+const lang=navigator.language.toLowerCase().startsWith("es")?"es":"en",tr=translate[lang];
+project.options[0].textContent=tr[0];document.querySelector('label:has(#folder)').firstChild.textContent=tr[1];
+$("import").textContent=tr[2];document.querySelector('label:has(#search)').firstChild.textContent=tr[3];
+$("refresh").textContent=tr[4];$("count").textContent=tr[5];
+function say(message){status.textContent=message}
+async function api(path,options={}){const response=await fetch(path,options);const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data}
+async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}}catch(e){say(e.message)}}
+async function refresh(){images.replaceChildren();if(!project.value){$("count").textContent=tr[5];return}
+try{const search=$("search").value;const data=await api("/api/workspace/datasets/"+encodeURIComponent(project.value)+"?search="+encodeURIComponent(search));
+$("count").textContent=data.images.length+" images";
+if(!data.images.length){const p=document.createElement("p");p.className="muted";p.textContent=tr[6];images.append(p);return}
+for(const item of data.images){const card=document.createElement("article");card.className="card";
+if(!item.missing){const img=document.createElement("img");img.loading="lazy";img.alt=item.name;img.src="/api/workspace/datasets/"+encodeURIComponent(project.value)+"/"+encodeURIComponent(item.id);card.append(img)}
+const meta=document.createElement("div");meta.className="meta";const title=document.createElement("strong");title.textContent=item.name;meta.append(title);
+const detail=document.createElement("small");detail.className="muted";detail.textContent=(item.bytes/1048576).toFixed(2)+" MB"+(item.missing?" · Missing":"");meta.append(detail);
+const remove=document.createElement("button");remove.type="button";remove.textContent="Remove reference";remove.addEventListener("click",async()=>{if(!confirm("Remove library reference? Original image stays untouched."))return;try{await api("/api/workspace/datasets/"+encodeURIComponent(project.value)+"/"+item.id,{method:"DELETE"});say(tr[7]);await refresh()}catch(e){say(e.message)}});
+meta.append(document.createElement("br"),remove);card.append(meta);images.append(card)}
+}catch(e){say(e.message)}}
+project.addEventListener("change",refresh);$("refresh").addEventListener("click",refresh);
+$("search").addEventListener("input",refresh);
+$("import").addEventListener("click",async()=>{if(!project.value){say(tr[0]);return}const folder=$("folder").value.trim();if(!folder){say(tr[1]);return}
+$("import").disabled=true;try{const data=await api("/api/workspace/datasets/"+encodeURIComponent(project.value),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({folder})});
+say(data.imported+" imported ("+data.scanned+" scanned). Originals unchanged.");await refresh()}catch(e){say(e.message)}finally{$("import").disabled=false}});
+projects();
+</script></body></html>
