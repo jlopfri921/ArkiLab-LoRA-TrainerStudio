@@ -5,7 +5,7 @@
 | 0.1 Foundation | branding, docs, safe update | review diff; launch existing UI; update tests |
 | 0.2 Workspace | SQLite library, project registry, read-only inventory | index synthetic data; no destructive writes |
 | 0.3 Connect | ComfyUI API adapter, workflow validation, explicit submission | mock API tests; real local inference |
-| 0.4 Dataset | quality checks, dedup, captions, split | reproducible manifest and non-destructive edits |
+| 0.4 Dataset | quality checks, dedup, captions, split; [Dataset Studio delivery scope](DATASET_STUDIO_0_4_SCOPE.md) | reproducible manifest and non-destructive edits |
 | 0.5 Multiview | angle metadata, reference/synthetic distinction | all views individually validated |
 | 0.6 Benchmark | paired prompts/seeds, comparable performance | reproducible report and held-out evaluation |
 | 0.7 Copilot | Ollama suggestions, logs | user confirmation for mutations |
