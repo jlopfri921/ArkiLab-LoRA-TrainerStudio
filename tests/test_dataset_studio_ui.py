@@ -23,7 +23,7 @@ class DatasetStudioUiChecks(unittest.TestCase):
             with self.subTest(selector=selector):
                 self.assertIn('id="' + selector + '"', self.html)
         for locale in ("en", "es", "pt", "fr", "de", "it", "ja", "ko"):
-            self.assertIn("\\n" + locale + ":[", self.html)
+            self.assertIn(chr(10) + locale + ":[", self.html)
         self.assertIn('I18N.lang', self.html)
         self.assertIn('batch("remove"', self.html)
         self.assertIn('batch("review"', self.html)
