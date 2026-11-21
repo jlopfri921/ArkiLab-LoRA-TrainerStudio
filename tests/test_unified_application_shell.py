@@ -141,8 +141,15 @@ class UnifiedChromeTests(unittest.TestCase):
         end = workspace.index("</nav>", start)
         comfy = workspace[start:end]
         self.assertIn('href="/workspace"', comfy)
-        self.assertIn("Back to Workspace", comfy)
+        self.assertIn("Main dashboard", comfy)
         self.assertLess(comfy.index('href="/workspace"'), comfy.index('href="#welcome"'))
+        import json
+        for lang in ("es", "pt", "fr", "de", "it", "ja", "ko"):
+            with self.subTest(language=lang):
+                strings = json.loads((ROOT / "GUI" / "locales" / (lang + ".json")).read_text(encoding="utf-8"))
+                self.assertTrue(strings.get("Main dashboard"))
+        es = json.loads((ROOT / "GUI" / "locales" / "es.json").read_text(encoding="utf-8"))
+        self.assertEqual(es["Main dashboard"], "Panel principal")
         self.assertNotIn("orki-global-nav", comfy)
         self.assertNotIn('home.cloneNode(true)', self.js)
         self.assertIn('comfy?.querySelectorAll(".orki-global-nav")', self.js)
