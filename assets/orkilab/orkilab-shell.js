@@ -58,27 +58,11 @@
         document.querySelector("#workspace-context")?.classList.add("orki-app-context");
         const locale = typeof I18N !== "undefined" && names[I18N.lang] ? I18N.lang : "en";
         unifiedFooter(content, names[locale]);
-        // Global Workspace navigation stays available in ComfyUI as well,
-        // while the specialised ComfyUI controls remain below it.
+        // ComfyUI is a focused zone: ONLY its own navigation plus the
+        // existing first "Back to Workspace" link in #comfy-navigation.
+        // Never clone Home navigation into this area.
         const comfy = document.querySelector("#comfy-navigation");
-        if (comfy && !comfy.querySelector(".orki-global-nav")) {
-            const group = element("div", "orki-global-nav");
-            const global = home.cloneNode(true);
-            global.removeAttribute("id");
-            global.removeAttribute("hidden");
-            global.className = "orki-app-nav orki-comfy-global-nav";
-            for (const a of global.querySelectorAll('a[href^="#"]')) {
-                a.href = "/workspace" + a.getAttribute("href");
-                a.removeAttribute("aria-current");
-            }
-            for (const button of global.querySelectorAll("button")) {
-                const mode = button.id === "settings-open" ? "settings" : "shutdown";
-                button.removeAttribute("id");
-                button.addEventListener("click", () => location.assign("/workspace?dialog=" + mode));
-            }
-            group.append(global);
-            comfy.prepend(group);
-        }
+        comfy?.querySelectorAll(".orki-global-nav").forEach(node => node.remove());
     }
     function render() {
         if (document.querySelector("#home-navigation")) {
