@@ -678,7 +678,8 @@ async function loadProjectCheckpoints(){
 function chosenCheckpoints(){return [...$("compare-checkpoint-list").querySelectorAll('input[data-checkpoint]:checked')].map(x=>x.value)}
 function updateCheckpointCount(){
  const n=chosenCheckpoints().length;
- if(checkMode())$("compare-run").disabled=compareRunning||!$("compare-node").value||n<2||n>6;
+ const ready=!!generationToken&&!generationDirty&&!generationBusy&&!generationPreparing&&$("generation-workflow").value===$("compare-workflow").value;
+ if(checkMode())$("compare-run").disabled=compareRunning||!ready||!$("compare-node").value||n<2||n>6;
 }
 function updateCheckpointMode(){
  const active=checkMode();
@@ -717,14 +718,26 @@ $("compare-weights").oninput=()=>$("compare-confirm").checked=false;
 $("compare-stop").onclick=()=>{compareStop=true;$("compare-stop").disabled=true;};
 $("compare-run").onclick=async()=>{
  if(compareRunning||generationBusy||generationPreparing||generationDirty||!generationToken||$("compare-workflow").value!==$("generation-workflow").value||!$("compare-node").value||!$("compare-confirm").checked)return;
- const out=$("compare-status"),root=$("compare-results"),raw=$("compare-weights").value.split(",").map(x=>x.trim());
- if(raw.some(x=>!x||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(x))){out.textContent=t("Invalid LoRA weights");return;}
- const weights=raw.map(Number);if(weights.length<2||weights.length>6||new Set(weights).size!==weights.length||weights.some(w=>!Number.isFinite(w)||w< -2||w>2)){out.textContent=t("Invalid LoRA weights");return;}
- compareRunning=true;compareStop=false;generationButtons();root.replaceChildren();for(const id of ["compare-node","compare-weights","compare-confirm","compare-run"])$(id).disabled=true;$("compare-stop").disabled=false;
+ const out=$("compare-status"),root=$("compare-results"),checkpointMode=checkMode(),raw=$("compare-weights").value.split(",").map(x=>x.trim());
+ let weights=[];
+ if(checkpointMode){
+  const names=chosenCheckpoints();
+  if(names.length<2||names.length>6){out.textContent=I18N.lang==="es"?"Selecciona entre 2 y 6 checkpoints.":"Select 2–6 checkpoints.";return}
+ }else{
+  if(raw.some(x=>!x||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(x))){out.textContent=t("Invalid LoRA weights");return;}
+  weights=raw.map(Number);
+  if(weights.length<2||weights.length>6||new Set(weights).size!==weights.length||weights.some(w=>!Number.isFinite(w)||w< -2||w>2)){out.textContent=t("Invalid LoRA weights");return;}
+ }
+ compareRunning=true;compareStop=false;generationButtons();root.replaceChildren();for(const id of ["compare-node","compare-weights","compare-confirm","compare-run","compare-mode","compare-checkpoint-project","compare-checkpoint-refresh"])$(id).disabled=true;$("compare-stop").disabled=false;
  try{
   out.textContent=t("Preparing comparison...");
-  const d=await post("/api/workspace/generation/compare",{token:generationToken,node:$("compare-node").value,weights});
-  const cards=d.variants.map(v=>{const box=el("article",undefined,"panel"),status=el("p",t("Waiting"),"muted"),media=el("div",undefined,"media-grid");box.append(el("h3",t("LoRA weight")+" "+v.weight),status,media);root.append(box);return {v,status,media};});
+  const d=checkpointMode
+   ?await post("/api/workspace/generation/compare/checkpoints",{
+     token:generationToken,node:$("compare-node").value,
+     project_id:$("compare-checkpoint-project").value,checkpoints:chosenCheckpoints()
+    })
+   :await post("/api/workspace/generation/compare",{token:generationToken,node:$("compare-node").value,weights});
+  const cards=d.variants.map(v=>{const box=el("article",undefined,"panel"),status=el("p",t("Waiting"),"muted"),media=el("div",undefined,"media-grid");box.append(el("h3",checkpointMode?"Paso "+v.step+" · "+v.name:t("LoRA weight")+" "+v.weight),status,media);root.append(box);return {v,status,media};});
   for(const [index,c] of cards.entries()){
    if(compareStop)break;
    out.textContent=t("Comparison variant {current} of {total}",{current:index+1,total:cards.length});
@@ -739,7 +752,7 @@ $("compare-run").onclick=async()=>{
    if(!finished)throw Error(t("Check generation status in ComfyUI"));
   }
   out.textContent=t(compareStop?"Comparison stopped":"Comparison completed");
- }catch(e){out.textContent=e.message;}finally{compareRunning=false;for(const id of ["compare-node","compare-weights","compare-confirm"])$(id).disabled=false;generationButtons();refreshCompare();}
+ }catch(e){out.textContent=e.message;}finally{compareRunning=false;for(const id of ["compare-node","compare-weights","compare-confirm","compare-mode","compare-checkpoint-project","compare-checkpoint-refresh"])$(id).disabled=false;generationButtons();refreshCompare();}
 };
 
 
