@@ -35,7 +35,56 @@
         a.href = to;
         return a;
     }
+    function unifiedFooter(content, t) {
+        let footer = content.querySelector(".orki-app-footer");
+        if (!footer) {
+            footer = element("footer", "orki-shell-footer orki-app-footer");
+            content.append(footer);
+        }
+        footer.replaceChildren();
+        const notice = element("span", null, "OrkiLab · " + t[9] + " · ");
+        const home = link("/workspace", t[0]);
+        footer.append(notice, home);
+    }
+    function renderWorkspaceChrome() {
+        const body = document.body, home = document.querySelector("#home-navigation");
+        const content = document.querySelector("#workspace-body");
+        const header = document.querySelector("body > header");
+        if (!home || !content || !header) return;
+        body.classList.add("orki-app-frame", "orki-queue-theme");
+        header.classList.add("orki-app-header", "orki-shell-header");
+        home.classList.add("orki-app-nav");
+        document.querySelector("#comfy-navigation")?.classList.add("orki-app-nav");
+        document.querySelector("#workspace-context")?.classList.add("orki-app-context");
+        const locale = typeof I18N !== "undefined" && names[I18N.lang] ? I18N.lang : "en";
+        unifiedFooter(content, names[locale]);
+        // Global Workspace navigation stays available in ComfyUI as well,
+        // while the specialised ComfyUI controls remain below it.
+        const comfy = document.querySelector("#comfy-navigation");
+        if (comfy && !comfy.querySelector(".orki-global-nav")) {
+            const group = element("div", "orki-global-nav");
+            const global = home.cloneNode(true);
+            global.removeAttribute("id");
+            global.removeAttribute("hidden");
+            global.className = "orki-app-nav orki-comfy-global-nav";
+            for (const a of global.querySelectorAll('a[href^="#"]')) {
+                a.href = "/workspace" + a.getAttribute("href");
+                a.removeAttribute("aria-current");
+            }
+            for (const button of global.querySelectorAll("button")) {
+                const mode = button.id === "settings-open" ? "settings" : "shutdown";
+                button.removeAttribute("id");
+                button.addEventListener("click", () => location.assign("/workspace?dialog=" + mode));
+            }
+            group.append(global);
+            comfy.prepend(group);
+        }
+    }
     function render() {
+        if (document.querySelector("#home-navigation")) {
+            renderWorkspaceChrome();
+            return;
+        }
         const page = location.pathname === "/queue" ? "queue" : "datasets";
         const nav = document.querySelector(page === "queue" ? ".queue-sidebar" : ".studio-navigation");
         const content = document.querySelector(page === "queue" ? ".queue-shell .wrap" : ".studio-content");
@@ -43,7 +92,8 @@
         if (!nav || !content || !layout) return;
         const locale = typeof I18N !== "undefined" && names[I18N.lang] ? I18N.lang : "en";
         const t = names[locale];
-        document.body.classList.add("orki-standalone-shell");
+        document.body.classList.add("orki-standalone-shell", "orki-app-frame", "orki-queue-theme");
+        nav.classList.add("orki-app-nav");
         // Match Workspace's actual header: logo, language selector, version and Ko-fi.
         let head = document.querySelector(".orki-shell-header");
         if (!head) {
@@ -97,6 +147,7 @@
                 if (info && info.version) version.textContent = info.version;
             }).catch(() => {});
         }
+        head.classList.add("orki-app-header");
         const languageText = head.querySelector("#orki-shell-language-label");
         if (languageText) languageText.textContent = typeof I18N !== "undefined" ? I18N.translate("Language") : "Language";
         const selector = head.querySelector("#orki-shell-language");
@@ -104,7 +155,7 @@
         // Use the same contextual title-and-help pattern as #workspace-context.
         let context = content.querySelector(".orki-shell-workspace-context");
         if (!context) {
-            context = element("section", "workspace-context orki-shell-workspace-context");
+            context = element("section", "workspace-context orki-shell-workspace-context orki-app-context");
             const row = element("div", "row");
             const title = element("strong", "no-i18n");
             title.id = "orki-shell-context-title";
@@ -141,6 +192,7 @@
             ko: ["여기서 무엇을 할 수 있나요?", "작업 대기열", "진행 중, 대기 중, 완료된 작업을 확인하고 일시정지, 순서 변경, 진행 상황을 확인하세요.", "Dataset Studio", "원본을 삭제하지 않고 이미지를 가져오고 품질을 확인하고 비교할 수 있습니다."]
         };
         const words = help[locale] || help.en;
+        context.classList.add("orki-app-context");
         context.querySelector("#orki-shell-context-title").textContent = page === "queue" ? words[1] : words[3];
         context.querySelector("#orki-shell-context-toggle-label").textContent = words[0];
         context.querySelector("#orki-shell-context-description").textContent = page === "queue" ? words[2] : words[4];
@@ -163,15 +215,7 @@
             if (id === page) node.setAttribute("aria-current", "page");
             nav.append(node);
         });
-        let footer = content.querySelector(".orki-shell-footer");
-        if (!footer) {
-            footer = element("footer", "orki-shell-footer");
-            content.append(footer);
-        }
-        footer.replaceChildren();
-        const line = element("span", null, "OrkiLab · " + t[9] + " · ");
-        const back = link("/workspace", t[0]);
-        footer.append(line, back);
+        unifiedFooter(content, t);
     }
     async function syncCanonicalWorkspaceChrome(page, nav, content) {
         try {
@@ -188,7 +232,7 @@
             const liveHeader = document.querySelector(".orki-shell-header");
             if (liveHeader) {
                 const header = canonicalHeader.cloneNode(true);
-                header.classList.add("orki-shell-header");
+                header.classList.add("orki-shell-header", "orki-app-header");
                 liveHeader.replaceWith(header);
                 if (typeof I18N !== "undefined") I18N.apply(header);
                 const selector = header.querySelector("#workspace-language");
@@ -223,7 +267,7 @@
             }
             const canonical = canonicalNav.cloneNode(true);
             canonical.removeAttribute("id");
-            canonical.className = page === "queue" ? "queue-sidebar" : "studio-navigation";
+            canonical.className = (page === "queue" ? "queue-sidebar" : "studio-navigation") + " orki-app-nav";
             // Hash navigation must resolve to Workspace, not this standalone page.
             for (const a of canonical.querySelectorAll("a[href^='#']"))
                 a.href = "/workspace" + a.getAttribute("href");
@@ -263,7 +307,7 @@
                         toggle.setAttribute("aria-expanded", String(opened));
                     });
                 }
-                context.classList.add("orki-shell-workspace-context");
+                context.classList.add("orki-shell-workspace-context", "orki-app-context");
                 oldContext.replaceWith(context);
             }
         } catch (error) {

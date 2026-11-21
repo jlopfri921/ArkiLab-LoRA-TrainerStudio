@@ -1,0 +1,289 @@
+/* OrkiLab unified application chrome — single authoritative visual contract.
+   Derived from the Job Queue panel language. Loaded LAST in every Workspace page.
+   Do not fork header/sidebar/footer CSS into standalone page styles. */
+:root {
+  --orki-app-bg:#0f172a;
+  --orki-app-bg-deep:#020617;
+  --orki-app-panel:#1e293b;
+  --orki-app-border:#334155;
+  --orki-app-text:#f8fafc;
+  --orki-app-muted:#94a3b8;
+  --orki-app-accent:#38bdf8;
+  --orki-app-gradient:linear-gradient(90deg,#0e7490,#6d28d9);
+  --orki-app-width:1440px;
+  --orki-app-side:200px;
+  --orki-app-gap:24px;
+  --orki-app-radius:16px;
+  --orki-app-pad:24px;
+}
+html{min-height:100%}
+body.orki-app-frame {
+  margin:0;
+  padding:0;
+  max-width:none;
+  min-height:100vh;
+  color:var(--orki-app-text);
+  background:radial-gradient(ellipse at top,#1e1b4b 0%,var(--orki-app-bg) 55%,var(--orki-app-bg-deep) 100%);
+  font:15px system-ui,"Segoe UI",sans-serif;
+}
+body.orki-app-frame * {box-sizing:border-box}
+body.orki-app-frame [hidden]{display:none!important}
+body.orki-app-frame .orki-app-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  width:100%;
+  min-height:86px;
+  padding:16px 24px;
+  margin:0;
+  border:0;
+  border-bottom:1px solid var(--orki-app-border);
+  border-radius:0;
+  color:var(--orki-app-text);
+  background:rgba(15,23,42,.83);
+  box-shadow:none;
+}
+body.orki-app-frame .orki-app-header > a:first-child {
+  display:inline-flex;
+  align-items:center;
+  min-width:0;
+  padding:0;
+  border:0;
+  background:transparent;
+}
+body.orki-app-frame .orki-app-header > a:first-child img {
+  width:210px;
+  max-width:min(52vw,210px);
+  height:auto;
+  border-radius:10px;
+  filter:drop-shadow(0 0 11px rgba(99,102,241,.36));
+}
+body.orki-app-frame .orki-app-header > .row {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:12px;
+}
+body.orki-app-frame .orki-app-header label{
+  display:grid;
+  gap:5px;
+  font:15px system-ui,sans-serif;
+  margin:0;
+}
+body.orki-app-frame .orki-app-header select{
+  font:15px system-ui,sans-serif;
+  color:var(--orki-app-text);
+  background:#0f172a;
+  border:1px solid var(--orki-app-border);
+  border-radius:9px;
+  padding:9px 12px;
+  min-width:140px;
+}
+body.orki-app-frame .orki-app-header #version{
+  font:15px system-ui,sans-serif;
+  color:var(--orki-app-muted);
+}
+body.orki-app-frame .orki-app-header .orki-header-kofi{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:9px 12px;
+  border:1px solid #4a7380;
+  border-radius:9px;
+  color:#c2f6ef;
+  background:#143342;
+  text-decoration:none;
+  font:600 13px system-ui,sans-serif;
+  white-space:nowrap;
+}
+body.orki-app-frame .orki-app-header .orki-header-kofi:hover{border-color:var(--orki-app-accent);color:#fff;background:#1a4855}
+body.orki-app-frame > main,
+body.orki-app-frame .queue-shell,
+body.orki-app-frame .studio-layout{
+  width:100%;
+  max-width:var(--orki-app-width);
+  display:grid;
+  grid-template-columns:var(--orki-app-side) minmax(0,1fr);
+  gap:var(--orki-app-gap);
+  align-items:start;
+  padding:var(--orki-app-pad);
+  margin:0 auto;
+}
+body.orki-app-frame #workspace-body,
+body.orki-app-frame .queue-shell > .wrap,
+body.orki-app-frame .studio-layout > .studio-content {
+  min-width:0;
+  width:100%;
+  max-width:none;
+}
+body.orki-app-frame .orki-app-nav,
+body.orki-app-frame #home-navigation,
+body.orki-app-frame #comfy-navigation{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:8px;
+  position:static;
+  top:auto;
+  max-height:none;
+  overflow:visible;
+  width:100%;
+  min-width:0;
+  margin:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.orki-app-frame .orki-app-nav > a,
+body.orki-app-frame .orki-app-nav > button,
+body.orki-app-frame #home-navigation > a,
+body.orki-app-frame #home-navigation > button,
+body.orki-app-frame #comfy-navigation > a,
+body.orki-app-frame #comfy-navigation > button {
+  display:block;
+  flex:none;
+  width:100%;
+  min-width:0;
+  padding:12px;
+  margin:0;
+  background:rgba(30,41,59,.82);
+  border:1px solid var(--orki-app-border);
+  border-radius:9px;
+  color:var(--orki-app-text);
+  font:500 14px system-ui,sans-serif;
+  text-align:left;
+  text-decoration:none;
+  line-height:1.4;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  box-shadow:none;
+  cursor:pointer;
+}
+body.orki-app-frame .orki-app-nav > a:hover,
+body.orki-app-frame .orki-app-nav > button:hover,
+body.orki-app-frame #home-navigation > a:hover,
+body.orki-app-frame #home-navigation > button:hover,
+body.orki-app-frame #comfy-navigation > a:hover{
+  border-color:var(--orki-app-accent);
+  color:#fff;
+  background:#26354c;
+  filter:none;
+}
+body.orki-app-frame .orki-app-nav > [aria-current="page"],
+body.orki-app-frame #home-navigation > [aria-current="page"],
+body.orki-app-frame #comfy-navigation > [aria-current="page"]{
+  border-color:var(--orki-app-accent);
+  background:#18364e;
+  color:#c0edff;
+  font-weight:700;
+}
+body.orki-app-frame .orki-app-nav > .zone-entry,
+body.orki-app-frame #home-navigation > .zone-entry,
+body.orki-app-frame #comfy-navigation > .zone-entry{
+  border-color:#456e85;
+}
+body.orki-app-frame .orki-app-context{
+  background:rgba(30,41,59,.82);
+  color:var(--orki-app-text);
+  border:1px solid var(--orki-app-border);
+  border-radius:var(--orki-app-radius);
+  padding:12px 16px;
+  margin:0 0 18px;
+  box-shadow:0 12px 34px rgba(0,0,0,.24);
+  backdrop-filter:blur(6px);
+}
+body.orki-app-frame .orki-app-context .row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+body.orki-app-frame .orki-app-context strong{font:700 15px system-ui,sans-serif}
+body.orki-app-frame .orki-app-context button{
+  font:500 13px system-ui,sans-serif;
+  padding:7px 10px;
+  background:#0f172a;
+  color:var(--orki-app-text);
+  border:1px solid var(--orki-app-border);
+  border-radius:8px;
+}
+body.orki-app-frame .orki-app-context p{
+  color:var(--orki-app-muted);
+  line-height:1.6;
+  margin:12px 0 0;
+}
+body.orki-app-frame .orki-app-footer{
+  display:block;
+  margin:18px 0 0;
+  padding:20px 16px;
+  background:rgba(30,41,59,.82);
+  color:var(--orki-app-muted);
+  border:1px solid var(--orki-app-border);
+  border-radius:var(--orki-app-radius);
+  font:13px system-ui,sans-serif;
+  text-align:center;
+  line-height:1.65;
+}
+body.orki-app-frame .orki-app-footer a{color:#c0edff;text-decoration:none}
+body.orki-app-frame .orki-app-footer a:hover{text-decoration:underline}
+body.orki-app-frame .queue-shell .wrap {margin:0;gap:18px}
+body.orki-app-frame .queue-shell .wrap > .top{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+body.orki-app-frame .queue-shell .wrap > .top > a:first-child,
+body.orki-app-frame .queue-shell .wrap > .top > .orki-header-kofi,
+body.orki-app-frame .queue-shell .wrap > .top > .btn{display:none}
+body.orki-app-frame .queue-shell .wrap > .top h1{
+  font:800 23px system-ui,sans-serif;
+  color:var(--orki-app-text);
+}
+body.orki-app-frame .queue-shell .wrap > .top p{color:var(--orki-app-muted)}
+body.orki-app-frame .studio-local-heading{margin:0 0 14px}
+body.orki-app-frame .studio-local-heading h1{margin:0;font-size:23px;font-weight:800}
+body.orki-app-frame .studio-local-heading p{color:var(--orki-app-muted)}
+body.orki-app-frame :is(.panel,.metric,.project,.gpu-card,.studio-content>section,.studio-content .card){
+  border-radius:var(--orki-app-radius);
+  border-color:var(--orki-app-border);
+}
+body.orki-app-frame :is(button,a,input,select,textarea):focus-visible{
+  outline:2px solid var(--orki-app-accent);
+  outline-offset:2px;
+}
+@media(max-width:760px){
+  body.orki-app-frame > main,
+  body.orki-app-frame .queue-shell,
+  body.orki-app-frame .studio-layout{
+    grid-template-columns:minmax(0,1fr);
+    padding:14px;
+    gap:14px;
+  }
+  body.orki-app-frame .orki-app-header{padding:12px;gap:12px}
+  body.orki-app-frame .orki-app-header > a:first-child img{width:140px}
+  body.orki-app-frame .orki-app-nav,
+  body.orki-app-frame #home-navigation,
+  body.orki-app-frame #comfy-navigation{
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  body.orki-app-frame .orki-app-nav > a,
+  body.orki-app-frame .orki-app-nav > button,
+  body.orki-app-frame #home-navigation > a,
+  body.orki-app-frame #home-navigation > button,
+  body.orki-app-frame #comfy-navigation > a,
+  body.orki-app-frame #comfy-navigation > button{
+    width:auto;
+    flex:1 1 130px;
+    padding:10px;
+  }
+}
