@@ -33,6 +33,25 @@ class DatasetStudioUiChecks(unittest.TestCase):
         self.assertIn('orkilab:language-changed', shell_js)
         self.assertIn('id="nav-datasets"', self.html)
 
+    def test_standalone_header_matches_workspace_context_pattern(self):
+        shell = (ROOT / "assets" / "orkilab" / "orkilab-shell.js").read_text(encoding="utf-8")
+        css = (ROOT / "assets" / "orkilab" / "orkilab-shell.css").read_text(encoding="utf-8")
+        for token in ('orki-shell-language', 'orki-shell-version',
+                      'orki-header-kofi', '/api/i18n',
+                      '/api/workspace/overview', 'orki-shell-workspace-context',
+                      'orki-shell-context-title', 'orki-shell-context-toggle',
+                      'orki-shell-context-description', 'aria-expanded',
+                      'aria-controls', 'aria-hidden', 'What can I do here?',
+                      '¿Qué puedo hacer aquí?', 'Job queue', 'Dataset Studio'):
+            with self.subTest(token=token):
+                self.assertIn(token, shell)
+        self.assertIn('.orki-shell-workspace-context', css)
+        self.assertIn('#orki-shell-version', css)
+        self.assertIn('.orki-shell-header', css)
+        self.assertIn('document.body.insertBefore(head, layout)', shell)
+        self.assertIn('content.prepend(context)', shell)
+        self.assertIn('description.hidden = !opened', shell)
+
     def test_settings_dialog_has_accessible_top_close(self):
         self.assertIn('id="settings-close-top"', self.workspace)
         self.assertIn('aria-label="Close settings"', self.workspace)
