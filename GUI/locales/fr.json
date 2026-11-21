@@ -2047,5 +2047,15 @@
   "Console": "Console",
   "Generated previews": "Aperçus générés",
   "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image : LoRA d’image et de retouche. Les contrôles vidéo et audio ne sont pas disponibles dans ce mode.",
-  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3 : LoRA vidéo et audio."
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3 : LoRA vidéo et audio.",
+  "Train project": "Entraîner le projet",
+  "Opens the trainer selected in this project. First prepare a compatible dataset.": "Ouvre l'entraîneur choisi pour ce projet. Préparez d'abord un jeu de données compatible.",
+  "No images indexed for this project yet. Import images in Dataset Studio.": "Aucune image associée. Importez-en depuis Dataset Studio.",
+  "{count} of {total} images have saved descriptions. A training folder has been prepared.": "{count} images sur {total} ont une description enregistrée. Un dossier d'entraînement est préparé.",
+  "{count} of {total} images have saved descriptions. Add the missing descriptions in Dataset Studio, then select the images and prepare the training folder.": "{count} images sur {total} ont une description enregistrée. Complétez les descriptions dans Dataset Studio, sélectionnez les images, puis préparez le dossier d'entraînement.",
+  "All {total} images have descriptions. Select them in Dataset Studio and prepare the training folder.": "Les {total} images ont une description. Sélectionnez-les dans Dataset Studio, puis préparez le dossier d'entraînement.",
+  "Project dataset folder does not exist; choose a valid absolute folder": "Le dossier du dataset n'existe pas. Choisissez un chemin absolu valide.",
+  "No dataset linked to this project; prepare one in Dataset Studio": "Ce projet n'a aucun dataset associé. Préparez-en un dans Dataset Studio.",
+  "Prepared dataset was moved or removed; prepare it again": "Le dossier préparé a été déplacé ou supprimé. Préparez-le de nouveau.",
+  "Selected trainer does not match the project": "L'entraîneur sélectionné ne correspond pas au projet."
 }
