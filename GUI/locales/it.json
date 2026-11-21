@@ -2057,5 +2057,6 @@
   "Project dataset folder does not exist; choose a valid absolute folder": "La cartella del dataset del progetto non esiste. Scegli un percorso assoluto valido.",
   "No dataset linked to this project; prepare one in Dataset Studio": "Questo progetto non ha un dataset associato. Preparalo in Dataset Studio.",
   "Prepared dataset was moved or removed; prepare it again": "La cartella preparata è stata spostata o eliminata. Preparala di nuovo.",
-  "Selected trainer does not match the project": "Il trainer scelto non corrisponde al progetto."
+  "Selected trainer does not match the project": "Il trainer scelto non corrisponde al progetto.",
+  "Images are linked in Dataset Studio, but no training folder is prepared. Save descriptions and prepare the training folder there.": "Le immagini sono associate in Dataset Studio, ma non è ancora stata preparata una cartella di addestramento. Salva le descrizioni e prepara la cartella."
 }
