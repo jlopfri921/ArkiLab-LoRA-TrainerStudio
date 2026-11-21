@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import jsonify, request
+from image_quality_visual import near_match
 from image_quality_visual import visual_metrics
 
 MAX_SCAN_BATCH = 20
@@ -89,3 +90,47 @@ def register(app, db, project_exists, local, valid_origin):
                        next_cursor=work[-1]["id"] if has_more and work else None,
                        finished=not has_more, low_resolution=sum(x[1] == "low_resolution" for x in updated))
 
+
+    @app.get("/api/workspace/datasets/<project_id>/quality/pairs")
+    def dataset_quality_pairs(project_id):
+        """List review candidates only; never transfer image paths or mutate files."""
+        if not local():
+            return jsonify(error="Comparison is available on the launcher PC only"), 403
+        if not project_exists(project_id):
+            return jsonify(error="Active project not found"), 404
+        kind = request.args.get("kind", "all")
+        if kind not in ("all", "exact", "near"):
+            return jsonify(error="Invalid comparison kind"), 400
+        with closing(db()) as conn:
+            rows = [dict(row) for row in conn.execute(
+                "SELECT id,quality_sha256,quality_dhash,width,height FROM dataset_images "
+                "WHERE project_id=? AND quality_scanned_at IS NOT NULL ORDER BY id LIMIT 2001",
+                (project_id,))]
+        if len(rows) > 2000:
+            return jsonify(error="Dataset too large for this comparison preview"), 413
+        pairs = []
+        for idx, first in enumerate(rows):
+            if not first["quality_sha256"]:
+                continue
+            for second in rows[idx + 1:]:
+                if not second["quality_sha256"]:
+                    continue
+                exact = first["quality_sha256"] == second["quality_sha256"]
+                if exact:
+                    label = "exact"
+                else:
+                    w1, h1 = first["width"], first["height"]
+                    w2, h2 = second["width"], second["height"]
+                    if not all((w1, h1, w2, h2)):
+                        continue
+                    if abs(w1 * h2 - w2 * h1) * 100 > 3 * w2 * h1:
+                        continue
+                    if not near_match(first["quality_dhash"], second["quality_dhash"]):
+                        continue
+                    label = "near"
+                if kind != "all" and kind != label:
+                    continue
+                pairs.append({"left": first["id"], "right": second["id"], "kind": label})
+                if len(pairs) >= 100:
+                    return jsonify(pairs=pairs, truncated=True)
+        return jsonify(pairs=pairs, truncated=False)

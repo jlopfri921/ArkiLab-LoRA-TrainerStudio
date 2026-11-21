@@ -79,6 +79,21 @@ class DatasetQualityTests(unittest.TestCase):
         self.assertEqual(sum(i["duplicate"] for i in images), 0)
         self.assertEqual(self.b.read_bytes(), self.original)
 
+    def test_quality_pairs_endpoint_returns_exact_duplicates_without_paths(self):
+        self.assertEqual(self.client.post(self.scan, json={"limit": 20}).status_code, 200)
+        response = self.client.get(self.root + "/quality/pairs")
+        self.assertEqual(response.status_code, 200)
+        pairs = response.get_json()["pairs"]
+        self.assertEqual(len(pairs), 1)
+        self.assertEqual(pairs[0]["kind"], "exact")
+        self.assertEqual(set(pairs[0]), {"left", "right", "kind"})
+        self.assertEqual(self.client.get(self.root + "/quality/pairs?kind=near").get_json()["pairs"], [])
+        self.assertEqual(self.client.get(self.root + "/quality/pairs?kind=unknown").status_code, 400)
+        self.assertEqual(self.client.get(self.root + "/quality/pairs",
+                         environ_overrides={"REMOTE_ADDR": "192.0.2.4"}).status_code, 403)
+        self.assertEqual(self.a.read_bytes(), self.original)
+        self.assertEqual(self.b.read_bytes(), self.original)
+
     def test_visual_similarity_and_blur_are_review_suggestions(self):
         from PIL import Image, ImageDraw, ImageFilter
         from image_quality_visual import near_match, visual_metrics
@@ -117,6 +132,10 @@ class DatasetQualityTests(unittest.TestCase):
         filtered = self.client.get(self.root + "?quality=near")
         self.assertEqual(filtered.status_code, 200)
         self.assertTrue(filtered.get_json()["images"])
+        comparison = self.client.get(self.root + "/quality/pairs?kind=near")
+        self.assertEqual(comparison.status_code, 200)
+        self.assertTrue(comparison.get_json()["pairs"])
+        self.assertTrue(all(pair["kind"] == "near" for pair in comparison.get_json()["pairs"]))
         self.assertEqual(self.client.get(self.root + "?quality=typo").status_code, 400)
         for file, original in before.items():
             self.assertEqual(file.read_bytes(), original)
