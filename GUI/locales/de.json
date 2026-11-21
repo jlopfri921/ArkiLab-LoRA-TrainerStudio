@@ -2047,5 +2047,15 @@
   "Console": "Konsole",
   "Generated previews": "Erzeugte Vorschauen",
   "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image: Bild- und Bearbeitungs-LoRAs. Video- und Audiosteuerungen stehen in diesem Modus nicht zur Verfügung.",
-  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: Video- und Audio-LoRAs."
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: Video- und Audio-LoRAs.",
+  "Train project": "Projekt trainieren",
+  "Opens the trainer selected in this project. First prepare a compatible dataset.": "Öffnet den für dieses Projekt ausgewählten Trainer. Bereite zuerst einen kompatiblen Datensatz vor.",
+  "No images indexed for this project yet. Import images in Dataset Studio.": "Noch keine Bilder zugeordnet. Importiere Bilder in Dataset Studio.",
+  "{count} of {total} images have saved descriptions. A training folder has been prepared.": "{count} von {total} Bildern haben gespeicherte Beschreibungen. Ein Trainingsordner wurde vorbereitet.",
+  "{count} of {total} images have saved descriptions. Add the missing descriptions in Dataset Studio, then select the images and prepare the training folder.": "{count} von {total} Bildern haben gespeicherte Beschreibungen. Ergänze sie in Dataset Studio, wähle die Bilder aus und bereite den Trainingsordner vor.",
+  "All {total} images have descriptions. Select them in Dataset Studio and prepare the training folder.": "Alle {total} Bilder haben Beschreibungen. Wähle sie in Dataset Studio aus und bereite den Trainingsordner vor.",
+  "Project dataset folder does not exist; choose a valid absolute folder": "Der Datensatzordner des Projekts existiert nicht. Wähle einen gültigen absoluten Pfad.",
+  "No dataset linked to this project; prepare one in Dataset Studio": "Diesem Projekt ist kein Datensatz zugeordnet. Bereite ihn in Dataset Studio vor.",
+  "Prepared dataset was moved or removed; prepare it again": "Der vorbereitete Ordner wurde verschoben oder gelöscht. Bereite ihn erneut vor.",
+  "Selected trainer does not match the project": "Der gewählte Trainer stimmt nicht mit dem Projekt überein."
 }
