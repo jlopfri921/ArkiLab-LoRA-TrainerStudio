@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import jsonify, request
+from image_quality_visual import visual_metrics
 
 MAX_SCAN_BATCH = 20
 MAX_FILE_BYTES = 40 * 1024 * 1024
@@ -42,6 +43,7 @@ def register(app, db, project_exists, local, valid_origin):
             for row in work:
                 path = Path(row["path"])
                 digest = None
+                perceptual = score = blurry = None
                 flag = "missing"
                 try:
                     if path.is_symlink() or not path.is_file():
@@ -60,6 +62,7 @@ def register(app, db, project_exists, local, valid_origin):
                                 flag = "changed"
                             else:
                                 digest = sha.hexdigest()
+                                perceptual, score, blurry = visual_metrics(path)
                                 width, height = row["width"], row["height"]
                                 if not width or not height:
                                     flag = "unknown_resolution"
@@ -69,11 +72,14 @@ def register(app, db, project_exists, local, valid_origin):
                                     flag = "ok"
                 except (OSError, ValueError):
                     flag = "unavailable"
-                updated.append((digest, flag, datetime.now(timezone.utc).isoformat(), project_id, row["id"]))
+                updated.append((digest, flag, datetime.now(timezone.utc).isoformat(),
+                                perceptual, score, int(blurry) if blurry is not None else None,
+                                project_id, row["id"]))
 
             with conn:
                 conn.executemany(
-                    "UPDATE dataset_images SET quality_sha256=?,quality_flag=?,quality_scanned_at=? "
+                    "UPDATE dataset_images SET quality_sha256=?,quality_flag=?,quality_scanned_at=?, "
+                    "quality_dhash=?,quality_blur_score=?,quality_possible_blur=? "
                     "WHERE project_id=? AND id=?", updated)
             # Progress is the cursor-based number processed, not a fabricated percent from GPU work.
             total = conn.execute("SELECT COUNT(*) FROM dataset_images WHERE project_id=?", (project_id,)).fetchone()[0]
