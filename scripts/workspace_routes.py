@@ -1,6 +1,7 @@
 """Workspace routes, alongside the existing launcher."""
 from flask import jsonify, request, send_from_directory
 import shutil
+import sqlite3
 from pathlib import Path
 
 from workspace_store import ProjectStore
@@ -66,7 +67,21 @@ def register(app, base, load_config):
     @app.route("/api/workspace/projects", methods=["GET", "POST"])
     def workspace_projects():
         if request.method == "GET":
-            return jsonify({"projects": store.list(request.args.get("archived") == "1")})
+            projects = store.list(request.args.get("archived") == "1")
+            # Image references live in Dataset Studio's separate SQLite database.
+            dataset_db = base / "settings" / "orkilab" / "datasets.sqlite3"
+            counts = {}
+            if dataset_db.is_file():
+                try:
+                    with sqlite3.connect(dataset_db, timeout=5) as conn:
+                        counts = {pid: count for pid, count in conn.execute(
+                            "SELECT project_id, COUNT(*) FROM dataset_images GROUP BY project_id")}
+                except sqlite3.Error:
+                    counts = {}
+            for project in projects:
+                project["dataset_image_count"] = counts.get(project["id"], 0)
+                project["dataset_train_ready"] = False  # Per-engine export is pending.
+            return jsonify({"projects": projects})
         if request.mimetype != "application/json":
             return jsonify({"error": "JSON required"}), 415
         if request.content_length is None or request.content_length > 16384:
