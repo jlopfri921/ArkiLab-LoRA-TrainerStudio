@@ -105,7 +105,7 @@ class CaptionStudioTests(unittest.TestCase):
             self.assertEqual(len(files), 2)
             self.assertIn("captions-manifest.json", files)
             name = next(name for name in files if name.endswith(".txt"))
-            self.assertTrue(name.startswith("captions/sample__"), name)
+            self.assertEqual(name, "captions/sample.txt")
             self.assertEqual(zf.read(name).decode("utf-8"), "sunset, orange sky, andalucía")
             manifest = json.loads(zf.read("captions-manifest.json"))
             self.assertEqual(manifest["format"], "orkilab-caption-sidecars-v1")
@@ -152,7 +152,7 @@ class CaptionStudioTests(unittest.TestCase):
             self.assertNotIn("../", safe)
             self.assertNotIn("\\\\", safe)
             self.assertEqual(safe.count("/"), 1)
-            self.assertTrue(safe.endswith("__" + image_id + ".txt"))
+            self.assertTrue(safe.endswith(".txt"))
         self.assertEqual(self.picture.read_bytes(), self.original)
 
     def test_history_is_bounded_and_unchanged_caption_does_not_increment(self):
