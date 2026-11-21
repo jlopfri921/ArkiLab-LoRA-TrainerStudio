@@ -36,7 +36,8 @@ class ComparatorBridgePreparationTest(unittest.TestCase):
         self.assertIn('bridgeViaComparator=w.format==="ui"',self.ui)
         self.assertIn('if(bridgeViaComparator)await $("generation-bridge").onclick()',self.ui)
         self.assertIn('if(!generationToken)throw Error($("generation-status").textContent||t("Workflow preparation failed"))',self.ui)
-        self.assertIn('if(scoped&&w.compatibility?.status!=="candidate"){',self.ui)
+        self.assertIn('if(scoped&&w.compatibility?.status==="incompatible"){',self.ui)
+        self.assertIn('La compatibilidad del modelo se comprobará sobre el workflow convertido',self.ui)
         self.assertIn('if compatibility["status"] != "candidate"',(ROOT/"scripts"/"generation_studio.py").read_text(encoding="utf-8"))
 
     def test_browser_button_is_not_silently_disabled(self):
