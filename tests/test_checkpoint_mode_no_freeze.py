@@ -37,7 +37,7 @@ class ComparatorCheckpointModeRegression(unittest.TestCase):
         self.assertIn('projectCompareWorkflows=d.workflows;projectCompatibilityId=requested;',body)
         self.assertIn('fillCompareWorkflows()',body)
         before_fetch=body.split('const d=await api(',1)[0]
-        self.assertNotIn('projectCompareWorkflows=[];',before_fetch.split('if(!checkMode()||!requested)',1)[-1])
+        self.assertNotIn('projectCompareWorkflows=[];',before_fetch.split('// Preserve the selected workflow and prepared token during the async request.',1)[-1])
         self.assertNotIn('fillCompareWorkflows();\n try{',body)
 
     def test_prepared_state_not_reset_when_switching_comparison_type(self):
