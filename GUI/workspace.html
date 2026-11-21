@@ -676,19 +676,23 @@ function updateCompareSelection(){
 }
 async function loadCompareCompatibility(){
  const requested=$("compare-checkpoint-project").value,run=++projectCompatibilityRequest;
- projectCompatibilityId="";projectCompareWorkflows=[];
- if(!checkMode()||!requested){fillCompareWorkflows();return}
+ if(!checkMode()||!requested){
+  projectCompatibilityId="";projectCompareWorkflows=[];
+  fillCompareWorkflows();return;
+ }
+ // Preserve the selected workflow and prepared token during the async request.
  $("compare-compat-status").textContent=I18N.lang==="es"?"Comprobando compatibilidad…":"Checking compatibility…";
- fillCompareWorkflows();
  try{
   const d=await api("/api/workspace/workflows?project_id="+encodeURIComponent(requested),{cache:"no-store"});
-  if(run!==projectCompatibilityRequest||requested!==$("compare-checkpoint-project").value)return;
+  if(run!==projectCompatibilityRequest||requested!==$("compare-checkpoint-project").value||!checkMode())return;
   projectCompareWorkflows=d.workflows;projectCompatibilityId=requested;
  }catch(error){
-  if(run!==projectCompatibilityRequest)return;
+  if(run!==projectCompatibilityRequest||!checkMode())return;
+  projectCompatibilityId="";
   $("compare-compat-status").textContent=error.message;
  }finally{
-  if(run===projectCompatibilityRequest)fillCompareWorkflows();
+  if(run===projectCompatibilityRequest&&checkMode()&&projectCompatibilityId===requested)
+   fillCompareWorkflows();
  }
 }
 $("compare-show-all").onchange=fillCompareWorkflows;
@@ -736,9 +740,12 @@ async function loadCheckpointProjects(){
   const requested=new URLSearchParams(location.search).get("checkpoint_project");
   const chosen=[old,requested].find(id=>id&&[...chooser.options].some(o=>o.value===id));
   if(chosen)chooser.value=chosen;
-  if(requested&&chooser.value===requested){$("compare-mode").value="checkpoints";updateCheckpointMode()}
-  if(chooser.value)await loadProjectCheckpoints();
-  await loadCompareCompatibility();
+  if(requested&&chooser.value===requested){
+   $("compare-mode").value="checkpoints";
+   updateCheckpointMode();
+  }
+  if(chooser.value&&checkMode())await loadProjectCheckpoints();
+  if(checkMode())await loadCompareCompatibility();
  }catch(error){$("compare-checkpoint-status").textContent=error.message}
 }
 async function loadProjectCheckpoints(){
@@ -772,10 +779,22 @@ function updateCheckpointMode(){
  $("compare-checkpoint-group").hidden=!active;
  $("compare-weights-group").hidden=active;
  $("compare-confirm").checked=false;
- refreshCompare();updateCheckpointCount();fillCompareWorkflows();
+ // Changing comparison type does not invalidate an already prepared workflow.
+ // Do not rebuild its selector or rescan the project in this synchronous step.
+ updateCompareRunState();
 }
-$("compare-mode").onchange=()=>{updateCheckpointMode();if(checkMode()){loadCheckpointProjects();loadCompareCompatibility();}else{projectCompatibilityRequest++;projectCompatibilityId="";projectCompareWorkflows=[];fillCompareWorkflows();}};
-$("compare-checkpoint-project").onchange=async()=>{await Promise.all([loadProjectCheckpoints(),loadCompareCompatibility()]);};
+$("compare-mode").onchange=async()=>{
+ updateCheckpointMode();
+ if(checkMode()){
+  if($("compare-checkpoint-project").options.length<=1)await loadCheckpointProjects();
+  else await loadCompareCompatibility();
+ }else{
+  projectCompatibilityRequest++;
+  projectCompatibilityId="";projectCompareWorkflows=[];
+  fillCompareWorkflows();
+ }
+};
+$("compare-checkpoint-project").onchange=()=>{loadProjectCheckpoints();loadCompareCompatibility();};
 $("compare-checkpoint-refresh").onclick=loadProjectCheckpoints;
 loadCheckpointProjects();
 
