@@ -92,27 +92,31 @@ def model_evidence(graph):
                     model_refs.append(value)
     return model_refs, classes, standard_loader
 
-def assess_workflow(graph, category, engine):
+def assess_workflow(graph, category, engine, name=None):
     expected = family_from_engine(engine)
     refs, nodes, supported = model_evidence(graph)
     families = detect_family(refs, nodes)
     if category not in ("image", "other"):
         return {"status":"incompatible", "reason":"non_image", "expected":expected,
                 "detected":families, "standard_loader":supported}
-    if not supported:
-        return {"status":"incompatible", "reason":"no_loader", "expected":expected,
-                "detected":families, "standard_loader":False}
     if expected is None:
         return {"status":"unverified", "reason":"unknown_project_family", "expected":None,
-                "detected":families, "standard_loader":True}
+                "detected":families, "standard_loader":supported}
     if len(families)>1:
         return {"status":"unverified", "reason":"mixed_models", "expected":expected,
-                "detected":families, "standard_loader":True}
+                "detected":families, "standard_loader":supported}
     if families and families[0]!=expected:
         return {"status":"incompatible", "reason":"different_family", "expected":expected,
-                "detected":families, "standard_loader":True}
+                "detected":families, "standard_loader":supported}
     if not families:
-        return {"status":"unverified", "reason":"unknown_family", "expected":expected,
-                "detected":[], "standard_loader":True}
+        # A workflow's filename is only a hint for review; it cannot qualify
+        # the graph for execution or override conflicting base model evidence.
+        name_families = detect_family([name], []) if isinstance(name, str) else []
+        reason = "name_hint" if name_families == [expected] else "unknown_family"
+        return {"status":"unverified", "reason":reason, "expected":expected,
+                "detected":[], "standard_loader":supported}
+    if not supported:
+        return {"status":"needs_lora", "reason":"no_loader", "expected":expected,
+                "detected":families, "standard_loader":False}
     return {"status":"candidate", "reason":"family_hint", "expected":expected,
             "detected":families, "standard_loader":True}
