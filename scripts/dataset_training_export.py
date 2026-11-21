@@ -2,7 +2,9 @@
 
 A generic image/text dataset ZIP is not a guarantee of engine compatibility.
 """
-import io
+import os
+import shutil
+import uuid
 import json
 import re
 import tempfile
@@ -19,7 +21,9 @@ ALLOWED = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
 HEX = set("0123456789abcdef")
 
 
-def register(app, db, project_exists, local, valid_origin):
+def register(app, db, project_exists, local, valid_origin, base):
+    base = Path(base)
+
     @app.post("/api/workspace/datasets/<project_id>/training-export")
     def training_export(project_id):
         if not local() or not valid_origin():
@@ -33,11 +37,11 @@ def register(app, db, project_exists, local, valid_origin):
             return jsonify(error="Invalid request body"), 400
         ids = body.get("image_ids")
         mode = body.get("mode")
-        if (mode not in ("preview", "download") or not isinstance(ids, list)
+        if (mode not in ("preview", "download", "prepare") or not isinstance(ids, list)
                 or not 0 < len(ids) <= MAX_IMAGES or len(set(map(str, ids))) != len(ids)
                 or any(not isinstance(i, str) or len(i) != 32 or not set(i) <= HEX for i in ids)):
             return jsonify(error="Select 1-200 distinct indexed images"), 400
-        if mode == "download" and body.get("confirm") is not True:
+        if mode in ("download", "prepare") and body.get("confirm") is not True:
             return jsonify(error="Confirm export before downloading"), 400
         with closing(db()) as conn:
             values = ",".join("?" for _ in ids)
@@ -99,6 +103,47 @@ def register(app, db, project_exists, local, valid_origin):
             return jsonify(summary)
         if not included:
             return jsonify(error="No complete image/caption pairs to export"), 409
+        if mode == "prepare":
+            # Always create a distinct local copy. Never overwrite a previous
+            # preparation, source image, caption or trainer configuration.
+            if issues:
+                return jsonify(error="Resolve skipped entries before preparing a complete dataset",
+                               skipped=issues), 409
+            output_root = base / "Datasets" / "OrkiLab"
+            # Do not follow symlink redirections in managed destination components.
+            if any(p.is_symlink() for p in (base / "Datasets", output_root,
+                                             output_root / project_id)):
+                return jsonify(error="Managed dataset destination cannot be a symlink"), 409
+            parent = output_root / project_id
+            prepared_id = uuid.uuid4().hex
+            staging = parent / (prepared_id + ".staging")
+            finished = parent / prepared_id
+            try:
+                parent.mkdir(parents=True, exist_ok=True)
+                staging.mkdir()
+                for item in included:
+                    source = item["source"]
+                    if source.is_symlink() or not source.is_file() or source.stat().st_size != item["bytes"]:
+                        raise ValueError("Source image changed since preview")
+                    target = staging / item["name"]
+                    shutil.copyfile(source, target)
+                    if target.stat().st_size != item["bytes"] or source.stat().st_size != item["bytes"]:
+                        raise ValueError("Source image changed during copy")
+                    (staging / item["text"]).write_text(item["caption"], encoding="utf-8")
+                manifest = {"version": 1, "project_id": project_id,
+                            "format": "flat_image_txt", "trainer_ready": False,
+                            "items": [{"id": x["id"], "image": x["name"],
+                                       "caption": x["text"]} for x in included]}
+                (staging / "manifest.json").write_text(
+                    json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+                staging.rename(finished)
+                return jsonify(ok=True, path=str(finished.resolve()), ready=len(included),
+                               trainer_ready=False,
+                               note="Prepared local folder; select this path in a compatible trainer.")
+            except (OSError, ValueError) as exc:
+                shutil.rmtree(staging, ignore_errors=True)
+                return jsonify(error=str(exc) if isinstance(exc, ValueError)
+                               else "Could not prepare dataset on local disk"), 409
         # Use a spooled file, not a large in-memory BytesIO. No writes to sources.
         output = tempfile.SpooledTemporaryFile(max_size=8 * 1024 * 1024, mode="w+b")
         try:
