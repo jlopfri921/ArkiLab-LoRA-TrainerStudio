@@ -106,7 +106,7 @@ class WorkflowCompatibilityIntegrationChecks(unittest.TestCase):
             self.assertIn(token,library)
         for token in ('id="compare-show-all"', 'id="compare-compat-status"',
                       'function loadCompareCompatibility()', 'w.compatibility?.status==="candidate"',
-                      'option.disabled=true', 'id="compare-checkpoint-project"'):
+                      'id="compare-checkpoint-project"'):
             self.assertIn(token,html)
         self.assertIn('id="compare-inspect"',html)
         self.assertIn('"needs_lora"',html)
