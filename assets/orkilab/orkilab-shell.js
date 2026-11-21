@@ -2,6 +2,18 @@
    Never rewrites queue controls, image controls or their listeners. */
 (function () {
     "use strict";
+    // Every menu transition must begin at the top, not at the previous
+    // section's scroll offset (including browser back/forward restoration).
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    const goTop=()=>window.scrollTo(0,0);
+    window.addEventListener("pageshow",goTop);
+    document.addEventListener("click",event=>{
+        if(event.defaultPrevented||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+        const link=event.target.closest?.(
+            "#home-navigation a,#comfy-navigation a,.queue-sidebar a,.studio-navigation a"
+        );
+        if(link)goTop();
+    });
     // Same item order as #home-navigation in GUI/workspace.html.
     const routes = [
         ["overview", "/workspace#overview", 1],
