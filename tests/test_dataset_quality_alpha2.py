@@ -79,6 +79,48 @@ class DatasetQualityTests(unittest.TestCase):
         self.assertEqual(sum(i["duplicate"] for i in images), 0)
         self.assertEqual(self.b.read_bytes(), self.original)
 
+    def test_visual_similarity_and_blur_are_review_suggestions(self):
+        from PIL import Image, ImageDraw, ImageFilter
+        from image_quality_visual import near_match, visual_metrics
+        scene = Image.new("RGB", (640, 640), "white")
+        draw = ImageDraw.Draw(scene)
+        for n in range(8):
+            draw.rectangle((n * 80, n * 80, n * 80 + 36, 620 - n * 20),
+                           fill=(20 + n * 18, 30, 170))
+        sharp = self.folder / "scene.png"
+        compressed = self.folder / "scene.jpg"
+        soft = self.folder / "scene_blurred.png"
+        blank = self.folder / "blank.png"
+        scene.save(sharp)
+        scene.save(compressed, format="JPEG", quality=95)
+        scene.filter(ImageFilter.GaussianBlur(radius=9)).save(soft)
+        Image.new("RGB", (640, 640), "white").save(blank)
+        before = {p: p.read_bytes() for p in (sharp, compressed, soft, blank)}
+        self.assertEqual(self.client.post(self.root, json={"folder": str(self.folder)}).status_code, 200)
+        for _ in range(5):
+            result = self.client.post(self.scan, json={"cursor": None, "limit": 20})
+            self.assertEqual(result.status_code, 200)
+            self.assertTrue(result.get_json()["finished"])
+            break
+        phash_a, sharp_score, _ = visual_metrics(sharp)
+        phash_b, _, _ = visual_metrics(compressed)
+        _, soft_score, _ = visual_metrics(soft)
+        blank_hash, _, blank_blur = visual_metrics(blank)
+        self.assertIsNotNone(phash_a)
+        self.assertTrue(near_match(phash_a, phash_b))
+        self.assertGreater(sharp_score, soft_score)
+        self.assertIsNone(blank_hash)
+        self.assertFalse(blank_blur)
+        images = self.client.get(self.root).get_json()["images"]
+        self.assertTrue(any(x["near_duplicate"] for x in images), images)
+        self.assertTrue(any(x["blur_score"] is not None for x in images), images)
+        filtered = self.client.get(self.root + "?quality=near")
+        self.assertEqual(filtered.status_code, 200)
+        self.assertTrue(filtered.get_json()["images"])
+        self.assertEqual(self.client.get(self.root + "?quality=typo").status_code, 400)
+        for file, original in before.items():
+            self.assertEqual(file.read_bytes(), original)
+
     def test_scan_does_not_change_review_states(self):
         ids = [x["id"] for x in self.client.get(self.root).get_json()["images"]]
         update = self.client.post(self.root + "/batch",
