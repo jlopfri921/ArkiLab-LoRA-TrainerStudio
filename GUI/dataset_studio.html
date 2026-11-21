@@ -116,6 +116,7 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <button type="button" id="reset" disabled>Mark unreviewed</button>
 <button type="button" class="danger" id="remove" disabled>Remove selected references</button>
 <button type="button" id="export-sidecars" disabled>Export selected captions (.txt ZIP)</button>
+<button type="button" id="export-training" disabled>Export image + caption dataset (ZIP)</button>
 </div>
 <div class="qualitybar" aria-label="Dataset quality scan"><button type="button" id="scan-quality">Analyze image quality</button><button type="button" id="cancel-scan" disabled>Cancel scan</button><button type="button" id="compare-images">Compare similar images</button><progress id="scan-progress" max="100" value="0" aria-label="Scan progress"></progress><span id="scan-label" class="muted" role="status" aria-live="polite">No scan running</span></div>
 <p id="count" class="muted count">No project selected</p>
@@ -211,7 +212,7 @@ let comparePairs=[],compareItems=new Map(),compareIndex=0;
 function say(message){status.textContent=message}
 function endpoint(){return "/api/workspace/datasets/"+encodeURIComponent(project.value)}
 async function api(path,options={}){const response=await fetch(path,{credentials:"same-origin",...options});const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data}
-function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars"])$(id).disabled=busy||!project.value||!selected.size;
+function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars","export-training"])$(id).disabled=busy||!project.value||!selected.size;
 $("compare-images").disabled=!project.value||scanning||busy}
 function scanControls(){ $("scan-quality").disabled=scanning||!project.value; $("cancel-scan").disabled=!scanning }
 async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}const requested=new URLSearchParams(location.search).get("project");if(requested&&[...project.options].some(o=>o.value===requested)){project.value=requested;project.dispatchEvent(new Event("change"));}}catch(e){say(e.message)}}
@@ -565,6 +566,31 @@ finally{URL.revokeObjectURL(url)}
 $("sidecar-export-status").textContent=exportText[9];
 }catch(error){$("sidecar-export-status").textContent=error.message||exportText[10]}
 finally{exportState()}
+});
+
+$("export-training").addEventListener("click",async()=>{
+ if(!project.value||!selected.size)return;
+ const projectId=project.value, imageIds=[...selected],button=$("export-training");
+ button.disabled=true;
+ try{
+  const target="/api/workspace/datasets/"+encodeURIComponent(projectId)+"/training-export";
+  const preview=await postJson(target,{mode:"preview",image_ids:imageIds});
+  if(project.value!==projectId)return;
+  const message=lang==="es"
+   ? "Listas: "+preview.ready+" de "+preview.selected+". Omitidas: "+preview.skipped.length+". Esta exportación genérica no configura automáticamente el entrenador. ¿Descargar el ZIP con imágenes y descripciones?"
+   : "Ready: "+preview.ready+" of "+preview.selected+". Skipped: "+preview.skipped.length+". This generic export does not configure the trainer. Download image/caption ZIP?";
+  if(!preview.ready){say(message);return}
+  if(!window.confirm(message))return;
+  const response=await fetch(target,{method:"POST",credentials:"same-origin",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({mode:"download",image_ids:imageIds,confirm:true})});
+  if(!response.ok){const result=await response.json();throw Error(result.error||"Dataset export failed")}
+  const blob=await response.blob(),url=URL.createObjectURL(blob);
+  try{const a=document.createElement("a");a.href=url;a.download="orkilab-training-dataset-"+projectId.slice(0,8)+".zip";document.body.append(a);a.click();a.remove()}
+  finally{URL.revokeObjectURL(url)}
+  say(lang==="es"?"Dataset exportado. Extrae el ZIP y configura la ruta en el entrenador compatible.":"Dataset exported. Extract the ZIP and choose its path in a compatible trainer.");
+ }catch(e){say(e.message)}
+ finally{selectionUI()}
 });
 
 selectionUI();scanControls();projects();
