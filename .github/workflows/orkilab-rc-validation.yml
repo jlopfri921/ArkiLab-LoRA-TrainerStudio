@@ -1,0 +1,45 @@
+name: OrkiLab RC validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: Python unit tests (${{ matrix.os }}, Python 3.13)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      # Avoid CUDA/model-download-heavy requirements.txt for this GPU-free gate.
+      - name: Install CPU-only test dependencies
+        run: python -m pip install --upgrade pip flask psutil requests
+      - name: Compile common modules
+        run: python -m compileall -q scripts tests
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Check release metadata consistency
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          version = Path('VERSION_ARKILAB').read_text(encoding='utf-8').strip()
+          launcher = json.loads(Path('GUI/launcher.json').read_text(encoding='utf-8'))
+          assert launcher['arkilab_version'] == version, (launcher['arkilab_version'], version)
+          assert all(t['id'] and t['run'] for t in launcher['trainers'])
+          print(f'Version metadata consistent: {version}')
