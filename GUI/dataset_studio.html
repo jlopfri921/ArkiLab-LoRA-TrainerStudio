@@ -98,7 +98,7 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <section aria-labelledby="library"><h2 id="library">Image library</h2>
 <div class="toolbar">
 <label><span id="project-label">Project</span><select id="project"><option value="">Choose a project</option></select></label>
-<label><span id="folder-label">Image folder (absolute path)</span><input id="folder" type="text" placeholder="D:\\datasets\\example" autocomplete="off"></label>
+<label><span id="folder-label">Image folder (absolute path)</span><span style="display:flex;gap:8px;min-width:0"><input id="folder" style="flex:1;min-width:0" type="text" placeholder="D:\\datasets\\example" autocomplete="off"><button type="button" id="browse-folder" style="white-space:nowrap">Browse…</button></span></label>
 <button id="import" type="button">Import images</button>
 </div>
 <div class="controls" style="margin-top:18px">
@@ -285,6 +285,18 @@ $("approve").addEventListener("click",()=>batch("review",[...selected],"approved
 $("reject").addEventListener("click",()=>batch("review",[...selected],"rejected"));
 $("reset").addEventListener("click",()=>batch("review",[...selected],"unreviewed"));
 $("remove").addEventListener("click",()=>{if(confirm(tr[31]))batch("remove",[...selected])});
+$("browse-folder").textContent=({es:"Examinar…",en:"Browse…",pt:"Procurar…",fr:"Parcourir…",de:"Durchsuchen…",it:"Sfoglia…",ja:"参照…",ko:"찾아보기…"}[lang]||"Browse…");
+$("browse-folder").title=lang==="es"?"Abrir el selector de carpetas del sistema operativo del equipo que ejecuta OrkiLab":"Open the native folder picker on the OrkiLab launcher computer";
+$("browse-folder").addEventListener("click",async()=>{
+ const button=$("browse-folder");
+ button.disabled=true;
+ try{
+  const result=await postJson("/api/workspace/datasets/browse-folder",{});
+  if(result.folder){$("folder").value=result.folder;say(lang==="es"?"Carpeta seleccionada. Pulsa Importar imágenes.":"Folder selected. Click Import images.");}
+  else if(result.cancelled){say(lang==="es"?"Selección cancelada; la ruta anterior se ha conservado.":"Selection cancelled; previous path kept.");}
+ }catch(error){say(error.message)}
+ finally{button.disabled=false}
+});
 $("import").addEventListener("click",async()=>{if(!project.value){say(tr[0]);return}const folder=$("folder").value.trim();if(!folder){say(tr[1]);return}
 $("import").disabled=true;try{const data=await postJson(endpoint(),{folder});say(data.imported+" / "+data.scanned+" · "+tr[32]);await refresh()}catch(e){say(e.message)}finally{$("import").disabled=false}});
 
