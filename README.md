@@ -25,6 +25,12 @@ The next beta.1 development slice adds **Export selected captions (.txt ZIP)** w
 
 The same development work also synchronizes the Workspace/Queue/Dataset header markup, removes the duplicate ComfyUI return button and resets scrolling to the top after selecting menu sections. Browser appearance and real-dataset acceptance must be verified on the user's Windows installation separately from CI. See [Dataset Studio scope and milestones](docs/arkilab/DATASET_STUDIO_0_4_SCOPE.md).
 
+### Dataset Studio: optional local Ollama caption previews (0.4 development)
+
+In **Dataset Studio → Edit caption → Local AI suggestion**, you may choose a **previously installed image-capable Ollama model** and explicitly click **Generate preview locally**. Ollama must already be running on this computer at `127.0.0.1:11434`; OrkiLab does **not** install Ollama, download or select a model for you, or enable cloud inference. The model name is entered manually (for example, `qwen3-vl:8b` if you have actually installed it). The selected source image is sent only to the local loopback Ollama endpoint. The request is capped at 12 MB and 120 seconds, performs no redirects and asks Ollama to unload the model afterward with `keep_alive: 0` (subject to Ollama's behavior).
+
+The suggestion appears in a separate **read-only preview**. Only **Use suggestion in editor** copies it into the editable text box; only the existing **Save caption** action writes the reviewed text to OrkiLab's local SQLite metadata. No original images, sidecars or caption history are changed just by generating a preview. Generating uses GPU memory and can contend with ComfyUI or training; run it only when resources are available. One preview is processed at a time. This is an **experimental development integration**, not a verified 0.4 release or a substitute for the training captioner already used by individual trainers. The official image-captioning acceptance still requires a real Windows/GPU test.
+
 ## Ecosystem spotlight — owner-managed announcement
 
 The Dashboard includes a small, dismissible **OrkiLab ecosystem** announcement currently restricted to OrkiLab and OrkiCAD AI. It is a first-party editorial promotion, never an advertising network. One announcement is shown at a time, rotated daily, with a session-level dismiss control.
