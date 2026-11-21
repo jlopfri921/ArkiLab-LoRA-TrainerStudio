@@ -75,7 +75,7 @@ class UnifiedChromeTests(unittest.TestCase):
         import re
         def first_header(page):
             html = (ROOT / "GUI" / page).read_text(encoding="utf-8")
-            match = re.search(r"<header(?:\\s[^>]*)?>(.*?)</header>", html, re.DOTALL)
+            match = re.search(r"<header(?:[ ]+[^>]*)?>(.*?)</header>", html, re.DOTALL)
             self.assertIsNotNone(match, page)
             return match.group(1)
         original = first_header("workspace.html")
