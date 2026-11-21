@@ -72,32 +72,16 @@ class UnifiedChromeTests(unittest.TestCase):
                 self.assertIn(needle, self.js)
 
     def test_queue_and_dataset_headers_use_exact_workspace_markup(self):
-        from html.parser import HTMLParser
-        class Header(HTMLParser):
-            def __init__(self):
-                super().__init__()
-                self.found = False
-                self.depth = 0
-                self.tokens = []
-            def handle_starttag(self, tag, attrs):
-                if tag == "header" and not self.found:
-                    self.found = True
-                    self.depth = 1
-                elif self.depth:
-                    self.depth += 1
-                if self.depth:
-                    self.tokens.append((tag, tuple((k, v) for k, v in attrs
-                                                   if k not in ("class", "role"))))
-            def handle_endtag(self, tag):
-                if self.depth:
-                    self.depth -= 1
-        base = Header()
-        base.feed((ROOT / "GUI" / "workspace.html").read_text(encoding="utf-8"))
+        import re
+        def first_header(page):
+            html = (ROOT / "GUI" / page).read_text(encoding="utf-8")
+            match = re.search(r"<header(?:\\s[^>]*)?>(.*?)</header>", html, re.DOTALL)
+            self.assertIsNotNone(match, page)
+            return match.group(1)
+        original = first_header("workspace.html")
         for page in ("queue.html", "dataset_studio.html"):
             with self.subTest(page=page):
-                other = Header()
-                other.feed((ROOT / "GUI" / page).read_text(encoding="utf-8"))
-                self.assertEqual(other.tokens, base.tokens)
+                self.assertEqual(first_header(page), original)
                 html = (ROOT / "GUI" / page).read_text(encoding="utf-8")
                 self.assertIn('class="orki-shell-header orki-app-header"', html)
 
