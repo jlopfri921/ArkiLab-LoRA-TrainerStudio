@@ -53,7 +53,6 @@ class DatasetStudioUiChecks(unittest.TestCase):
         self.assertIn('description.hidden = !opened', shell)
 
     def test_queue_and_dataset_menu_match_home_order_and_controls(self):
-        import re
         from html.parser import HTMLParser
 
         class HomeMenu(HTMLParser):
@@ -82,8 +81,9 @@ class DatasetStudioUiChecks(unittest.TestCase):
         ]
         self.assertEqual(parser.order, expected)
         js = (ROOT / "assets" / "orkilab" / "orkilab-shell.js").read_text(encoding="utf-8")
-        fallback = re.findall(r'^\\s*\\["(overview|projects|engines|gpu|settings|shutdown|queue|comfy|datasets)",',
-                              js, re.MULTILINE)
+        keys = ("overview", "projects", "engines", "gpu", "settings", "shutdown", "queue", "comfy", "datasets")
+        fallback = [line.strip().split('"')[1] for line in js.splitlines()
+                    if line.strip().startswith('["') and line.strip().split('"')[1] in keys]
         self.assertEqual(fallback, [
             "overview", "projects", "engines", "gpu", "settings",
             "shutdown", "queue", "comfy", "datasets"
