@@ -94,6 +94,22 @@ class UnifiedChromeTests(unittest.TestCase):
         self.assertIn("scrollWorkspaceTop();", workspace)
         self.assertNotIn('<a href="/workspace" class="back-link">', workspace)
 
+    def test_queue_job_rows_are_scoped_away_from_shared_header(self):
+        queue = (ROOT / "GUI" / "queue.html").read_text(encoding="utf-8")
+        style = queue.split("<style>", 1)[1].split("</style>", 1)[0]
+        self.assertIn(".wrap .row { display: grid;", style)
+        self.assertIn(".wrap .row:hover", style)
+        self.assertIn(".wrap .row.hist", style)
+        # A bare .row selector also targets the header's language/version group,
+        # giving it a card background, padding, and grid columns.
+        import re
+        self.assertIsNone(re.search(r"(?<![\\w-])(?<!\\.wrap )\\.row(?:\\s|\\.|:|\\{)", style))
+        self.assertIn('<header class="orki-shell-header orki-app-header">', queue)
+        self.assertIn('<div class="row"><label><span>Language</span>', queue)
+        for property in ("background:transparent;", "padding:0;",
+                         "border:0;", "grid-template-columns:none;"):
+            self.assertIn(property, self.css)
+
     def test_queue_does_not_acquire_a_second_language_selector(self):
         helper = (ROOT / "assets" / "orkilab" / "orkilab-ui.js").read_text(encoding="utf-8")
         self.assertIn("#ui-lang,#workspace-language,#orki-language,.queue-shell,.studio-layout", helper)
@@ -125,8 +141,15 @@ class UnifiedChromeTests(unittest.TestCase):
         end = workspace.index("</nav>", start)
         comfy = workspace[start:end]
         self.assertIn('href="/workspace"', comfy)
-        self.assertIn("Back to Workspace", comfy)
+        self.assertIn("Main dashboard", comfy)
         self.assertLess(comfy.index('href="/workspace"'), comfy.index('href="#welcome"'))
+        import json
+        for lang in ("es", "pt", "fr", "de", "it", "ja", "ko"):
+            with self.subTest(language=lang):
+                strings = json.loads((ROOT / "GUI" / "locales" / (lang + ".json")).read_text(encoding="utf-8"))
+                self.assertTrue(strings.get("Main dashboard"))
+        es = json.loads((ROOT / "GUI" / "locales" / "es.json").read_text(encoding="utf-8"))
+        self.assertEqual(es["Main dashboard"], "Panel principal")
         self.assertNotIn("orki-global-nav", comfy)
         self.assertNotIn('home.cloneNode(true)', self.js)
         self.assertIn('comfy?.querySelectorAll(".orki-global-nav")', self.js)

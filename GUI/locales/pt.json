@@ -1769,6 +1769,7 @@
   "Could not read generation status": "Não foi possível consultar o estado",
   "ComfyUI Zone": "Zona ComfyUI",
   "Back to Workspace": "Voltar ao espaço de trabalho",
+  "Main dashboard": "Painel principal",
   "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "Gerir a ligação ao ComfyUI, modelos, nós, workflows e geração num único lugar.",
   "Generation history": "Histórico de gerações",
   "Review saved generation parameters and outputs. Original media remains on ComfyUI.": "Consulte os parâmetros e resultados guardados. Os ficheiros originais permanecem no ComfyUI.",

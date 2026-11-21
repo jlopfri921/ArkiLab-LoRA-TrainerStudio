@@ -1769,6 +1769,7 @@
   "Could not read generation status": "生成状態を取得できません",
   "ComfyUI Zone": "ComfyUI ゾーン",
   "Back to Workspace": "ワークスペースに戻る",
+  "Main dashboard": "メインパネル",
   "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "ComfyUI 接続、モデル、ノード、ワークフロー、生成を一か所で管理します。",
   "Generation history": "生成履歴",
   "Review saved generation parameters and outputs. Original media remains on ComfyUI.": "保存されたパラメーターと結果を確認します。元のファイルは ComfyUI に残ります。",

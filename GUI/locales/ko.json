@@ -1769,6 +1769,7 @@
   "Could not read generation status": "생성 상태를 읽을 수 없습니다",
   "ComfyUI Zone": "ComfyUI 영역",
   "Back to Workspace": "작업 공간으로 돌아가기",
+  "Main dashboard": "메인 대시보드",
   "Manage your ComfyUI connection, models, nodes, workflows and generation in one place.": "ComfyUI 연결, 모델, 노드, 워크플로 및 생성을 한 곳에서 관리합니다.",
   "Generation history": "생성 기록",
   "Review saved generation parameters and outputs. Original media remains on ComfyUI.": "저장된 매개변수와 결과를 확인합니다. 원본 파일은 ComfyUI에 남습니다.",
