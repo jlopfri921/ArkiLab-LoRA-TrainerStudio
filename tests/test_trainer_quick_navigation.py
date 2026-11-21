@@ -17,7 +17,7 @@ class QuickNavTests(unittest.TestCase):
             self.assertLess(text.index('src="/trainer_quick_nav.js"'),text.index("</body>"))
     def test_navigation_only_scrolls_and_opens_panels(self):
         for text in ("document.createElement('nav')","document.createElement('button')",
-                     "b.type = 'button'","aria-label", "panel.classList.contains('collapsed')",
+                     "b.type = 'button'","aria-label", "panel?.classList.contains('collapsed')",
                      "window.togglePanel(clickable)","target.scrollIntoView","target.focus",
                      "if (!grid || !sidebar","if (text) addTarget"):
             self.assertIn(text,JS)
