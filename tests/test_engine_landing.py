@@ -33,7 +33,8 @@ class EngineLandingTests(unittest.TestCase):
         self.assertEqual(dom.filters,["image","video","audio"])
 
     def test_existing_engine_launcher_not_removed(self):
-        self.assertIn('function launchButton(id)',HTML)
+        self.assertIn('function launchButton(id,projectId=null)',HTML)
+        self.assertIn('actions.append(launchButton(p.engine,p.id))',HTML)
         self.assertIn('details,launchButton(trainer.id)',HTML)
         self.assertIn('["all","image","video","audio","multimodal"]',HTML)
 
