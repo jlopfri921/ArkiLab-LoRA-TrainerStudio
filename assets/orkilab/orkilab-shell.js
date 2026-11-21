@@ -90,7 +90,7 @@
                     if (message) { message.textContent = error.message; message.hidden = false; }
                 }
             });
-            fetch("/api/system", {credentials:"same-origin"}).then(r => r.ok ? r.json() : null).then(info => {
+            fetch("/api/workspace/overview", {credentials:"same-origin"}).then(r => r.ok ? r.json() : null).then(info => {
                 if (info && info.version) version.textContent = info.version;
             }).catch(() => {});
         }
