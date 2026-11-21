@@ -2,8 +2,8 @@
 
 **Date:** 2026-11-21  
 **Status:** NOT READY TO TAG. This is a release-candidate readiness record, not release notes or a declaration of acceptance.  
-**Version in main at review:** `VERSION_ARKILAB = 0.2.0-rc.1`.  
-**Baseline:** `main`, following merged PR #33 (commit `9f3ed80204bfeddfc6b780abc634cc2cd13de18a`). Confirm SHA again before executing local tests.
+**Version in published main at initial review:** `VERSION_ARKILAB = 0.2.0-rc.1`. **This release candidate branch proposes `0.3.0-rc.1`; it is not yet tagged or released.**  
+**Baseline:** refreshed from `main` after CI PR #39 and acceptance documentation PR #41. Record the exact candidate SHA before tagging.
 
 ## Rules for recording evidence
 
@@ -94,6 +94,11 @@ GitHub Actions returned **completed / success** for the following workflow runs 
 PR #39 was merged into `main` with squash commit `289e6859843c1bf6c93591a84023eaca943ac4f2`.
 
 **Scope note:** CI on the PR branch is confirmed. The combined-status and PR-workflow-only queries have **not** yet established successful runs on the eventual final `v0.3.0-rc.1` commit. Repeat or verify both platform checks for the exact release SHA before tagging. These are GPU-free tests; they complement, rather than replace, real on-device ComfyUI acceptance.
+
+
+## Candidate branch preparation (2026-11-21)
+
+The proposed version bump, README badge and changelog from draft PR #40 have been reapplied onto current `main` on branch `release/0.3.0-rc.1-final-checks`, which includes the merged Windows/Linux CI workflow. **The branch is a candidate, not a publication.** Both CI platforms must pass on this branch and on the final merged/tagged release commit. The user reported successful local tests and core ComfyUI scenarios, but missing failure/upgrade screenshots or logs remain unverified and must not be inferred as passed.
 
 ## Suggested safe operator command sequence
 
