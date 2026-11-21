@@ -842,17 +842,17 @@ $("compare-prepare").onclick=async()=>{
   if(!generationToken)throw Error($("generation-status").textContent||t("Workflow preparation failed"));
   refreshCompare();
   const count=$("compare-node").options.length-1;
-  if(scoped&&w.compatibility?.status!=="candidate"){
-   out.textContent=(I18N.lang==="es"?"Workflow convertido, pero aún no está autorizado para comparar checkpoints: ":"Workflow converted but not yet eligible for checkpoint comparison: ")+compatibilityReason(w);
+  if(count){
+   out.textContent=t("Ready: {count} LoRA loader(s) available for comparison.",{count})+
+    (scoped&&w.compatibility?.status!=="candidate"
+     ?(I18N.lang==="es"?" · La compatibilidad del modelo se comprobará sobre el workflow convertido al ejecutar la comparación.":" · Model compatibility will be verified using the converted workflow when the comparison starts.")
+     :"");
   }else{
-   if(count)out.textContent=t("Ready: {count} LoRA loader(s) available for comparison.",{count});
-   else{
     const graph=JSON.parse($("generation-graph").textContent||"{}");
     const loaders=Object.values(graph).filter(n=>["LoraLoader","LoraLoaderModelOnly"].includes(n?.class_type));
     out.textContent=loaders.length
      ?(I18N.lang==="es"?"Workflow preparado, pero el cargador LoRA no tiene lora_name y strength_model editables. Comprueba sus conexiones.":"Workflow prepared, but lora_name and strength_model are not editable on its LoRA loader. Check its links.")
      :t("No compatible standard LoRA loader found. Try a workflow with LoraLoader or LoraLoaderModelOnly.");
-   }
   }
  }catch(e){out.textContent=e.message;}
  finally{bridgeViaComparator=false;updateCompareSelection();}
