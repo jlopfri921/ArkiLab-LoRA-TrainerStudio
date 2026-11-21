@@ -1,0 +1,8 @@
+/* OrkiLab trainee navigation pilot. Existing trainer layout and actions stay unchanged. */
+.orkilab-trainer-quicknav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 15px;margin:0 0 16px;background:#13263e;border:1px solid #355672;border-radius:12px}
+.orkilab-quicknav-heading{font-size:12px;font-weight:700;color:#a7c8d9;margin-right:4px;white-space:nowrap}
+.orkilab-quicknav-link{font:inherit;font-size:12px;font-weight:600;color:#e3f5fb;background:#193148;border:1px solid #3b6077;border-radius:999px;padding:7px 11px;cursor:pointer;max-width:250px}
+.orkilab-quicknav-link:hover{background:#244763;border-color:#49bdb6}
+.orkilab-quicknav-link:focus-visible{outline:2px solid #40d4c6;outline-offset:3px}
+.main-grid .panel, .main-grid #terminal, .main-grid #ds-grid, .main-grid #gallery{scroll-margin-top:18px}
+@media(max-width:760px){.orkilab-trainer-quicknav{gap:6px;padding:10px}.orkilab-quicknav-link{font-size:12px;padding:7px 9px}}

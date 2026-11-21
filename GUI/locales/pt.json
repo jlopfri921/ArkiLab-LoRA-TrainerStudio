@@ -134,7 +134,7 @@
   "Saves the training settings, previews included. While training, they apply on the next step.": "Salva as configurações de treinamento, previews incluídas. Durante o treinamento, elas valem a partir do próximo passo.",
   "Console Output": "Saída do console",
   "IDLE": "OCIOSO",
-  "Dataset Manager": "Gerenciador do dataset",
+  "Dataset Manager": "Gestor do conjunto de dados",
   "Search...": "Buscar...",
   "Uploads files or a .zip into the dataset folder (you can also drag them here). Useful from another device or RunPod.": "Envia arquivos ou um .zip para a pasta do dataset (você também pode arrastá-los aqui). Útil a partir de outro dispositivo ou do RunPod.",
   "⬆ Upload": "⬆ Enviar",
@@ -2040,5 +2040,9 @@
   "Multimodal training checklist": "Preparação para treino multimodal",
   "Check which input modalities and dataset structure this engine supports. Confirm compatible model weights, resolution or duration, GPU memory and checkpoints before training.": "Verifica modalidades e estrutura de dados suportadas. Confirma pesos do modelo, resolução ou duração, memória GPU e checkpoints antes de treinar.",
   "Before opening this trainer": "Antes de abrir este treinador",
-  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "Confirma neste treinador a compatibilidade exata, a memória GPU recomendada e os checkpoints suportados. Esta ajuda não altera definições."
+  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "Confirma neste treinador a compatibilidade exata, a memória GPU recomendada e os checkpoints suportados. Esta ajuda não altera definições.",
+  "Trainer quick navigation": "Navegação rápida do treinador",
+  "Jump to": "Ir para",
+  "Console": "Consola",
+  "Generated previews": "Pré-visualizações geradas"
 }

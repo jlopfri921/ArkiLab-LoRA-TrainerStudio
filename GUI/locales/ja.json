@@ -2040,5 +2040,9 @@
   "Multimodal training checklist": "マルチモーダル学習の準備",
   "Check which input modalities and dataset structure this engine supports. Confirm compatible model weights, resolution or duration, GPU memory and checkpoints before training.": "対応する入力形式とデータ構造を確認します。モデル重み、解像度または長さ、GPU メモリ、チェックポイントも確認してください。",
   "Before opening this trainer": "トレーナーを開く前に",
-  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "正確な互換性、推奨 GPU メモリ、チェックポイント機能は各トレーナーで確認してください。この説明は設定を変更しません。"
+  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "正確な互換性、推奨 GPU メモリ、チェックポイント機能は各トレーナーで確認してください。この説明は設定を変更しません。",
+  "Trainer quick navigation": "トレーナーのクイックナビゲーション",
+  "Jump to": "移動先",
+  "Console": "コンソール",
+  "Generated previews": "生成プレビュー"
 }
