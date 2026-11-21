@@ -41,3 +41,96 @@ body.orki-standalone-shell .studio-navigation,body.orki-standalone-shell .queue-
 body.orki-standalone-shell .studio-navigation a,body.orki-standalone-shell .queue-sidebar a{flex:1 1 145px}
 body.orki-standalone-shell .studio-navigation .nav-heading,body.orki-standalone-shell .queue-sidebar .nav-heading{flex-basis:100%}}
 @media(max-width:600px){.orki-shell-header{padding:12px}.orki-shell-footer{padding:12px}}
+
+
+/* Canonical Workspace chrome override, deliberately using the very same measurements
+   as GUI/workspace.html, not approximated standalone-sidebar styling. */
+body.orki-standalone-shell .queue-shell,
+body.orki-standalone-shell .studio-layout{
+  max-width:1440px;width:100%;margin:0 auto;
+  display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;
+  padding:24px;align-items:start
+}
+body.orki-standalone-shell .queue-sidebar,
+body.orki-standalone-shell .studio-navigation{
+  position:static;max-height:none;overflow:visible;display:flex;flex-direction:column;gap:8px;
+  width:auto;min-width:0;padding:0;border:0;border-radius:0;background:transparent
+}
+body.orki-standalone-shell .queue-sidebar a,
+body.orki-standalone-shell .queue-sidebar button,
+body.orki-standalone-shell .studio-navigation a,
+body.orki-standalone-shell .studio-navigation button{
+  font:15px system-ui,sans-serif;
+  padding:12px;text-align:left;background:#152238;
+  border:1px solid transparent;border-radius:9px;
+  color:#3cdbd0;text-decoration:none;white-space:normal;
+  font-weight:400;min-width:0;width:100%;cursor:pointer
+}
+body.orki-standalone-shell .queue-sidebar a[aria-current="page"],
+body.orki-standalone-shell .studio-navigation a[aria-current="page"]{
+  border:1px solid #3cdbd0;color:#3cdbd0;background:#123445
+}
+body.orki-standalone-shell .queue-sidebar .zone-entry,
+body.orki-standalone-shell .studio-navigation .zone-entry{
+  border:1px solid #3cdbd0;color:#3cdbd0;font-weight:600
+}
+body.orki-standalone-shell .orki-shell-header{
+  padding:16px 24px;border-bottom:1px solid #293b53;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:0;flex-wrap:nowrap;background:#0b1221;border-radius:0;min-height:0
+}
+body.orki-standalone-shell .orki-shell-header img{width:210px;max-width:none;height:auto}
+body.orki-standalone-shell .orki-shell-header .row{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap
+}
+body.orki-standalone-shell .orki-shell-header label{
+  display:grid;gap:5px;font:15px system-ui,sans-serif
+}
+body.orki-standalone-shell .orki-shell-header select{
+  font:15px system-ui,sans-serif;color:#e8f0fb;
+  border:1px solid #39506d;background:#111d30;
+  border-radius:8px;padding:10px
+}
+body.orki-standalone-shell .orki-shell-header #version{
+  color:#a4b4cc;font:15px system-ui,sans-serif
+}
+body.orki-standalone-shell .orki-shell-header .orki-header-kofi{
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  padding:9px 12px;border:1px solid #4a7380;border-radius:9px;
+  color:#c2f6ef;text-decoration:none;font:600 13px system-ui,sans-serif;
+  background:#143342;white-space:nowrap
+}
+body.orki-standalone-shell .orki-shell-workspace-context{
+  background:#111d30;border:1px solid #344f6c;border-radius:12px;
+  padding:12px 16px;margin:0 0 16px;color:#e8f0fb
+}
+body.orki-standalone-shell .orki-shell-workspace-context .row{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between
+}
+body.orki-standalone-shell .orki-shell-workspace-context button{
+  background:transparent;border:1px solid #39506d;
+  font:13px system-ui,sans-serif;padding:7px 10px;color:#e8f0fb;
+  border-radius:8px;cursor:pointer
+}
+body.orki-standalone-shell .orki-shell-workspace-context p{
+  margin:12px 0 0;line-height:1.6;color:#a4b4cc
+}
+body.orki-standalone-shell .studio-local-heading{display:block}
+@media(max-width:760px){
+  body.orki-standalone-shell .queue-shell,
+  body.orki-standalone-shell .studio-layout{
+    grid-template-columns:minmax(0,1fr);gap:14px;padding:14px
+  }
+  body.orki-standalone-shell .queue-sidebar,
+  body.orki-standalone-shell .studio-navigation{
+    position:static;flex-direction:row;flex-wrap:wrap;gap:6px
+  }
+  body.orki-standalone-shell .queue-sidebar a,
+  body.orki-standalone-shell .queue-sidebar button,
+  body.orki-standalone-shell .studio-navigation a,
+  body.orki-standalone-shell .studio-navigation button{
+    padding:10px;width:auto;flex:0 1 auto
+  }
+  body.orki-standalone-shell .orki-shell-header{padding:12px;flex-wrap:wrap;gap:12px}
+  body.orki-standalone-shell .orki-shell-header img{width:140px}
+}
