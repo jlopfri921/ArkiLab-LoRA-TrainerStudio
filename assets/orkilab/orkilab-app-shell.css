@@ -165,6 +165,18 @@ body.orki-app-frame #comfy-navigation > button {
   box-shadow:none;
   cursor:pointer;
 }
+/* Navigation text is consistent aqua on every screen, independent of source
+   page styling. Settings and "Pause all and exit" remain white. */
+body.orki-app-frame .orki-app-nav > a,
+body.orki-app-frame #home-navigation > a,
+body.orki-app-frame #comfy-navigation > a {
+  color:#3cdbd0;
+}
+body.orki-app-frame .orki-app-nav > button,
+body.orki-app-frame #home-navigation > button,
+body.orki-app-frame #comfy-navigation > button {
+  color:#fff;
+}
 body.orki-app-frame .orki-app-nav > a:hover,
 body.orki-app-frame .orki-app-nav > button:hover,
 body.orki-app-frame #home-navigation > a:hover,
@@ -182,6 +194,16 @@ body.orki-app-frame #comfy-navigation > [aria-current="page"]{
   background:#18364e;
   color:#c0edff;
   font-weight:700;
+}
+/* Hover and selected states do not change link text away from aqua. */
+body.orki-app-frame .orki-app-nav > a:is(:hover,[aria-current="page"]),
+body.orki-app-frame #home-navigation > a:is(:hover,[aria-current="page"]),
+body.orki-app-frame #comfy-navigation > a:is(:hover,[aria-current="page"]) {
+  color:#3cdbd0;
+}
+body.orki-app-frame .orki-app-nav > button:is(:hover,[aria-current="page"]),
+body.orki-app-frame #home-navigation > button:is(:hover,[aria-current="page"]) {
+  color:#fff;
 }
 body.orki-app-frame .orki-app-nav > .zone-entry,
 body.orki-app-frame #home-navigation > .zone-entry,
