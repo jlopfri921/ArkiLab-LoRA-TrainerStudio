@@ -2057,8 +2057,8 @@
   "The selected LoRA strength or checkpoint is the only setting that changes. Prompt, seed and all other settings remain unchanged. Runs are sequential; Stop prevents new submissions but does not interrupt the current job.": "Só muda a intensidade LoRA ou o checkpoint selecionado. O prompt, a seed e os outros parâmetros mantêm-se. As gerações são sequenciais; Parar impede novos envios mas não interrompe o trabalho atual.",
   "Projects link datasets and detect saved training checkpoints. Checkpoint comparison requires a compatible workflow and LoRA files available to ComfyUI; OrkiLab never copies them automatically.": "Os projetos ligam datasets e detetam checkpoints guardados. A comparação requer um workflow compatível e os ficheiros LoRA disponíveis no ComfyUI; o OrkiLab nunca os copia automaticamente.",
   "Train project": "Treinar projeto",
-  "images have captions. Dataset prepared for training.": "As imagens têm legendas. Dataset preparado para treino.",
-  "images have captions. Finish the descriptions and prepare the dataset before training.": "As imagens têm legendas. Termine as descrições e prepare o dataset antes de treinar.",
-  "images have captions. Prepare the dataset before training.": "As imagens têm legendas. Prepare o dataset antes de treinar.",
+  "images have captions. Dataset prepared for training.": "imagens têm legenda. Dataset preparado para treino.",
+  "images have captions. Finish the descriptions and prepare the dataset before training.": "imagens têm legenda. Termine as descrições e prepare o dataset antes de treinar.",
+  "images have captions. Prepare the dataset before training.": "imagens têm legenda. Prepare o dataset antes de treinar.",
   "No images indexed for this project yet.": "Este projeto ainda não tem imagens indexadas."
 }
