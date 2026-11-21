@@ -51,10 +51,9 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 .actions button{padding:9px 12px}.count{margin:0;padding:12px 0}.loading{opacity:.7}
 @media(max-width:900px){.studio-layout{grid-template-columns:1fr}.studio-navigation{position:static;max-height:none;flex-direction:row;flex-wrap:wrap;gap:7px}.studio-navigation a{flex:1 1 140px}.studio-navigation .nav-heading{flex-basis:100%}}
 @media(max-width:780px){.toolbar{grid-template-columns:1fr}body{padding:12px}section{padding:14px}}
-</style><link rel="stylesheet" href="/assets/orkilab/orkilab-shell.css">
-</head><body>
-<header class="studio-local-heading"><a href="/workspace" id="back">← OrkiLab Workspace</a><h1>Dataset Studio <small class="muted">0.4 alpha</small></h1>
-<p class="muted" id="subtitle">Organize images by project without modifying your original files.</p></header>
+</style><link rel="stylesheet" href="/assets/orkilab/orkilab-queue-theme.css">
+<link rel="stylesheet" href="/assets/orkilab/orkilab-shell.css">
+</head><body class="orki-queue-theme">
 <div class="studio-layout">
 <nav class="studio-navigation" aria-label="OrkiLab general navigation">
 <span class="nav-heading" id="nav-workspace">Workspace</span>
@@ -67,6 +66,7 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <a href="/workspace/comfyui" id="nav-comfy">ComfyUI Zone</a>
 </nav>
 <main class="studio-content">
+<div class="studio-local-heading"><h1>Dataset Studio <small class="muted">0.4 alpha</small></h1><p class="muted" id="subtitle">Organize images by project without modifying your original files.</p></div>
 <section aria-labelledby="help"><h2 id="help">How it works</h2>
 <p id="intro">Choose an existing image project, enter a folder on this computer, then inspect the library. Select items to mark reviewed or remove references. Source files are never changed.</p>
 <p class="muted" id="limits">Preview: image files only, one directory at a time (no subfolders). Captioning, quality checks and exports are planned.</p></section>

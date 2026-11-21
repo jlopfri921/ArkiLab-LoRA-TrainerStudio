@@ -52,6 +52,59 @@ class DatasetStudioUiChecks(unittest.TestCase):
         self.assertIn('content.prepend(context)', shell)
         self.assertIn('description.hidden = !opened', shell)
 
+    def test_queue_and_dataset_menu_match_home_order_and_controls(self):
+        from html.parser import HTMLParser
+
+        class HomeMenu(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.collecting = False
+                self.order = []
+
+            def handle_starttag(self, tag, attrs):
+                attrs = dict(attrs)
+                if tag == "nav" and attrs.get("id") == "home-navigation":
+                    self.collecting = True
+                elif self.collecting and tag in ("a", "button"):
+                    self.order.append(attrs.get("id") or attrs.get("href"))
+
+            def handle_endtag(self, tag):
+                if tag == "nav" and self.collecting:
+                    self.collecting = False
+
+        parser = HomeMenu()
+        parser.feed(self.workspace)
+        expected = [
+            "#overview", "#projects", "#engines", "#gpu-manager",
+            "settings-open", "shutdown-open", "/queue",
+            "/workspace/comfyui", "/workspace/datasets"
+        ]
+        self.assertEqual(parser.order, expected)
+        js = (ROOT / "assets" / "orkilab" / "orkilab-shell.js").read_text(encoding="utf-8")
+        keys = ("overview", "projects", "engines", "gpu", "settings", "shutdown", "queue", "comfy", "datasets")
+        fallback = [line.strip().split('"')[1] for line in js.splitlines()
+                    if line.strip().startswith('["') and line.strip().split('"')[1] in keys]
+        self.assertEqual(fallback, [
+            "overview", "projects", "engines", "gpu", "settings",
+            "shutdown", "queue", "comfy", "datasets"
+        ])
+        for contract in ('source.querySelector("#home-navigation")',
+                         'canonicalNav.cloneNode(true)',
+                         'nav.replaceWith(canonical)',
+                         'location.href = "/workspace?dialog=" + mode',
+                         'I18N.apply(canonical)'):
+            self.assertIn(contract, js)
+
+    def test_job_queue_visual_theme_is_shared(self):
+        queue_theme = (ROOT / "assets" / "orkilab" / "orkilab-queue-theme.css").read_text(encoding="utf-8")
+        for path in ("workspace.html", "dataset_studio.html"):
+            html = (ROOT / "GUI" / path).read_text(encoding="utf-8")
+            self.assertIn('href="/assets/orkilab/orkilab-queue-theme.css"', html)
+            self.assertIn('class="orki-queue-theme"', html)
+        for token in ("--orki-queue-panel", "--orki-queue-border", "--orki-queue-grad",
+                      "body.orki-queue-theme .panel", "body.orki-queue-theme .workspace-context"):
+            self.assertIn(token, queue_theme)
+
     def test_settings_dialog_has_accessible_top_close(self):
         self.assertIn('id="settings-close-top"', self.workspace)
         self.assertIn('aria-label="Close settings"', self.workspace)
