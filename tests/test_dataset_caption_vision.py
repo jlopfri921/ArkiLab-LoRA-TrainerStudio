@@ -141,8 +141,8 @@ class LocalCaptionPreviewTests(unittest.TestCase):
             status = 200
             def __init__(self):
                 self.lines = iter([
-                    json.dumps({"response": "a person "}).encode() + b"\\n",
-                    json.dumps({"response": "in green", "done": True}).encode() + b"\\n"
+                    json.dumps({"response": "a person "}).encode() + b"\n",
+                    json.dumps({"response": "in green", "done": True}).encode() + b"\n"
                 ])
             def readline(self, limit):
                 return next(self.lines, b"")
