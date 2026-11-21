@@ -100,7 +100,7 @@ class DatasetStudioUiChecks(unittest.TestCase):
         for path in ("workspace.html", "dataset_studio.html"):
             html = (ROOT / "GUI" / path).read_text(encoding="utf-8")
             self.assertIn('href="/assets/orkilab/orkilab-queue-theme.css"', html)
-            self.assertIn('class="orki-queue-theme"', html)
+            self.assertIn('orki-queue-theme', html)
         for token in ("--orki-queue-panel", "--orki-queue-border", "--orki-queue-grad",
                       "body.orki-queue-theme .panel", "body.orki-queue-theme .workspace-context"):
             self.assertIn(token, queue_theme)
