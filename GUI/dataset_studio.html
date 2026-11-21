@@ -98,7 +98,7 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <section aria-labelledby="library"><h2 id="library">Image library</h2>
 <div class="toolbar">
 <label><span id="project-label">Project</span><select id="project"><option value="">Choose a project</option></select></label>
-<label><span id="folder-label">Image folder (absolute path)</span><input id="folder" type="text" placeholder="D:\\datasets\\example" autocomplete="off"></label>
+<label><span id="folder-label">Image folder (absolute path)</span><span style="display:flex;gap:8px;min-width:0"><input id="folder" style="flex:1;min-width:0" type="text" placeholder="D:\\datasets\\example" autocomplete="off"><button type="button" id="browse-folder" style="white-space:nowrap">Browse…</button></span></label>
 <button id="import" type="button">Import images</button>
 </div>
 <div class="controls" style="margin-top:18px">
@@ -116,6 +116,8 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <button type="button" id="reset" disabled>Mark unreviewed</button>
 <button type="button" class="danger" id="remove" disabled>Remove selected references</button>
 <button type="button" id="export-sidecars" disabled>Export selected captions (.txt ZIP)</button>
+<button type="button" id="export-training" disabled>Export image + caption dataset (ZIP)</button>
+<button type="button" id="prepare-training" disabled>Prepare local training folder</button>
 </div>
 <div class="qualitybar" aria-label="Dataset quality scan"><button type="button" id="scan-quality">Analyze image quality</button><button type="button" id="cancel-scan" disabled>Cancel scan</button><button type="button" id="compare-images">Compare similar images</button><progress id="scan-progress" max="100" value="0" aria-label="Scan progress"></progress><span id="scan-label" class="muted" role="status" aria-live="polite">No scan running</span></div>
 <p id="count" class="muted count">No project selected</p>
@@ -211,10 +213,10 @@ let comparePairs=[],compareItems=new Map(),compareIndex=0;
 function say(message){status.textContent=message}
 function endpoint(){return "/api/workspace/datasets/"+encodeURIComponent(project.value)}
 async function api(path,options={}){const response=await fetch(path,{credentials:"same-origin",...options});const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data}
-function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars"])$(id).disabled=busy||!project.value||!selected.size;
+function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars","export-training","prepare-training"])$(id).disabled=busy||!project.value||!selected.size;
 $("compare-images").disabled=!project.value||scanning||busy}
 function scanControls(){ $("scan-quality").disabled=scanning||!project.value; $("cancel-scan").disabled=!scanning }
-async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}}catch(e){say(e.message)}}
+async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}const requested=new URLSearchParams(location.search).get("project");if(requested&&[...project.options].some(o=>o.value===requested)){project.value=requested;project.dispatchEvent(new Event("change"));}}catch(e){say(e.message)}}
 function postJson(url,payload){return api(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})}
 async function refresh(){
 const requestSeq=++seq,projectId=project.value;images.replaceChildren();current=[];
@@ -284,6 +286,18 @@ $("approve").addEventListener("click",()=>batch("review",[...selected],"approved
 $("reject").addEventListener("click",()=>batch("review",[...selected],"rejected"));
 $("reset").addEventListener("click",()=>batch("review",[...selected],"unreviewed"));
 $("remove").addEventListener("click",()=>{if(confirm(tr[31]))batch("remove",[...selected])});
+$("browse-folder").textContent=({es:"Examinar…",en:"Browse…",pt:"Procurar…",fr:"Parcourir…",de:"Durchsuchen…",it:"Sfoglia…",ja:"参照…",ko:"찾아보기…"}[lang]||"Browse…");
+$("browse-folder").title=lang==="es"?"Abrir el selector de carpetas del sistema operativo del equipo que ejecuta OrkiLab":"Open the native folder picker on the OrkiLab launcher computer";
+$("browse-folder").addEventListener("click",async()=>{
+ const button=$("browse-folder");
+ button.disabled=true;
+ try{
+  const result=await postJson("/api/workspace/datasets/browse-folder",{});
+  if(result.folder){$("folder").value=result.folder;say(lang==="es"?"Carpeta seleccionada. Pulsa Importar imágenes.":"Folder selected. Click Import images.");}
+  else if(result.cancelled){say(lang==="es"?"Selección cancelada; la ruta anterior se ha conservado.":"Selection cancelled; previous path kept.");}
+ }catch(error){say(error.message)}
+ finally{button.disabled=false}
+});
 $("import").addEventListener("click",async()=>{if(!project.value){say(tr[0]);return}const folder=$("folder").value.trim();if(!folder){say(tr[1]);return}
 $("import").disabled=true;try{const data=await postJson(endpoint(),{folder});say(data.imported+" / "+data.scanned+" · "+tr[32]);await refresh()}catch(e){say(e.message)}finally{$("import").disabled=false}});
 
@@ -565,6 +579,52 @@ finally{URL.revokeObjectURL(url)}
 $("sidecar-export-status").textContent=exportText[9];
 }catch(error){$("sidecar-export-status").textContent=error.message||exportText[10]}
 finally{exportState()}
+});
+
+$("prepare-training").textContent=({es:"Preparar carpeta de entrenamiento",en:"Prepare local training folder",pt:"Preparar pasta de treino",fr:"Préparer le dossier d'entraînement",de:"Trainingsordner vorbereiten",it:"Prepara cartella di training",ja:"学習フォルダーを準備",ko:"학습 폴더 준비"}[lang]||"Prepare local training folder");
+$("prepare-training").addEventListener("click",async()=>{
+ if(!project.value||!selected.size)return;
+ const projectId=project.value,imageIds=[...selected],button=$("prepare-training");
+ button.disabled=true;
+ try{
+  const target="/api/workspace/datasets/"+encodeURIComponent(projectId)+"/training-export";
+  const preview=await postJson(target,{mode:"preview",image_ids:imageIds});
+  if(project.value!==projectId)return;
+  if(preview.skipped.length||!preview.ready){
+   say(lang==="es"?"Hay "+preview.skipped.length+" imágenes incompletas o rechazadas. Corrígelas antes de preparar la carpeta.":"Resolve "+preview.skipped.length+" incomplete or rejected images before preparing.");return;
+  }
+  if(!window.confirm(lang==="es"?"Crear una nueva carpeta local con "+preview.ready+" imágenes y sus descripciones, sin modificar las originales?":"Create a new local folder with "+preview.ready+" image/caption pairs, leaving originals unchanged?"))return;
+  const result=await postJson(target,{mode:"prepare",image_ids:imageIds,confirm:true});
+  if(project.value!==projectId)return;
+  say((lang==="es"?"Carpeta preparada; indica esta ruta en el entrenador: ":"Prepared folder; select this path in the trainer: ")+result.path);
+  try{await navigator.clipboard.writeText(result.path);say((lang==="es"?"Ruta copiada. Selecciónala en el entrenador compatible: ":"Path copied. Select it in a compatible trainer: ")+result.path)}catch{}
+ }catch(error){say(error.message)}
+ finally{selectionUI()}
+});
+
+$("export-training").addEventListener("click",async()=>{
+ if(!project.value||!selected.size)return;
+ const projectId=project.value, imageIds=[...selected],button=$("export-training");
+ button.disabled=true;
+ try{
+  const target="/api/workspace/datasets/"+encodeURIComponent(projectId)+"/training-export";
+  const preview=await postJson(target,{mode:"preview",image_ids:imageIds});
+  if(project.value!==projectId)return;
+  const message=lang==="es"
+   ? "Listas: "+preview.ready+" de "+preview.selected+". Omitidas: "+preview.skipped.length+". Esta exportación genérica no configura automáticamente el entrenador. ¿Descargar el ZIP con imágenes y descripciones?"
+   : "Ready: "+preview.ready+" of "+preview.selected+". Skipped: "+preview.skipped.length+". This generic export does not configure the trainer. Download image/caption ZIP?";
+  if(!preview.ready){say(message);return}
+  if(!window.confirm(message))return;
+  const response=await fetch(target,{method:"POST",credentials:"same-origin",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({mode:"download",image_ids:imageIds,confirm:true})});
+  if(!response.ok){const result=await response.json();throw Error(result.error||"Dataset export failed")}
+  const blob=await response.blob(),url=URL.createObjectURL(blob);
+  try{const a=document.createElement("a");a.href=url;a.download="orkilab-training-dataset-"+projectId.slice(0,8)+".zip";document.body.append(a);a.click();a.remove()}
+  finally{URL.revokeObjectURL(url)}
+  say(lang==="es"?"Dataset exportado. Extrae el ZIP y configura la ruta en el entrenador compatible.":"Dataset exported. Extract the ZIP and choose its path in a compatible trainer.");
+ }catch(e){say(e.message)}
+ finally{selectionUI()}
 });
 
 selectionUI();scanControls();projects();

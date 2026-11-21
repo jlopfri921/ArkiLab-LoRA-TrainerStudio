@@ -66,3 +66,29 @@ An optional per-image Ollama adapter can be invoked **only by explicit user acti
 ## Acceptance model
 
 `PASS`: test command/result, commit and environment recorded. `REPORTED PASS`: operator result without retained detailed log. `NOT VERIFIED`: no sufficient evidence; not equal to failure. CI without a GPU **cannot** certify actual end-to-end training. Maintain a separate acceptance record for each 0.4 milestone.
+
+## Project-to-training handoff development slice (PR #61, not released)
+
+- Projects API now reports indexed image counts and links each image project to its own Dataset Studio library.
+- Dataset Studio supports explicit preview and download of a **generic** ZIP containing matched `dataset/<image>` + `dataset/<stem>.txt` pairs and a `manifest.json`; incomplete/rejected/stale entries are skipped with reasons. Originals are not changed.
+- The paired export requires an existing saved caption and explicit download confirmation. Supported file types: JPEG, PNG, WebP and BMP. Maximum 200 selected entries, 40 MiB per file and 256 MiB total indexed image bytes per export.
+- **Important:** This ZIP is **not** an engine-specific export adapter, does not set the trainer's dataset path, and does not itself trigger training. A user must extract the ZIP and select a compatible dataset directory in the target trainer.
+- Future work: true per-trainer profile, safe managed output directory, project dataset path persistence/hand-off, train/validation split and real Windows + GPU acceptance.
+
+### Native dataset folder browser (PR #61 development)
+
+The Image folder field continues to accept a pasted or typed absolute path. The new **Browse…** button asks the **launcher computer's** Windows/Linux desktop session for a native folder using a local-only, same-origin API. Cancelling does not erase the text field. Linux headless servers without a GUI session show an error and retain manual-path input. Browser-only file input is intentionally not used because browsers do not reliably expose the local absolute path of a directory. No files are imported by selecting a folder; the user must explicitly click **Import images**. Real Windows and Linux GUI acceptance is still pending.
+
+### Prepare local image/caption dataset (PR #61 development)
+
+Dataset Studio now offers **Prepare local training folder** for selected, fully captioned images. This is an explicit, confirmed local operation that copies images and creates corresponding UTF-8 captions in a fresh, uniquely named directory at `Datasets/OrkiLab/<project-id>/<preparation-id>/` relative to the OrkiLab installation, plus a reproducibility manifest. Existing prepared folders are never overwritten; original files and captions remain untouched. A preview enumerates incomplete/rejected entries and prevents an incomplete local preparation. The resulting absolute path is displayed and best-effort copied to the clipboard to paste into a compatible trainer. **No training run is started and no trainer's settings are modified automatically.** True per-engine handoff, collision/race security hardening, disk-space behavior and on-device Windows verification remain acceptance work.
+
+### Selected-engine project handoff (development, unverified on GPU)
+
+Launching from a **project** now sends its project ID as well as its configured trainer ID. The launcher verifies that the two match and selects that project's most recently prepared image+caption copy. It creates a separate draft instance and supplies `dataset_path` in that trainer's **pre-cache and training settings**, leaving shared settings and active trainers unchanged. The project-specific draft also has a unique project name for cache/output isolation. The image dataset adapter covers image-only trainer families with the current flat image/caption convention; formats such as editing pairs or video inputs may need further adaptation. For video/audio projects whose dataset path was explicitly entered in Projects, their selected trainer gets that path in isolated settings, subject to trainer-specific validation. When there is no prepared or explicitly configured dataset, the launch fails with actionable feedback rather than silently using an unrelated one. Launching from the general Training Engines screen is unchanged.
+
+**Not certified yet:** end-to-end GPU pre-cache/training with every trainer, automatic modality-specific validation, and multi-project real-world browser acceptance.
+
+### Project overview visibility (linked data, not a manual path)
+
+The project metadata's optional `dataset` text field is **not** automatically populated when Dataset Studio indexes images. Those references are stored independently in `datasets.sqlite3` and are associated with the project by ID. Projects now display **Indexed source folders**, indexed/captioned counts, and the **latest locally prepared dataset folder** when present, even if the project's manually entered path is empty. Source folders are labeled separately from the prepared training copy, so their presence cannot be mistaken for a validated trainer-ready export. The underlying manual project path is preserved and never rewritten merely because image references were indexed.
