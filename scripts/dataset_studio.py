@@ -11,6 +11,7 @@ import dataset_quality
 import dataset_captions
 import dataset_caption_vision
 import dataset_training_export
+import dataset_folder_picker
 from image_quality_visual import near_match
 
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp"}
@@ -128,6 +129,7 @@ def register(app, base):
     dataset_captions.register(app, db, project_exists, local, valid_origin)
     dataset_caption_vision.register(app, db, project_exists, local, valid_origin)
     dataset_training_export.register(app, db, project_exists, local, valid_origin)
+    dataset_folder_picker.register(app, local, valid_origin)
 
     @app.route("/api/workspace/datasets/<project_id>", methods=["GET", "POST"])
     def datasets(project_id):
