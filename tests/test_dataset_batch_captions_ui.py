@@ -1,5 +1,9 @@
 """Dataset Studio bulk captioning UI regression and privacy checks."""
 import unittest
+import re
+import shutil
+import subprocess
+import tempfile
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -45,6 +49,20 @@ class BatchCaptionTests(unittest.TestCase):
         self.assertIn('const data=await api("/api/workspace/datasets/"', HTML)
         self.assertIn('batchWords={', HTML)
         self.assertIn('es:["Generar descripciones con IA"', HTML)
+
+    @unittest.skipUnless(shutil.which("node"), "node is not installed")
+    def test_dataset_studio_inline_script_syntax(self):
+        scripts = re.findall(r"<script[^>]*>(.*?)</script>", HTML, flags=re.I | re.S)
+        self.assertTrue(scripts)
+        for code in scripts:
+            if not code.strip():
+                continue
+            with tempfile.TemporaryDirectory() as directory:
+                source = Path(directory) / "dataset_studio.js"
+                source.write_text(code, encoding="utf-8")
+                result = subprocess.run(["node", "--check", str(source)],
+                                        text=True, capture_output=True, timeout=20)
+            self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_native_browser_and_existing_single_caption_remain_available(self):
         for item in ('id="browse-folder"', 'id="caption-ai-generate"',
