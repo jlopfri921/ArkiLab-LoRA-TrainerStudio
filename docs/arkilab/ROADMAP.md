@@ -36,6 +36,8 @@
 4. Test language switching and page navigation (including Projects and Training Engines) in a real browser, verify no dataset/workflow files are rewritten, and review multi-GPU readings when hardware is available. Single-GPU validation must not be represented as multi-GPU validation.
 5. Update README, changelog and acceptance notes with results and known limitations; verify a safe update from the previous release candidate.
 
+**Trainer UX modernization (ongoing):** Optional, non-destructive quick navigation is being rolled out by engine family. The FLUX.1/SDXL pilot and FLUX.3/Qwen-Image 2.1/Krea 2/LTX 2.3 expansion are already merged; this third wave adds LTX 2.5, MiniMax-H3, Wan 2.2, Fibo 2.0 and YuE2-3B. This only improves navigation around the existing trainer panels; it is **not** a full modern interface replacement or evidence of real training compatibility. Browser acceptance and parameter-by-parameter trainer review are still required before deleting legacy views.
+
 **Reported progress (2026-11-21):** user reports that the previously planned real-world ComfyUI/GPU tests have been carried out. Detailed per-scenario PASS/FAIL evidence still needs to be recorded before claiming full certification. Engine-by-engine modernization remains ongoing. Documentation/version planning is being updated here. Packaging and RC tagging follow the exit checks.
 
 **Deferred beyond 0.3 RC:** Dataset Studio (0.4), multiview validation (0.5), broader benchmarking (0.6), Ollama assistant (0.7), Hugging Face/Civitai Hub integration (0.8), production desktop installer (0.9), full trainer modern-view replacement when independently verified, and scheduling or an interactive mesh viewer unless separately accepted.
