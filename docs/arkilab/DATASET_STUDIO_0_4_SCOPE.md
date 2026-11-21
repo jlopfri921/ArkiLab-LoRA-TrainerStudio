@@ -1,6 +1,6 @@
 # OrkiLab 0.4.0 — Dataset Studio: initial scope and acceptance
 
-**Status:** proposed milestone; **no 0.4.0 implementation or release claimed**. Development follows the published 0.3.0-rc.1 and the post-RC Boogu layout fix. The existing 0.3 release tag remains immutable.
+**Status:** alpha.1 implementation merged to main and code/CI checks complete; **local Windows browser and real-dataset acceptance not yet verified**. The 0.4.0 milestone is not tagged or released. See [alpha.1 development closeout and remaining acceptance gates](DATASET_STUDIO_0_4_ALPHA1_CLOSEOUT.md). The published 0.3.0-rc.1 tag remains immutable.
 
 ## Goal and workflow
 
@@ -29,13 +29,13 @@ Prepare, inspect and export **image** datasets for LoRA training in one local-fi
 7. **Access and safety.** Mutation endpoints are local-only, validate paths and request sizes and reject symlink traversal outside approved roots. No processing at import time until explicitly started.
 8. **Languages/accessibility.** New interface strings in all eight supported locales with English fallback; labels, keyboard navigation and no unnecessary long vertical scroll.
 
-## Proposed first implementation PR (alpha.1)
+## Implemented in alpha.1 (PRs #46 and #47)
 
 - Dedicated `/workspace/datasets` entry from the main Workspace, with a clear introduction and empty state.
 - SQLite-backed collection index scoped to a project, import-by-reference and image-only extension/filter metadata.
-- Read-only thumbnail service for approved, indexed files, with size limits and no path traversal.
-- Search/sort/filter and manual review states without touching images.
-- Synthetic-fixture tests on Windows and Linux proving imports are non-destructive and unauthorized requests are rejected.
+- Local-only preview service for indexed files, with file-size limits and symlink checks. This is an image preview endpoint, not a transcoded thumbnail cache.
+- Search/sort/filter, bounded best-effort image dimensions, multi-selection and explicit batch review/rollback of metadata and removal of index references, without touching image source files.
+- Synthetic-fixture tests pass on Windows and Ubuntu for non-destructive imports, batch actions, validation and local access. Full browser/security assessment is not yet demonstrated.
 
 **Out of scope for alpha.1:** AI captioning, image generation, automatic training, caption rewrites, cloud sync, multiview, audio/video, marketplace integration and any direct write to the user's dataset folders.
 
