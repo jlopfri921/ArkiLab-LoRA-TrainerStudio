@@ -2,6 +2,7 @@
 from flask import jsonify, request, send_from_directory
 import shutil
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 from workspace_store import ProjectStore
@@ -73,7 +74,7 @@ def register(app, base, load_config):
             counts, captioned, sources, prepared = {}, {}, {}, {}
             if dataset_db.is_file():
                 try:
-                    with sqlite3.connect(dataset_db, timeout=5) as conn:
+                    with closing(sqlite3.connect(dataset_db, timeout=5)) as conn:
                         counts = {pid: count for pid, count in conn.execute(
                             "SELECT project_id, COUNT(*) FROM dataset_images GROUP BY project_id")}
                         tables = {row[0] for row in conn.execute(
