@@ -7,16 +7,21 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from flask import Flask
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-import comfyui_connect
-import generation_studio
-import workflow_library
 
 
 class ComfyUILoopbackSecurityTests(unittest.TestCase):
     def setUp(self):
+        try:
+            from flask import Flask
+            import comfyui_connect
+            import generation_studio
+            import workflow_library
+        except ModuleNotFoundError as exc:
+            if exc.name == "flask":
+                self.skipTest("Flask is not installed in this lightweight foundation test job")
+            raise
+        self.comfyui_connect = comfyui_connect
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         root = Path(self.tmp.name)
@@ -70,7 +75,7 @@ class ComfyUILoopbackSecurityTests(unittest.TestCase):
                     environ_overrides={"REMOTE_ADDR": address},
                 )
                 self.assertEqual(response.status_code, 200)
-                self.assertEqual(response.get_json()["url"], comfyui_connect.DEFAULT)
+                self.assertEqual(response.get_json()["url"], self.comfyui_connect.DEFAULT)
 
     def test_private_only_address_validation_rejects_public_and_redirect_urls(self):
         invalid = (
@@ -82,7 +87,7 @@ class ComfyUILoopbackSecurityTests(unittest.TestCase):
         for address in invalid:
             with self.subTest(address=address):
                 with self.assertRaises(ValueError):
-                    comfyui_connect.validate_url(address)
+                    self.comfyui_connect.validate_url(address)
 
 
 if __name__ == "__main__":
