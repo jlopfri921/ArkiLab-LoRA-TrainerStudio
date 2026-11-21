@@ -27,7 +27,7 @@
 - OrkiLab Bridge visual-to-API graph preparation; validation of representative installed-node workflows.
 - Generation Studio: explicit review/confirmation, supported parameter editing, job status, best-effort per-node progress, safe cancellation, history and output access.
 - Optional, queue-safe ComfyUI model/cache release and per-generation system RAM/VRAM diagnostic snapshots. GPU Manager read-only multi-adapter telemetry and bounded charts.
-- Standard-LoRA-loader comparison as an explicitly scoped capability (custom loaders remain unsupported).
+- Existing standard-LoRA-loader comparison UI remains accessible **as experimental / unverified**, excluded from the rc.1 stability promise. GPU validation of the comparator is deferred to a subsequent release.
 - Preserved existing trainer launching and queue; no claim of full trainer-interface modernization in 0.3.
 
 **Exit criteria before changing the version to `0.3.0-rc.1`:**
@@ -52,7 +52,7 @@
 | Bridge | Installable frontend extension and safe preparation path | ComfyUI Desktop restart and subgraph conversion tests |
 | Generation | Graph review, editable inputs, browser presets, explicit execution | Real ComfyUI inference and error-state tests |
 | Results | SQLite history, media proxy, images/audio/video playback and downloads | Large-file playback, restarts and 3D viewer |
-| LoRA Comparator | Direct workflow discovery, standard-loader weight variants, sequential execution | Full GPU tests, custom loaders, different LoRA files/checkpoints |
+| LoRA Comparator (experimental) | Direct workflow discovery, standard-loader weight variants, sequential execution code exists | Two-strength GPU test and cancel/error handling deferred beyond rc.1; **not a release gate or validated capability** |
 | GPU Manager | Read-only local NVIDIA polling and utilization/VRAM alerts | NVIDIA hardware tests, multi-GPU validation, scheduling separately |
 | UX/i18n | Modern Workspace/ComfyUI routing and translations | Audit each trainer interface and contextual guidance |
 
