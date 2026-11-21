@@ -76,8 +76,9 @@ def valid_origin():
     from urllib.parse import urlsplit
     try:
         parsed = urlsplit(origin)
-        host = request.host.split(":")[0].strip("[]").lower()
-        return parsed.scheme in ("http", "https") and parsed.hostname in ("localhost", "127.0.0.1", "::1") and parsed.hostname == host and parsed.netloc == request.host
+        return (parsed.scheme in ("http", "https")
+                and parsed.hostname in ("localhost", "127.0.0.1", "::1")
+                and parsed.netloc.lower() == request.host.lower())
     except ValueError:
         return False
 
