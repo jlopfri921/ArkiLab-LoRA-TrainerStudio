@@ -137,9 +137,18 @@ def register(app, db, project_exists, local, valid_origin, base):
                 (staging / "manifest.json").write_text(
                     json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
                 staging.rename(finished)
+                # Record the latest prepared copy for this project. The launcher
+                # validates the path and project again before opening an engine.
+                with closing(db()) as connection, connection:
+                    connection.execute("""CREATE TABLE IF NOT EXISTS dataset_preparations (
+                      id TEXT PRIMARY KEY, project_id TEXT NOT NULL, path TEXT NOT NULL,
+                      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)""")
+                    connection.execute(
+                        "INSERT INTO dataset_preparations(id,project_id,path) VALUES (?,?,?)",
+                        (prepared_id, project_id, str(finished.resolve())))
                 return jsonify(ok=True, path=str(finished.resolve()), ready=len(included),
                                trainer_ready=False,
-                               note="Prepared local folder; select this path in a compatible trainer.")
+                               note="Prepared local folder and linked it to this project.")
             except (OSError, ValueError) as exc:
                 shutil.rmtree(staging, ignore_errors=True)
                 return jsonify(error=str(exc) if isinstance(exc, ValueError)
