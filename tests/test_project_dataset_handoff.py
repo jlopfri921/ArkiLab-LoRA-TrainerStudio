@@ -49,7 +49,7 @@ class ProjectHandoffTests(unittest.TestCase):
         draft, info = make_draft(self.root, self.project, "flux1")
         self.assertEqual(info["dataset_origin"], "prepared")
         for section in ("pre_cache", "train"):
-            self.assertEqual(draft[section]["dataset_path"], str(self.prepared))
+            self.assertEqual(Path(draft[section]["dataset_path"]).resolve(), self.prepared.resolve())
             self.assertEqual(draft[section]["project_name"], "orkilab_" + self.project[:12])
         self.assertEqual(draft["pre_cache"]["learning_rate"], 0.0001)
         self.assertEqual(json.loads(config.read_text(encoding="utf-8")), original)
@@ -71,8 +71,8 @@ class ProjectHandoffTests(unittest.TestCase):
                                "WHERE id=?", (str(dataset), self.project))
         draft, info = make_draft(self.root, self.project, "yue2")
         self.assertEqual(info["dataset_origin"], "project_path")
-        self.assertEqual(draft["pre_cache"]["dataset_path"], str(dataset))
-        self.assertEqual(draft["train"]["dataset_path"], str(dataset))
+        self.assertEqual(Path(draft["pre_cache"]["dataset_path"]).resolve(), dataset.resolve())
+        self.assertEqual(Path(draft["train"]["dataset_path"]).resolve(), dataset.resolve())
 
 
 if __name__ == "__main__":
