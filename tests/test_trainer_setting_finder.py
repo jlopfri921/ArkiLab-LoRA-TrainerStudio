@@ -79,6 +79,23 @@ class TrainerSettingFinderTests(unittest.TestCase):
                             "Settings complexity", "advanced settings hidden"):
                     self.assertTrue(translations.get(key), (lang, key))
 
+    def test_boogu_compact_layout_is_scoped_and_ui_is_connected(self):
+        """Keep the recovered compact CSS applicable to Boogu without altering other engines."""
+        boogu = (ROOT / "GUI" / "trainer_ui_boogu.html").read_text(encoding="utf-8")
+        self.assertIn('<body data-orki-engine="boogu">', boogu)
+        self.assertIn('href="/assets/orkilab-pilot.css"', boogu)
+        self.assertIn('src="/assets/orkilab-pilot.js"', boogu)
+        self.assertIn('class="main-grid"', boogu)
+        self.assertIn('class="sidebar"', boogu)
+        self.assertIn('class="form-row"', boogu)
+        selector = '[data-orki-engine="boogu"]'
+        self.assertEqual(self.css.count(selector), 16)
+        self.assertIn('@media (min-width: 961px)', self.css)
+        self.assertIn('@media(max-width: 520px)', self.css)
+        self.assertIn('.sidebar .form-row { grid-template-columns: 1fr; }', self.css)
+        # The enhancement is presentation-only; JS still uses the existing controls.
+        self.assertIn('sidebar.querySelectorAll(".form-group")', self.js)
+
     def test_accessible_and_responsive(self):
         self.assertIn('search.type="search"', self.js)
         self.assertIn('search.setAttribute("aria-label"', self.js)
