@@ -17,6 +17,7 @@ from generation_history import GenerationHistory, describe_outputs
 import project_layout
 from comfyui_connect import validate_settings, DEFAULT_SETTINGS, get_json, NoRedirect
 from workflow_library import inspect_graph
+from workflow_compatibility import assess_workflow
 from generation_parameters import editable_fields, apply_edits
 from workflow_conversion import convert_visual, node_schema, validate_prompt
 
@@ -228,6 +229,17 @@ def register(app, base):
                 item = prepared.get(token)
                 if not item or time.monotonic()-item[0]>1800 or item[2]!=cfg["url"]:
                     return jsonify(error="Prepare workflow before generating"),409
+                saved = read_graph(item[1])
+                if not saved:
+                    return jsonify(error="Saved workflow unavailable"),404
+                with closing(sqlite3.connect(base / "settings" / "orkilab" / "workflows.sqlite3")) as workflows_db:
+                    row = workflows_db.execute("SELECT category FROM workflows WHERE id=?", (item[1],)).fetchone()
+                if not row:
+                    return jsonify(error="Saved workflow unavailable"),404
+                compatibility = assess_workflow(json.loads(saved), row[0], discovered["engine"])
+                if compatibility["status"] != "candidate":
+                    return jsonify(error="Workflow model family is not verified compatible with this project",
+                                   detail=compatibility["reason"]),409
                 node = item[4].get(node_id, {})
                 if node.get("class_type") not in ("LoraLoader", "LoraLoaderModelOnly"):
                     return jsonify(error="Choose a standard LoRA loader"),400

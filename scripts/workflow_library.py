@@ -8,6 +8,7 @@ import sqlite3
 import uuid
 from pathlib import Path
 from flask import request, jsonify
+from workflow_compatibility import assess_workflow
 
 MAX_BYTES = 4_000_000
 CATEGORIES = ("image", "video", "audio", "music", "3d", "other")
@@ -64,9 +65,35 @@ def register(app, base):
         if not allowed():
             return jsonify(error="Manage workflows on the launcher PC"), 403
         if request.method == "GET":
+            project_id = request.args.get("project_id")
+            project_engine = None
+            if project_id is not None:
+                if len(project_id)!=32 or any(ch not in "0123456789abcdef" for ch in project_id):
+                    return jsonify(error="Invalid project reference"), 400
+                project_path = Path(base) / "settings" / "orkilab" / "projects.sqlite3"
+                if not project_path.is_file():
+                    return jsonify(error="Project not found"), 404
+                with closing(sqlite3.connect(project_path)) as projects_db:
+                    project = projects_db.execute(
+                        "SELECT engine,category FROM projects WHERE id=? AND archived=0", (project_id,)).fetchone()
+                if not project or project[1]!="image":
+                    return jsonify(error="Active image project not found"), 404
+                project_engine = project[0]
             with closing(db()) as con, con:
-                rows = con.execute("SELECT w.id,w.name,w.category,w.favorite,w.summary,s.relative FROM workflows w LEFT JOIN workflow_sources s ON w.id=s.workflow_id ORDER BY w.favorite DESC,w.name COLLATE NOCASE").fetchall()
-                return jsonify(workflows=[public(row) for row in rows])
+                rows = con.execute("SELECT w.id,w.name,w.category,w.favorite,w.summary,w.graph,s.relative FROM workflows w LEFT JOIN workflow_sources s ON w.id=s.workflow_id ORDER BY w.favorite DESC,w.name COLLATE NOCASE").fetchall()
+                result = []
+                for row in rows:
+                    entry = public(row)
+                    if project_engine is not None:
+                        try:
+                            entry["compatibility"] = assess_workflow(
+                                json.loads(row["graph"]), row["category"], project_engine)
+                        except (ValueError,TypeError,RecursionError):
+                            entry["compatibility"] = {
+                                "status":"unverified","reason":"invalid_graph","detected":[],
+                                "expected":None,"standard_loader":False}
+                    result.append(entry)
+                return jsonify(workflows=result)
         if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= MAX_BYTES:
             return jsonify(error="Invalid workflow request or file too large"), 400
         try:
