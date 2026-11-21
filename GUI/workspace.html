@@ -229,7 +229,7 @@ if(p.category==="image"){
    const names=result.checkpoints.map(x=>x.step).join(", ");
    list.append(el("p",(I18N.lang==="es"?"Pasos: ":"Steps: ")+names,"muted no-i18n"));
    const compare=el("a",I18N.lang==="es"?"Comparar en ComfyUI":"Compare in ComfyUI","no-i18n");
-   compare.href="/workspace?checkpoint_project="+encodeURIComponent(p.id)+"#compare";
+   compare.href="/workspace/comfyui?checkpoint_project="+encodeURIComponent(p.id)+"#compare";
    list.append(compare);
   }catch(e){status.textContent=e.message}
   finally{checkpoints.disabled=false;}
@@ -666,7 +666,7 @@ async function loadProjectCheckpoints(){
    const check=el("input");check.type="checkbox";check.value=entry.name;check.checked=suggested.has(entry.step);
    check.dataset.checkpoint="true";
    check.onchange=()=>{$("compare-confirm").checked=false;updateCheckpointCount()};
-   row.append(check,document.createTextNode("Paso "+entry.step+" · "+entry.name+" · "+(entry.size_bytes/1048576).toFixed(1)+" MiB"));
+   row.append(check,document.createTextNode((I18N.lang==="es"?"Paso ":"Step ")+entry.step+" · "+entry.name+" · "+(entry.size_bytes/1048576).toFixed(1)+" MiB"));
    root.append(row);
   }
   $("compare-checkpoint-status").textContent=checkpointList.length
@@ -928,7 +928,7 @@ const workspaceHelp={
  workflows:["Workflow library","Import or index ComfyUI workflows, inspect nodes, mark favorites and open them in the generation or comparison tools."],
  generation:["Generation Studio","Prepare and review a workflow, adjust editable parameters and explicitly confirm before running. Preparation alone does not generate."],
  history:["Generation history","See previously submitted workflows and output references. Media stays on the ComfyUI server."],
- compare:["LoRA Comparator","Select a compatible workflow and compare selected LoRA strengths with otherwise unchanged generation settings."]
+ compare:["LoRA Comparator","Select a compatible workflow and compare LoRA strengths or saved project checkpoints while retaining the original prompt and seed."]
 };
 let contextKey="";
 function updateWorkspaceContext(key){
