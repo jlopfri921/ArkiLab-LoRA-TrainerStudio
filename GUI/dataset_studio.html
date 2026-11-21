@@ -41,6 +41,12 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 .caption-dialog .caption-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:12px 0}
 .caption-dialog .caption-preview{max-width:100%;max-height:240px;object-fit:contain;display:block;margin:12px auto;background:#0b1221;border-radius:9px}
 .caption-dialog .caption-history{width:100%}
+.caption-export-dialog{width:min(760px,95vw);max-height:85vh;overflow:auto;background:#1e293b;border:1px solid #334155;color:#f8fafc;border-radius:16px;padding:20px}
+.caption-export-dialog::backdrop{background:#020617c9}
+.caption-export-dialog .export-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.caption-export-dialog .export-header h2{margin:0}
+.caption-export-dialog .export-list{max-height:220px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;color:#cbd5e1;border:1px solid #334155;background:#0f172a;border-radius:8px;padding:12px;margin:10px 0}
+.caption-export-dialog .export-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .comparison-dialog{width:min(1150px,96vw);max-width:96vw;max-height:94vh;background:#152238;color:#e8f0fb;border:1px solid #486482;border-radius:16px;padding:20px}
 .comparison-dialog::backdrop{background:#040a13d9}
 .compare-header,.compare-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
@@ -101,6 +107,7 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <button type="button" id="reject" disabled>Reject selected</button>
 <button type="button" id="reset" disabled>Mark unreviewed</button>
 <button type="button" class="danger" id="remove" disabled>Remove selected references</button>
+<button type="button" id="export-sidecars" disabled>Export selected captions (.txt ZIP)</button>
 </div>
 <div class="qualitybar" aria-label="Dataset quality scan"><button type="button" id="scan-quality">Analyze image quality</button><button type="button" id="cancel-scan" disabled>Cancel scan</button><button type="button" id="compare-images">Compare similar images</button><progress id="scan-progress" max="100" value="0" aria-label="Scan progress"></progress><span id="scan-label" class="muted" role="status" aria-live="polite">No scan running</span></div>
 <p id="count" class="muted count">No project selected</p>
@@ -132,6 +139,14 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <select id="caption-history" class="caption-history"><option value="">Select a version to restore</option></select>
 <button type="button" id="caption-restore">Load selected version into editor</button>
 <p class="status" id="caption-status" role="status" aria-live="polite"></p>
+</dialog>
+<dialog class="caption-export-dialog" id="sidecar-export-dialog" aria-labelledby="sidecar-export-title">
+<div class="export-header"><h2 id="sidecar-export-title">Export caption sidecars</h2><button type="button" id="sidecar-export-close" aria-label="Close">✕</button></div>
+<p id="sidecar-export-intro">Preview selected captions before downloading a ZIP containing only .txt files. Original images and sidecars remain unchanged.</p>
+<p class="muted" id="sidecar-export-summary" role="status" aria-live="polite"></p>
+<div class="export-list" id="sidecar-export-files" aria-label="Files to export"></div>
+<label class="picker" for="sidecar-export-confirm"><input id="sidecar-export-confirm" type="checkbox"><span id="sidecar-export-confirm-label">I understand this downloads a separate ZIP and does not edit source files.</span></label>
+<div class="export-actions"><button type="button" id="sidecar-export-download" disabled>Download .txt ZIP</button><span class="status" id="sidecar-export-status" role="status" aria-live="polite"></span></div>
 </dialog>
 <script>
 "use strict";
@@ -176,7 +191,7 @@ let comparePairs=[],compareItems=new Map(),compareIndex=0;
 function say(message){status.textContent=message}
 function endpoint(){return "/api/workspace/datasets/"+encodeURIComponent(project.value)}
 async function api(path,options={}){const response=await fetch(path,{credentials:"same-origin",...options});const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data}
-function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove"])$(id).disabled=busy||!project.value||!selected.size;
+function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars"])$(id).disabled=busy||!project.value||!selected.size;
 $("compare-images").disabled=!project.value||scanning||busy}
 function scanControls(){ $("scan-quality").disabled=scanning||!project.value; $("cancel-scan").disabled=!scanning }
 async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}}catch(e){say(e.message)}}
@@ -364,6 +379,60 @@ function requestCaptionClose(){if($("caption-text").value!==captionOriginal&&!co
 $("caption-close").addEventListener("click",requestCaptionClose);
 $("caption-dialog").addEventListener("cancel",e=>{if($("caption-text").value!==captionOriginal&&!confirm(capTr[12]))e.preventDefault()});
 $("caption-dialog").addEventListener("close",()=>{captionActive=null;$("caption-image").removeAttribute("src")});
+
+
+const sidecarExportText={
+en:["Export selected captions (.txt ZIP)","Export caption sidecars","Review the export before downloading. Only saved non-empty captions are included. Images and existing .txt files remain untouched.","selected","captions to export","without saved captions","I understand this downloads a separate ZIP and does not edit source files.","Download .txt ZIP","No saved captions in the selection.","Export is ready.","Could not download captions."],
+es:["Exportar captions seleccionadas (.txt ZIP)","Exportar archivos .txt","Revisa la exportación antes de descargar. Solo se incluyen las descripciones guardadas que no estén vacías. Las imágenes y los .txt originales no cambian.","seleccionadas","descripciones exportables","sin descripción guardada","Entiendo que se descarga un ZIP independiente y no se modifican los originales.","Descargar ZIP de .txt","No hay descripciones guardadas en la selección.","Exportación preparada.","No se pudieron descargar las descripciones."],
+pt:["Exportar legendas selecionadas (.txt ZIP)","Exportar ficheiros .txt","Reveja os ficheiros antes de descarregar. Só são incluídas legendas guardadas não vazias. Os originais não são alterados.","selecionadas","legendas exportáveis","sem legenda","Compreendo que o ZIP é separado e não altera originais.","Descarregar ZIP de .txt","Não há legendas guardadas.","Exportação preparada.","Não foi possível descarregar."],
+fr:["Exporter les légendes (.txt ZIP)","Exporter les fichiers .txt","Vérifiez les fichiers avant téléchargement. Seules les légendes enregistrées non vides sont incluses. Les originaux restent intacts.","sélectionnées","légendes exportables","sans légende","Je comprends que le ZIP est indépendant et ne modifie pas les originaux.","Télécharger ZIP .txt","Aucune légende enregistrée.","Export prêt.","Téléchargement impossible."],
+de:["Beschriftungen exportieren (.txt ZIP)","Textdateien exportieren","Prüfen Sie den Export. Nur gespeicherte, nicht leere Beschriftungen werden exportiert. Originaldateien bleiben unverändert.","ausgewählt","Beschriftungen für Export","ohne Beschriftung","Der ZIP-Export verändert keine Originaldateien.","ZIP mit .txt herunterladen","Keine gespeicherten Beschriftungen.","Export bereit.","Download fehlgeschlagen."],
+it:["Esporta didascalie (.txt ZIP)","Esporta file .txt","Controlla i file prima del download. Solo le descrizioni salvate e non vuote saranno esportate. Gli originali restano intatti.","selezionate","didascalie esportabili","senza didascalia","Il file ZIP è separato e non modifica gli originali.","Scarica ZIP .txt","Nessuna descrizione salvata.","Esportazione pronta.","Download non riuscito."],
+ja:["キャプションを出力 (.txt ZIP)","テキストファイルを出力","保存済みの空でないキャプションのみZIPに含まれます。元画像と既存の.txtは変更しません。","選択","出力可能","未保存","元ファイルを変更しない別ZIPのダウンロードであることを理解しました。","ZIPをダウンロード","保存済みキャプションがありません。","出力準備完了。","ダウンロードに失敗しました。"],
+ko:["캡션 내보내기 (.txt ZIP)","텍스트 파일 내보내기","저장된 비어 있지 않은 캡션만 ZIP에 포함됩니다. 원본 이미지와 기존 .txt는 변경되지 않습니다.","선택","내보낼 캡션","저장되지 않음","원본 파일을 수정하지 않는 별도 ZIP 다운로드임을 이해합니다.","ZIP 다운로드","저장된 캡션이 없습니다.","내보내기 준비 완료.","다운로드에 실패했습니다."]
+};
+const exportText=sidecarExportText[lang];
+$("export-sidecars").textContent=exportText[0];$("sidecar-export-title").textContent=exportText[1];
+$("sidecar-export-intro").textContent=exportText[2];$("sidecar-export-confirm-label").textContent=exportText[6];
+$("sidecar-export-download").textContent=exportText[7];
+let exportIds=[],exportProject="",exportReady=false;
+function exportState(){
+$("sidecar-export-download").disabled=!exportReady||!$("sidecar-export-confirm").checked;
+}
+$("sidecar-export-confirm").addEventListener("change",exportState);
+$("sidecar-export-close").addEventListener("click",()=> $("sidecar-export-dialog").close());
+$("export-sidecars").addEventListener("click",async()=>{
+if(!project.value||!selected.size)return;
+exportIds=[...selected];exportProject=project.value;exportReady=false;
+$("sidecar-export-confirm").checked=false;exportState();
+$("sidecar-export-status").textContent="";$("sidecar-export-summary").textContent="";
+$("sidecar-export-files").replaceChildren();
+$("sidecar-export-dialog").showModal();
+try{
+const result=await postJson("/api/workspace/datasets/"+encodeURIComponent(exportProject)+"/captions/export",{mode:"preview",image_ids:exportIds});
+if(project.value!==exportProject){$("sidecar-export-dialog").close();return;}
+$("sidecar-export-summary").textContent=result.selected+" "+exportText[3]+" · "+result.exportable+" "+exportText[4]+" · "+result.skipped_empty+" "+exportText[5];
+for(const item of result.files){const p=document.createElement("p");p.textContent=item.name+" → "+item.sidecar;$("sidecar-export-files").append(p)}
+exportReady=result.exportable>0;exportState();
+if(!exportReady)$("sidecar-export-status").textContent=exportText[8];
+}catch(error){$("sidecar-export-status").textContent=error.message}
+});
+$("sidecar-export-download").addEventListener("click",async()=>{
+if(!exportReady||!$("sidecar-export-confirm").checked||project.value!==exportProject)return;
+const button=$("sidecar-export-download");button.disabled=true;
+try{
+const response=await fetch("/api/workspace/datasets/"+encodeURIComponent(exportProject)+"/captions/export",{
+method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},
+body:JSON.stringify({mode:"download",image_ids:exportIds,confirm:true})
+});
+if(!response.ok){const body=await response.json();throw Error(body.error||exportText[10])}
+const data=await response.blob();const url=URL.createObjectURL(data);
+try{const a=document.createElement("a");a.href=url;a.download="orkilab-captions-"+exportProject.slice(0,8)+".zip";document.body.append(a);a.click();a.remove()}
+finally{URL.revokeObjectURL(url)}
+$("sidecar-export-status").textContent=exportText[9];
+}catch(error){$("sidecar-export-status").textContent=error.message||exportText[10]}
+finally{exportState()}
+});
 
 selectionUI();scanControls();projects();
 </script><script src="/assets/orkilab/orkilab-shell.js"></script>

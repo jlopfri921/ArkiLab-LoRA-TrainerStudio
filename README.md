@@ -21,6 +21,8 @@ The **development branch in `main`**, after the published 0.3.0-rc.1 prerelease,
 
 The first **0.4 beta.1 development slice** adds a per-image **Edit caption** dialog with manual text, a bounded history of the 25 latest saved revisions and a way to load an older version before saving it as a new revision. Captions are kept in OrkiLab's local SQLite metadata, with concurrent-edit conflict detection; they **do not yet create or modify `.txt` sidecars**. This is **not an AI caption generator**, a resize/crop exporter or a completed 0.4 beta.1 release; these are separate acceptance steps.
 
+The next beta.1 development slice adds **Export selected captions (.txt ZIP)** with a preview of which selected images have saved text, a separate confirmation checkbox and a browser download. The ZIP contains UTF-8 `.txt` sidecars (matching the image stem when unique, with stable suffixes when names collide) and `captions-manifest.json`. It **does not copy source images, write alongside originals or overwrite sidecars**. Captions must be saved first, and the download is limited to 200 selected image references per request. A derived image/sidecar pair export for trainer-ready datasets remains a future step.
+
 The same development work also synchronizes the Workspace/Queue/Dataset header markup, removes the duplicate ComfyUI return button and resets scrolling to the top after selecting menu sections. Browser appearance and real-dataset acceptance must be verified on the user's Windows installation separately from CI. See [Dataset Studio scope and milestones](docs/arkilab/DATASET_STUDIO_0_4_SCOPE.md).
 
 ## Ecosystem spotlight — owner-managed announcement

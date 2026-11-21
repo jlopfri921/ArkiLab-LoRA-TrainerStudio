@@ -49,6 +49,12 @@ Before calling 0.3.0 stable, review outstanding ComfyUI custom-node/Bridge failu
 
 **Remaining beta.1 scope:** batch caption editing and preview; optional explicitly configured local captioner; standalone sidecar export/validation; reversible non-destructive resize/crop export; real Windows browser exercise with user datasets. Do not certify the full 0.4.0-beta.1 milestone until these acceptance gates are met.
 
+### Sidecar ZIP export — separate beta.1 slice
+
+Users can select up to 200 image references, preview saved non-empty captions and explicitly confirm downloading a UTF-8 ZIP containing `captions/*.txt` plus `captions-manifest.json`. Uncaptioned selections are reported and excluded. Unique filenames match their source image basename; collisions use stable IDs. The source folders, existing sidecars and image bytes are never changed, and the generated archive contains no source images. Access requires the local launcher and same-origin request; the download is not an automatic sidecar write.
+
+**Remaining:** image-plus-caption derived export, optional non-destructive resize/crop outputs, bulk caption edit preview, opt-in local captioner, per-trainer profiles, Windows real-dataset validation and full 0.4 beta milestone acceptance.
+
 ## Acceptance model
 
 `PASS`: test command/result, commit and environment recorded. `REPORTED PASS`: operator result without retained detailed log. `NOT VERIFIED`: no sufficient evidence; not equal to failure. CI without a GPU **cannot** certify actual end-to-end training. Maintain a separate acceptance record for each 0.4 milestone.
