@@ -178,6 +178,7 @@
                 const header = canonicalHeader.cloneNode(true);
                 header.classList.add("orki-shell-header");
                 liveHeader.replaceWith(header);
+                if (typeof I18N !== "undefined") I18N.apply(header);
                 const selector = header.querySelector("#workspace-language");
                 if (selector && typeof I18N !== "undefined") {
                     for (const [code, name] of I18N.languages) selector.add(new Option(name, code));
@@ -227,6 +228,7 @@
                 }
             }
             nav.replaceWith(canonical);
+            if (typeof I18N !== "undefined") I18N.apply(canonical);
             const oldContext = content.querySelector(".orki-shell-workspace-context");
             if (oldContext) {
                 const titleText = oldContext.querySelector("#orki-shell-context-title")?.textContent || "";
