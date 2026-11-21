@@ -41,6 +41,13 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 .caption-dialog .caption-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:12px 0}
 .caption-dialog .caption-preview{max-width:100%;max-height:240px;object-fit:contain;display:block;margin:12px auto;background:#0b1221;border-radius:9px}
 .caption-dialog .caption-history{width:100%}
+.caption-dialog .caption-ai{border:1px solid #45607b;border-radius:10px;padding:12px;margin:14px 0}
+.caption-dialog .caption-ai legend{font-weight:700;color:#3cdbd0}
+.caption-dialog .caption-ai input,.caption-dialog .caption-ai textarea{width:100%;min-width:0;margin:6px 0 10px;background:#0f172a;color:#f8fafc;border:1px solid #486482;border-radius:8px;padding:10px;font:inherit}
+.caption-dialog .caption-ai p{line-height:1.5}
+.caption-dialog .caption-ai label{display:block}
+.caption-dialog #caption-ai-status{font-size:13px;color:#a4b4cc}
+
 .caption-export-dialog{width:min(760px,95vw);max-height:85vh;overflow:auto;background:#1e293b;border:1px solid #334155;color:#f8fafc;border-radius:16px;padding:20px}
 .caption-export-dialog::backdrop{background:#020617c9}
 .caption-export-dialog .export-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -134,6 +141,15 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <label for="caption-text" id="caption-label">Caption</label>
 <textarea id="caption-text" maxlength="2000" aria-describedby="caption-count"></textarea>
 <p class="muted" id="caption-count">0 / 2000</p>
+<fieldset class="caption-ai"><legend id="caption-ai-title">Local AI suggestion · Ollama (optional)</legend>
+<p class="muted" id="caption-ai-help">Requires your own running Ollama and an already-installed vision model. No models are downloaded. Generation uses your GPU; nothing is saved automatically.</p>
+<label for="caption-ai-model" id="caption-ai-model-label">Installed Ollama vision model</label>
+<input id="caption-ai-model" type="text" maxlength="100" autocomplete="off" placeholder="e.g. qwen3-vl:8b">
+<button type="button" id="caption-ai-generate">Generate preview locally</button>
+<label for="caption-ai-result" id="caption-ai-result-label">Suggested caption (review before applying)</label>
+<textarea id="caption-ai-result" readonly rows="4"></textarea>
+<div class="caption-actions"><button type="button" id="caption-ai-apply" disabled>Use suggestion in editor</button><span id="caption-ai-status" role="status" aria-live="polite"></span></div>
+</fieldset>
 <div class="caption-actions"><button type="button" id="caption-save">Save caption</button><button type="button" id="caption-clear">Clear editor</button></div>
 <label for="caption-history" id="caption-history-label">Previous versions</label>
 <select id="caption-history" class="caption-history"><option value="">Select a version to restore</option></select>
@@ -342,6 +358,48 @@ $("caption-title").textContent=capTr[1];$("caption-help").textContent=capTr[2];$
 $("caption-save").textContent=capTr[4];$("caption-clear").textContent=capTr[5];$("caption-history-label").textContent=capTr[6];
 $("caption-restore").textContent=capTr[7];$("caption-close").setAttribute("aria-label",capTr[1]);
 let captionActive=null,captionOriginal="",captionRevision=0,captionHistory=[];
+const localVisionText={
+en:["Local AI suggestion · Ollama (optional)","Requires Ollama running on this computer and an already-installed vision model. No downloads. This uses GPU memory; nothing is saved automatically.","Installed Ollama vision model","Generate preview locally","Suggested caption (review before applying)","Use suggestion in editor","Generating locally…","Preview ready. Review before applying.","Generating a suggestion does not save it.","Replace the unsaved editor text with this AI suggestion?"],
+es:["Sugerencia de IA local · Ollama (opcional)","Necesitas Ollama funcionando en este equipo y un modelo de visión ya instalado. No se descarga nada. Usa memoria de GPU; no se guarda automáticamente.","Modelo de visión instalado en Ollama","Generar vista previa local","Descripción sugerida (revísala antes de aplicarla)","Pasar sugerencia al editor","Generando en local…","Vista previa lista. Revísala antes de aplicarla.","Generar una sugerencia no la guarda.","¿Sustituir el texto del editor por esta sugerencia de IA?"],
+pt:["Sugestão de IA local · Ollama (opcional)","Requer Ollama ativo e um modelo de visão já instalado. Sem downloads. Usa a GPU e não guarda automaticamente.","Modelo de visão Ollama instalado","Gerar pré-visualização local","Legenda sugerida (revise antes de aplicar)","Usar sugestão no editor","A gerar localmente…","Pré-visualização pronta.","A sugestão não é guardada automaticamente.","Substituir o texto não guardado?"],
+fr:["Suggestion d’IA locale · Ollama (facultatif)","Nécessite Ollama et un modèle de vision déjà installés. Aucun téléchargement. Utilise le GPU et ne sauvegarde rien.","Modèle de vision Ollama installé","Générer un aperçu local","Légende suggérée (vérifiez avant usage)","Utiliser la suggestion","Génération locale…","Aperçu prêt.","L’aperçu n’est pas enregistré.","Remplacer le texte non enregistré ?"],
+de:["Lokaler KI-Vorschlag · Ollama (optional)","Benötigt laufendes Ollama und ein bereits installiertes Vision-Modell. Kein Download. GPU-Nutzung; kein automatisches Speichern.","Installiertes Ollama-Vision-Modell","Lokale Vorschau generieren","Vorgeschlagene Beschreibung (vorher prüfen)","Vorschlag übernehmen","Lokale Generierung…","Vorschau fertig.","Vorschlag ist nicht gespeichert.","Ungespeicherten Text ersetzen?"],
+it:["Suggerimento IA locale · Ollama (facoltativo)","Richiede Ollama attivo e un modello visivo già installato. Nessun download. Usa la GPU e non salva automaticamente.","Modello visivo Ollama installato","Genera anteprima locale","Descrizione suggerita (controlla prima)","Usa il suggerimento","Generazione locale…","Anteprima pronta.","Il suggerimento non è salvato.","Sostituire il testo non salvato?"],
+ja:["ローカルAI提案 · Ollama（任意）","実行中のOllamaとインストール済みの画像対応モデルが必要です。ダウンロードや自動保存はしません。GPUを使用します。","画像対応Ollamaモデル","ローカルプレビューを生成","提案されたキャプション（確認してください）","エディターに反映","ローカル生成中…","プレビューが完成しました。","自動保存されません。","未保存の文章を置き換えますか？"],
+ko:["로컬 AI 제안 · Ollama (선택)","실행 중인 Ollama와 설치된 비전 모델이 필요합니다. 다운로드나 자동 저장은 하지 않습니다. GPU를 사용합니다.","설치된 Ollama 비전 모델","로컬 미리보기 생성","제안된 캡션 (검토 후 적용)","편집기에 적용","로컬 생성 중…","미리보기가 준비되었습니다.","자동 저장되지 않습니다.","저장하지 않은 내용을 바꿀까요?"]
+};
+const visionTr=localVisionText[lang];
+const visionIDs=["caption-ai-title","caption-ai-help","caption-ai-model-label","caption-ai-generate","caption-ai-result-label","caption-ai-apply"];
+visionIDs.forEach((id,index)=>$(id).textContent=visionTr[index]);
+let visionRequest=0;
+$("caption-ai-generate").addEventListener("click",async()=>{
+ if(!captionActive)return;
+ const model=$("caption-ai-model").value.trim();
+ if(!model){$("caption-ai-status").textContent=visionTr[2];$("caption-ai-model").focus();return}
+ const image={...captionActive},run=++visionRequest;
+ const button=$("caption-ai-generate");button.disabled=true;
+ $("caption-ai-apply").disabled=true;$("caption-ai-result").value="";
+ $("caption-ai-status").textContent=visionTr[6];
+ try{
+   const result=await api("/api/workspace/datasets/"+encodeURIComponent(image.project)+"/"+encodeURIComponent(image.id)+"/caption/suggest",{
+     method:"POST",headers:{"Content-Type":"application/json"},
+     body:JSON.stringify({model,confirm:true})
+   });
+   if(run!==visionRequest||!captionActive||image.id!==captionActive.id||image.project!==captionActive.project)return;
+   $("caption-ai-result").value=result.caption;
+   $("caption-ai-apply").disabled=false;
+   $("caption-ai-status").textContent=visionTr[7]+" "+visionTr[8];
+ }catch(error){if(run===visionRequest)$("caption-ai-status").textContent=error.message}
+ finally{if(run===visionRequest)button.disabled=false}
+});
+$("caption-ai-apply").addEventListener("click",()=>{
+ if(!captionActive||$("caption-ai-apply").disabled)return;
+ if($("caption-text").value!==captionOriginal&&$("caption-text").value&&
+    !confirm(visionTr[9]))return;
+ $("caption-text").value=$("caption-ai-result").value;
+ captionCount();$("caption-ai-status").textContent=visionTr[8];$("caption-text").focus();
+});
+
 function captionCount(){$("caption-count").textContent=$("caption-text").value.length+" / 2000"}
 function captionPath(){return "/api/workspace/datasets/"+encodeURIComponent(captionActive.project)+"/"+encodeURIComponent(captionActive.id)+"/caption"}
 async function captionVersions(){
@@ -360,6 +418,8 @@ $("caption-text").value=data.caption;$("caption-filename").textContent=item.name
 $("caption-image").alt=item.name;$("caption-image").removeAttribute("src");
 if(!item.missing)$("caption-image").src="/api/workspace/datasets/"+encodeURIComponent(openProject)+"/"+encodeURIComponent(item.id);
 captionCount();$("caption-status").textContent="";
+++visionRequest;$("caption-ai-generate").disabled=false;$("caption-ai-apply").disabled=true;
+$("caption-ai-result").value="";$("caption-ai-status").textContent="";
 await captionVersions();$("caption-dialog").showModal();$("caption-text").focus()
 }catch(e){say(e.message)}
 }
@@ -378,7 +438,7 @@ if(old){$("caption-text").value=old.caption;captionCount();$("caption-status").t
 function requestCaptionClose(){if($("caption-text").value!==captionOriginal&&!confirm(capTr[12]))return;$("caption-dialog").close()}
 $("caption-close").addEventListener("click",requestCaptionClose);
 $("caption-dialog").addEventListener("cancel",e=>{if($("caption-text").value!==captionOriginal&&!confirm(capTr[12]))e.preventDefault()});
-$("caption-dialog").addEventListener("close",()=>{captionActive=null;$("caption-image").removeAttribute("src")});
+$("caption-dialog").addEventListener("close",()=>{++visionRequest;captionActive=null;$("caption-image").removeAttribute("src")});
 
 
 const sidecarExportText={
