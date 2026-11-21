@@ -79,6 +79,27 @@ class WorkspaceNavigationTests(unittest.TestCase):
                 ):
                     self.assertTrue(strings.get(key), (language, key))
 
+    def test_project_dataset_status_and_launch_feedback_visible(self):
+        self.assertIn('id="projects-notice" role="status" aria-live="polite"', self.html)
+        self.assertIn('if(p)p.textContent=message;', self.html)
+        self.assertIn('function launchButton(id,projectId=null)', self.html)
+        self.assertIn('t(projectId?"Train project":"Open trainer")', self.html)
+        self.assertIn('p.dataset_prepared_path?', self.html)
+        locale_root = HTML.parents[0] / "locales"
+        keys = (
+            "Train project",
+            "Opens the trainer selected in this project. First prepare a compatible dataset.",
+            "{count} of {total} images have saved descriptions. Add the missing descriptions in Dataset Studio, then select the images and prepare the training folder.",
+            "Images are linked in Dataset Studio, but no training folder is prepared. Save descriptions and prepare the training folder there.",
+        )
+        for language in ("es", "pt", "fr", "de", "it", "ja", "ko"):
+            strings = json.loads((locale_root / (language + ".json")).read_text(encoding="utf-8"))
+            for key in keys:
+                with self.subTest(language=language, key=key):
+                    self.assertTrue(strings.get(key), (language, key))
+        self.assertEqual(json.loads((locale_root / "es.json").read_text(encoding="utf-8"))["Train project"],
+                         "Entrenar proyecto")
+
     def test_ecosystem_promotion_is_nonintrusive(self):
         for field in ('orki-promotion', 'orki-promo-title', 'orki-promo-description',
                       'orki-promo-link', 'orki-promo-dismiss'):
