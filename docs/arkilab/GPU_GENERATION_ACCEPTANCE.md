@@ -42,7 +42,7 @@ These results were provided by the operator through the release-readiness checkl
 | Cancel generation without affecting other jobs | **REPORTED PASS** | Active/pending distinctions and queue state logs not recorded |
 | Observe RAM/VRAM before and after releasing ComfyUI models | **REPORTED PASS** | Numerical measurements, peak and process attribution not recorded |
 | Disconnect ComfyUI; OrkiLab reflects disconnected state | **REPORTED PASS** | Does not cover all authentication, malformed workflow or offline cases |
-| Compare two LoRA strengths | **PENDING — NOT TESTED** | Standard-loader comparator remains part of the scoped 0.3 RC |
+| Compare two LoRA strengths | **DEFERRED — NOT TESTED** | UI remains experimental; comparator is outside the 0.3.0-rc.1 acceptance gate and is not certified |
 
 See [the 0.3.0-rc.1 release readiness register](RC_0_3_0_READINESS.md) for publication gates. Windows/Linux CI evidence, detailed queue-safety cases, failures/recovery, multi-format media, i18n and upgrade checks remain open.
 
