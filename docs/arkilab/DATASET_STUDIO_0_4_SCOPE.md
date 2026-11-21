@@ -66,3 +66,11 @@ An optional per-image Ollama adapter can be invoked **only by explicit user acti
 ## Acceptance model
 
 `PASS`: test command/result, commit and environment recorded. `REPORTED PASS`: operator result without retained detailed log. `NOT VERIFIED`: no sufficient evidence; not equal to failure. CI without a GPU **cannot** certify actual end-to-end training. Maintain a separate acceptance record for each 0.4 milestone.
+
+## Project-to-training handoff development slice (PR #61, not released)
+
+- Projects API now reports indexed image counts and links each image project to its own Dataset Studio library.
+- Dataset Studio supports explicit preview and download of a **generic** ZIP containing matched `dataset/<image>` + `dataset/<stem>.txt` pairs and a `manifest.json`; incomplete/rejected/stale entries are skipped with reasons. Originals are not changed.
+- The paired export requires an existing saved caption and explicit download confirmation. Supported file types: JPEG, PNG, WebP and BMP. Maximum 200 selected entries, 40 MiB per file and 256 MiB total indexed image bytes per export.
+- **Important:** This ZIP is **not** an engine-specific export adapter, does not set the trainer's dataset path, and does not itself trigger training. A user must extract the ZIP and select a compatible dataset directory in the target trainer.
+- Future work: true per-trainer profile, safe managed output directory, project dataset path persistence/hand-off, train/validation split and real Windows + GPU acceptance.
