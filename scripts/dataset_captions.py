@@ -149,15 +149,28 @@ def register(app, db, project_exists, local, valid_origin):
             caption = row["caption"] or ""
             if not caption.strip():
                 continue
-            # The ID suffix guarantees archive-name uniqueness even for equal
-            # basenames from different folders, Unicode names and case variants.
+            # Match the image basename for compatible trainer sidecars when
+            # unique. Only append stable image IDs to resolve collisions.
             stem = row["name"].rsplit(".", 1)[0][:80]
             stem = re.sub(r"[^\w. -]", "_", stem, flags=re.UNICODE)
             stem = stem.strip(" ._") or "image"
-            target = "captions/" + stem + "__" + image_id + ".txt"
             items.append({"image_id": image_id, "image_name": row["name"],
-                          "file": target, "revision": row["revision"],
+                          "stem": stem, "revision": row["revision"],
                           "caption": caption})
+        from collections import Counter
+        counts = Counter(item["stem"].casefold() for item in items)
+        claimed = set()
+        for item in items:
+            stem = item.pop("stem")
+            if counts[stem.casefold()] != 1:
+                stem += "__" + item["image_id"]
+            target = "captions/" + stem + ".txt"
+            if target.casefold() in claimed:
+                # Defend against an input basename already containing an ID
+                # suffix, even when collisions span different file extensions.
+                target = "captions/" + stem + "__" + item["image_id"] + ".txt"
+            claimed.add(target.casefold())
+            item["file"] = target
         result = {"selected": len(image_ids), "exportable": len(items),
                   "skipped_empty": len(image_ids) - len(items),
                   "files": [{"image_id": item["image_id"], "name": item["image_name"],
