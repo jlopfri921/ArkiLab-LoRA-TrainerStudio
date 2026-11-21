@@ -77,10 +77,10 @@ class UnifiedChromeTests(unittest.TestCase):
         self.assertIn('selector.id = "orki-shell-language"', self.js)
         self.assertIn('header.querySelector("#workspace-language")', self.js)
 
-    def test_comfy_global_actions_are_keyed_by_original_ids_not_translated_text(self):
-        self.assertIn('button.id === "settings-open" ? "settings" : "shutdown"', self.js)
-        self.assertIn('global.removeAttribute("id")', self.js)
+    def test_comfy_zone_keeps_only_its_own_menu(self):
+        self.assertNotIn('home.cloneNode(true)', self.js)
         self.assertIn('document.querySelector("#comfy-navigation")', self.js)
+        self.assertIn('comfy?.querySelectorAll(".orki-global-nav")', self.js)
 
     def test_aqua_menu_links_except_white_settings_and_shutdown(self):
         for token in (
