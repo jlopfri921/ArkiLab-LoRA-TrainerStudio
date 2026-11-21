@@ -78,10 +78,10 @@ def register(app, base):
 
     @app.route("/api/workspace/comfyui", methods=["GET", "POST"])
     def comfyui_settings():
-        if request.method == "GET":
-            return jsonify(load())
         if request.remote_addr not in ("127.0.0.1", "::1"):
             return jsonify(error="Configure ComfyUI on the launcher PC"), 403
+        if request.method == "GET":
+            return jsonify(load())
         if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 4096:
             return jsonify(error="Invalid request"), 400
         body = request.get_json(silent=True)
