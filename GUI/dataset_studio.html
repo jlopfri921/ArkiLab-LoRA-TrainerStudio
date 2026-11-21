@@ -118,12 +118,24 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <button type="button" id="export-sidecars" disabled>Export selected captions (.txt ZIP)</button>
 <button type="button" id="export-training" disabled>Export image + caption dataset (ZIP)</button>
 <button type="button" id="prepare-training" disabled>Prepare local training folder</button>
+<button type="button" id="batch-captions" disabled>AI captions for selected images</button>
 </div>
 <div class="qualitybar" aria-label="Dataset quality scan"><button type="button" id="scan-quality">Analyze image quality</button><button type="button" id="cancel-scan" disabled>Cancel scan</button><button type="button" id="compare-images">Compare similar images</button><progress id="scan-progress" max="100" value="0" aria-label="Scan progress"></progress><span id="scan-label" class="muted" role="status" aria-live="polite">No scan running</span></div>
 <p id="count" class="muted count">No project selected</p>
 <p role="status" aria-live="polite" class="status" id="status"></p>
 <div class="grid" id="images"></div>
 </section></main></div>
+<dialog class="caption-dialog" id="batch-caption-dialog" aria-labelledby="batch-caption-title">
+<div class="caption-head"><h2 id="batch-caption-title">Generate captions in bulk · Local Ollama</h2><button id="batch-caption-close" type="button" aria-label="Close">✕</button></div>
+<p id="batch-caption-help" class="muted">Only the selected images are processed. OrkiLab calls your locally installed Ollama vision model one image at a time. Results are proposals: review each description before saving. Existing captions are skipped, never replaced automatically.</p>
+<label for="batch-caption-model" id="batch-caption-model-label">Installed vision model</label>
+<div class="caption-actions"><select id="batch-caption-model" style="min-width:220px"><option value="">Searching...</option></select><button id="batch-caption-model-refresh" type="button">Refresh models</button></div>
+<div class="caption-actions"><button id="batch-caption-start" type="button">Generate previews</button><button id="batch-caption-cancel" type="button" disabled>Cancel generation</button></div>
+<progress id="batch-caption-progress" max="100" value="0" style="width:100%"></progress>
+<p id="batch-caption-status" class="muted" role="status" aria-live="polite"></p>
+<div id="batch-caption-results" style="display:grid;gap:12px;max-height:50vh;overflow:auto"></div>
+<div class="caption-actions"><button id="batch-caption-save" type="button" disabled>Save approved captions</button><button id="batch-caption-done" type="button">Close</button></div>
+</dialog>
 <dialog class="comparison-dialog" id="comparison" aria-labelledby="compare-title">
 <div class="compare-header"><h2 id="compare-title">Compare images</h2><button type="button" id="compare-close" aria-label="Close comparison">✕</button></div>
 <p class="compare-tip" id="compare-intro">Review possible matches side by side. Similarity and blur are suggestions, not automatic deletion decisions.</p>
@@ -213,7 +225,7 @@ let comparePairs=[],compareItems=new Map(),compareIndex=0;
 function say(message){status.textContent=message}
 function endpoint(){return "/api/workspace/datasets/"+encodeURIComponent(project.value)}
 async function api(path,options={}){const response=await fetch(path,{credentials:"same-origin",...options});const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data}
-function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars","export-training","prepare-training"])$(id).disabled=busy||!project.value||!selected.size;
+function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars","export-training","prepare-training","batch-captions"])$(id).disabled=busy||!project.value||!selected.size;
 $("compare-images").disabled=!project.value||scanning||busy}
 function scanControls(){ $("scan-quality").disabled=scanning||!project.value; $("cancel-scan").disabled=!scanning }
 async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}const requested=new URLSearchParams(location.search).get("project");if(requested&&[...project.options].some(o=>o.value===requested)){project.value=requested;project.dispatchEvent(new Event("change"));}}catch(e){say(e.message)}}
@@ -276,7 +288,7 @@ finally{if(token===scanRun){scanning=false;scanControls()}}
 }
 $("scan-quality").addEventListener("click",qualityScan);
 $("cancel-scan").addEventListener("click",()=>{scanRun++;scanning=false;scanControls();$("scan-label").textContent="Scan cancelled; results already checked are preserved";refresh()});
-project.addEventListener("change",()=>{scanRun++;scanning=false;scanControls();selected.clear();refresh()});
+project.addEventListener("change",()=>{if(batchRun?.running)cancelBatch();scanRun++;scanning=false;scanControls();selected.clear();refresh()});
 $("refresh").addEventListener("click",refresh);$("search").addEventListener("input",refresh);
 $("review-filter").addEventListener("change",refresh);$("sort").addEventListener("change",refresh);$("quality-filter").addEventListener("change",refresh);
 $("select-all").addEventListener("click",()=>{for(const item of current)selected.add(item.id);refreshSelection()});
@@ -448,6 +460,159 @@ function cancelVision(){
   $("caption-ai-status").textContent=visionExtra[7];
  }).catch(()=>{$("caption-ai-status").textContent=visionExtra[6]});
 }
+
+// Sequential, cancellable generation: all previews stay in the browser until
+// the user explicitly approves individual captions and clicks Save.
+const batchWords={
+ es:["Generar descripciones con IA","Generación de descripciones por lotes · Ollama local","Solo se procesan las imágenes seleccionadas. Las descripciones existentes se omiten. Revisa las propuestas antes de guardarlas.","Modelo de visión instalado","Actualizar modelos","Generar propuestas","Cancelar generación","Guardar descripciones aprobadas","Cerrar","Buscando modelos de visión en Ollama…","No hay modelos de visión locales disponibles. Inicia Ollama e instala uno compatible.","Elige un modelo de visión.","¿Generar descripciones de {count} imágenes con Ollama local? No se guardarán automáticamente.","Procesando {done} de {total}: {name}","Terminado: {ready} propuestas. Revisa y guarda las que quieras.","Cancelado tras {done} de {total}. Las propuestas ya generadas siguen disponibles.","Descripción ya guardada; se conserva sin cambios.","Error al generar: ","Aprobar esta descripción","Revisión terminada: {saved} descripciones guardadas. Los originales no se han modificado.","No hay propuestas aprobadas para guardar.","¿Cerrar y descartar las propuestas sin guardar?","Guardando descripciones…","Guardada","Omitida","Error al guardar: ","No se han encontrado modelos de visión. Comprueba Ollama.","Generación detenida por el usuario.","Se omite una descripción ya existente."],
+ en:["Generate AI captions","Bulk image descriptions · Local Ollama","Only selected images are processed. Existing captions are skipped. Review the suggestions before saving.","Installed vision model","Refresh models","Generate previews","Cancel generation","Save approved captions","Close","Finding local Ollama vision models…","No local vision models available. Start Ollama and install a compatible model.","Choose a vision model.","Generate suggestions for {count} images with local Ollama? Nothing will be saved automatically.","Processing {done} of {total}: {name}","Finished: {ready} suggestions. Review and save the ones you want.","Cancelled after {done} of {total}. Existing suggestions remain available.","A saved caption already exists; left unchanged.","Generation error: ","Approve this caption","Review complete: {saved} captions saved. Original images unchanged.","No approved suggestions to save.","Close and discard unsaved suggestions?","Saving captions…","Saved","Skipped","Save error: ","No vision models found. Check Ollama.","Generation stopped by user.","Skipping an existing caption."]
+};
+const bw=batchWords[lang]||batchWords.en,bt=(key,params={})=>bw[key].replace(/\{(\w+)\}/g,(_,k)=>String(params[k]??""));
+const batchDialog=$("batch-caption-dialog"),batchModel=$("batch-caption-model"),batchResults=$("batch-caption-results");
+let batchRun=null,batchPreviews=[];
+$("batch-captions").textContent=bt(0);
+for(const [id,index] of [["batch-caption-title",1],["batch-caption-help",2],["batch-caption-model-label",3],
+ ["batch-caption-model-refresh",4],["batch-caption-start",5],["batch-caption-cancel",6],
+ ["batch-caption-save",7],["batch-caption-done",8]])$(id).textContent=bt(index);
+function batchStatus(message){$("batch-caption-status").textContent=message}
+function batchControls(){
+ const running=Boolean(batchRun?.running),saving=Boolean(batchRun?.saving);
+ $("batch-caption-start").disabled=running||saving||!batchModel.value||!batchRun?.ids.length;
+ $("batch-caption-model-refresh").disabled=running||saving;
+ $("batch-caption-cancel").disabled=!running;
+ $("batch-caption-save").disabled=running||saving||!batchPreviews.some(item=>item.ready&&!item.saved);
+ $("batch-caption-close").disabled=saving;
+ $("batch-caption-done").disabled=saving;
+}
+async function batchDiscover(){
+ batchModel.replaceChildren();batchModel.add(new Option(bt(9),""));
+ batchModel.disabled=true;batchControls();batchStatus(bt(9));
+ try{
+  const result=await api("/api/workspace/ollama/vision-models");
+  batchModel.replaceChildren();const names=(result.models||[]).map(x=>x.name);
+  if(!names.length){batchModel.add(new Option(bt(10),""));batchStatus(bt(26));return}
+  for(const name of names)batchModel.add(new Option(name,name));
+  batchModel.value=names.includes("gemma4:26b")?"gemma4:26b":names[0];
+  batchStatus(names.length+" "+(lang==="es"?"modelos de visión detectados.":"vision models detected."));
+ }catch(error){batchModel.replaceChildren();batchModel.add(new Option(bt(10),""));batchStatus(error.message)}
+ finally{batchModel.disabled=false;batchControls()}
+}
+batchModel.addEventListener("change",batchControls);
+$("batch-caption-model-refresh").addEventListener("click",batchDiscover);
+function batchAddPreview(item){
+ const row=document.createElement("article");
+ row.className="card";row.style.display="grid";row.style.gap="8px";
+ const heading=document.createElement("strong");heading.textContent=item.name;
+ row.append(heading);
+ if(item.ready){
+  const checkbox=document.createElement("input");checkbox.type="checkbox";checkbox.checked=true;
+  const label=document.createElement("label");label.className="row";
+  label.append(checkbox,document.createTextNode(bt(18)));row.append(label);
+  const textarea=document.createElement("textarea");textarea.value=item.caption;
+  textarea.maxLength=2000;textarea.rows=3;textarea.style.width="100%";
+  textarea.addEventListener("input",()=>{item.caption=textarea.value;batchControls()});
+  checkbox.addEventListener("change",()=>{item.approved=checkbox.checked;batchControls()});
+  item.approved=true;item.checkbox=checkbox;item.textarea=textarea;
+  row.append(textarea);
+ }else{
+  const note=document.createElement("p");note.className="muted";
+  note.textContent=item.note||bt(17);row.append(note);
+ }
+ item.row=row;batchResults.append(row);batchControls();
+}
+async function cancelBatch(){
+ const run=batchRun;if(!run?.running)return;
+ run.cancelled=true;
+ if(run.active){
+  const current=run.active;
+  // Send cancellation to Ollama's server-side streaming request first.
+  fetch("/api/workspace/datasets/"+encodeURIComponent(run.project)+"/"+encodeURIComponent(current.id)+"/caption/suggest/cancel",{
+   method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({request_id:current.requestId})
+  }).catch(()=>{});
+ }
+ run.controller?.abort();batchStatus(bt(27));batchControls();
+}
+$("batch-caption-cancel").addEventListener("click",cancelBatch);
+function closeBatch(){
+ if(batchRun?.saving)return;
+ if(batchRun?.running){cancelBatch();batchDialog.close();return}
+ if(batchPreviews.some(item=>item.ready&&!item.saved)&&!confirm(bt(21)))return;
+ batchDialog.close();
+}
+$("batch-caption-close").addEventListener("click",closeBatch);
+$("batch-caption-done").addEventListener("click",closeBatch);
+batchDialog.addEventListener("cancel",event=>{event.preventDefault();closeBatch()});
+$("batch-captions").addEventListener("click",()=>{
+ if(!project.value||!selected.size)return;
+ const ids=[...selected],snapshot=current.filter(item=>ids.includes(item.id));
+ if(batchRun?.running)return;
+ batchPreviews=[];batchResults.replaceChildren();
+ batchRun={project:project.value,ids:snapshot,done:0,running:false,saving:false,cancelled:false,active:null,controller:null};
+ $("batch-caption-progress").value=0;batchDialog.showModal();
+ batchDiscover();
+});
+$("batch-caption-start").addEventListener("click",async()=>{
+ const run=batchRun,model=batchModel.value;
+ if(!run||run.running||run.saving||!model){batchStatus(bt(11));return}
+ if(!confirm(bt(12,{count:run.ids.length})))return;
+ run.running=true;run.cancelled=false;run.done=0;batchPreviews=[];batchResults.replaceChildren();
+ batchControls();
+ for(const item of run.ids){
+  if(run.cancelled||batchRun!==run||project.value!==run.project)break;
+  batchStatus(bt(13,{done:run.done+1,total:run.ids.length,name:item.name}));
+  const url="/api/workspace/datasets/"+encodeURIComponent(run.project)+"/"+encodeURIComponent(item.id)+"/caption";
+  try{
+   const existing=await api(url);
+   if(run.cancelled||batchRun!==run)break;
+   if(existing.caption?.trim()){
+    batchAddPreview({id:item.id,name:item.name,ready:false,note:bt(17),saved:true});
+   }else{
+    const requestId=crypto.randomUUID().replaceAll("-",""),controller=new AbortController();
+    run.active={id:item.id,requestId};run.controller=controller;
+    const result=await api(url+"/suggest",{
+     method:"POST",headers:{"Content-Type":"application/json"},
+     body:JSON.stringify({model,confirm:true,request_id:requestId}),
+     signal:controller.signal
+    });
+    if(run.cancelled||batchRun!==run)break;
+    const suggestion={id:item.id,name:item.name,ready:true,saved:false,
+      caption:result.caption,revision:existing.revision};
+    batchPreviews.push(suggestion);batchAddPreview(suggestion);
+   }
+  }catch(error){
+   if(run.cancelled||batchRun!==run)break;
+   batchAddPreview({id:item.id,name:item.name,ready:false,note:bt(17)+error.message});
+  }finally{
+   run.active=null;run.controller=null;run.done++;
+   $("batch-caption-progress").value=100*run.done/run.ids.length;
+  }
+ }
+ run.running=false;
+ if(batchRun===run){batchStatus(run.cancelled?bt(15,{done:run.done,total:run.ids.length}):bt(14,{ready:batchPreviews.length}));batchControls()}
+});
+$("batch-caption-save").addEventListener("click",async()=>{
+ const run=batchRun;if(!run||run.running||run.saving)return;
+ const items=batchPreviews.filter(x=>x.ready&&!x.saved&&x.approved&&x.caption.trim());
+ if(!items.length){batchStatus(bt(20));return}
+ run.saving=true;batchControls();batchStatus(bt(22));let saved=0;
+ for(const item of items){
+  try{
+   const data=await api("/api/workspace/datasets/"+encodeURIComponent(run.project)+"/"+encodeURIComponent(item.id)+"/caption",{
+    method:"PUT",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({caption:item.caption,expected_revision:item.revision})
+   });
+   item.saved=true;item.revision=data.revision;item.checkbox.disabled=true;item.textarea.readOnly=true;
+   item.row.append(document.createTextNode("✓ "+bt(23)));saved++;
+  }catch(error){
+   const errorText=document.createElement("p");errorText.className="status";
+   errorText.textContent=bt(25)+error.message;item.row.append(errorText);
+  }
+ }
+ run.saving=false;batchStatus(bt(19,{saved}));batchControls();
+ if(project.value===run.project)await refresh();
+});
+
 $("caption-ai-cancel").addEventListener("click",cancelVision);
 $("caption-ai-generate").addEventListener("click",async()=>{
  if(!captionActive)return;
