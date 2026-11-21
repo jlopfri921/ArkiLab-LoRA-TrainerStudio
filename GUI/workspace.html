@@ -837,7 +837,15 @@ $("comfy-welcome-recheck").onclick=async()=>{
  catch(e){updateComfyAccess(false);$("comfy-welcome-status").textContent=e.message;}
  finally{$("comfy-welcome-recheck").disabled=false;}
 };
-window.addEventListener("hashchange",routeWorkspace);routeWorkspace();routeHome();
+// Queue sidebar links use the same Workspace dialog actions as the local buttons.
+function routeWorkspaceActions(){
+ if(location.pathname.replace(/\/$/,"")!=="/workspace")return;
+ const action=location.hash.slice(1);
+ if(action==="settings")$("settings-open").click();
+ if(action==="shutdown" && !$("shutdown-dialog").open)$("shutdown-open").click();
+}
+window.addEventListener("hashchange",routeWorkspaceActions);
+window.addEventListener("hashchange",routeWorkspace);routeWorkspace();routeHome();routeWorkspaceActions();
 overview().catch(e=>notice(e.message)).finally(()=>projects().catch(e=>notice(e.message)));
 </script><script src="/assets/orkilab/orkilab-ui.js"></script>
 </body></html>
