@@ -45,6 +45,7 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <label><span id="search-label">Search by name</span><input id="search" type="search" placeholder="image_01"></label>
 <label><span id="filter-label">Review status</span><select id="review-filter"><option value="all">All</option><option value="unreviewed">Unreviewed</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></label>
 <label><span id="sort-label">Sort by</span><select id="sort"><option value="name">Name</option><option value="size">Size (largest first)</option><option value="resolution">Resolution (largest first)</option></select></label>
+<label><span id="quality-label">Quality findings</span><select id="quality-filter"><option value="all">All images</option><option value="exact">Exact duplicates</option><option value="near">Possible near duplicates</option><option value="blur">Possible blur</option><option value="low_resolution">Low resolution</option><option value="unanalyzed">Not analyzed</option></select></label>
 <button id="refresh" type="button">Refresh</button></div>
 <div class="actions" aria-label="Selection actions">
 <button type="button" id="select-all">Select visible</button>
@@ -72,7 +73,18 @@ de:["Projekt auswählen","Bildordner (absoluter Pfad)","Bilder importieren","Nac
 it:["Scegli progetto","Cartella immagini (percorso assoluto)","Importa immagini","Cerca per nome","Aggiorna","Nessun progetto selezionato","Nessuna immagine corrispondente.","Riferimenti rimossi, originali conservati.","Stato revisione","Ordina per","Seleziona visibili","Deseleziona","Approva","Rifiuta","Segna da rivedere","Rimuovi riferimenti","selezionate","immagini","Tutte","Da rivedere","Approvate","Rifiutate","Nome","Dimensione decrescente","Risoluzione decrescente","Progetto","Come funziona","Libreria immagini","Organizza le immagini senza modificare gli originali.","Scegli progetto e cartella locale per gestire i riferimenti alle immagini.","Anteprima: solo immagini senza sottocartelle. Didascalie e analisi arriveranno.","Rimuovere i riferimenti selezionati? Gli originali restano intatti.","Importazione completata; originali conservati.","Mancante","Rimuovi riferimento"],
 ja:["プロジェクトを選択","画像フォルダー（絶対パス）","画像を読み込む","名前で検索","更新","プロジェクト未選択","該当画像がありません。","参照を削除しました。元画像は保持されます。","確認状況","並べ替え","表示分を選択","選択解除","承認","却下","未確認に戻す","選択した参照を削除","選択","画像","すべて","未確認","承認済み","却下","名前","サイズ順","解像度順","プロジェクト","使い方","画像ライブラリ","元ファイルを変更せず画像を整理します。","プロジェクトとローカルフォルダーを選んで画像を確認できます。","プレビュー：画像のみ。サブフォルダーは対象外です。","選択した参照を削除しますか？元画像は残ります。","読み込み完了。元画像は変更されません。","見つかりません","参照を削除"],
 ko:["프로젝트 선택","이미지 폴더(절대 경로)","이미지 가져오기","이름 검색","새로 고침","프로젝트 미선택","일치하는 이미지가 없습니다.","참조만 제거했습니다. 원본은 유지됩니다.","검토 상태","정렬","보이는 항목 선택","선택 해제","승인","거부","미검토 표시","선택한 참조 제거","선택됨","이미지","전체","미검토","승인","거부","이름","크기순","해상도순","프로젝트","사용 방법","이미지 라이브러리","원본 파일을 수정하지 않고 이미지를 관리합니다.","프로젝트와 로컬 폴더를 선택해 이미지를 확인하세요.","미리보기: 이미지 전용. 하위 폴더는 제외됩니다.","선택한 참조를 제거할까요? 원본은 남습니다.","가져오기 완료. 원본은 그대로입니다.","없음","참조 제거"]};
-let lang=((typeof I18N!=="undefined"&&I18N.lang)||navigator.language||"en").slice(0,2).toLowerCase();if(!texts[lang])lang="en";const tr=texts[lang];document.documentElement.lang=lang;
+const qualityTexts={
+en:["Quality findings","All images","Exact duplicates","Possible near duplicates","Possible blur","Low resolution","Not analyzed","Review suggestion only; do not delete automatically"],
+es:["Resultados de calidad","Todas las imágenes","Duplicados exactos","Posibles duplicados similares","Posible desenfoque","Resolución baja","Sin analizar","Solo sugerencias: no se eliminan imágenes automáticamente"],
+pt:["Qualidade","Todas as imagens","Duplicados exatos","Possíveis duplicados semelhantes","Possível desfocagem","Baixa resolução","Não analisadas","Apenas sugestões: não são apagadas imagens"],
+fr:["Résultats qualité","Toutes les images","Doublons exacts","Doublons possibles","Flou possible","Faible résolution","Non analysées","Suggestions seulement : aucune suppression automatique"],
+de:["Qualitätsprüfung","Alle Bilder","Exakte Duplikate","Ähnliche Bilder","Mögliche Unschärfe","Niedrige Auflösung","Nicht analysiert","Nur Hinweise: keine automatische Löschung"],
+it:["Risultati qualità","Tutte le immagini","Duplicati esatti","Possibili duplicati simili","Possibile sfocatura","Bassa risoluzione","Non analizzate","Solo suggerimenti, nessuna eliminazione automatica"],
+ja:["品質チェック","すべての画像","完全な重複","類似画像の可能性","ぼけの可能性","低解像度","未解析","提案のみ。自動削除はしません"],
+ko:["품질 결과","모든 이미지","완전히 중복된 이미지","유사 이미지 가능성","흐림 가능성","낮은 해상도","미분석","권장 사항일 뿐 자동 삭제하지 않습니다"]};
+let lang=((typeof I18N!=="undefined"&&I18N.lang)||navigator.language||"en").slice(0,2).toLowerCase();if(!texts[lang])lang="en";const tr=texts[lang],qt=qualityTexts[lang];document.documentElement.lang=lang;
+$("quality-label").textContent=qt[0];
+for(let i=0;i<6;i++)$("quality-filter").options[i].textContent=qt[i+1];
 const bindings={"project-label":25,"folder-label":1,"import":2,"search-label":3,"refresh":4,"count":5,"review-filter":8,"sort-label":9,"select-all":10,"select-none":11,"approve":12,"reject":13,"reset":14,"remove":15,"help":26,"library":27,"subtitle":28,"intro":29,"limits":30};
 for(const [id,i] of Object.entries(bindings)){if(id!=="review-filter")$(id).textContent=tr[i]}
 project.options[0].textContent=tr[0];for(let i=0;i<4;i++)$("review-filter").options[i].textContent=tr[18+i];for(let i=0;i<3;i++)$("sort").options[i].textContent=tr[22+i];
@@ -87,7 +99,7 @@ function postJson(url,payload){return api(url,{method:"POST",headers:{"Content-T
 async function refresh(){
 const requestSeq=++seq,projectId=project.value;images.replaceChildren();current=[];
 if(!projectId){$("count").textContent=tr[5];selected.clear();selectionUI();return}
-try{const qs=new URLSearchParams({search:$("search").value,review:$("review-filter").value,sort:$("sort").value});
+try{const qs=new URLSearchParams({search:$("search").value,review:$("review-filter").value,sort:$("sort").value,quality:$("quality-filter").value});
 const data=await api(endpoint()+"?"+qs.toString());if(seq!==requestSeq||project.value!==projectId)return;
 current=data.images;const visible=new Set(current.map(item=>item.id));selected=new Set([...selected].filter(id=>visible.has(id)));
 $("count").textContent=current.length+" "+tr[17];selectionUI();
@@ -102,7 +114,15 @@ check.addEventListener("change",()=>{if(check.checked)selected.add(item.id);else
 const pickText=document.createElement("span");pickText.textContent=item.review;pick.append(check,pickText);meta.append(pick);
 const title=document.createElement("strong");title.textContent=item.name;meta.append(title);
 const detail=document.createElement("small");detail.textContent=(item.width&&item.height?item.width+" × "+item.height+" · ":"")+(item.bytes/1048576).toFixed(2)+" MB"+(item.missing?" · "+tr[33]:"");meta.append(detail);
-if(item.analyzed){const quality=document.createElement("span");quality.className="qualityflag"+(item.duplicate?" duplicate":"");quality.textContent=item.duplicate?"Exact duplicate":item.quality==="low_resolution"?"Low resolution":item.quality==="ok"?"Resolution OK":item.quality||"Not checked";meta.append(quality)}
+if(item.analyzed){
+const findings=[];
+if(item.duplicate)findings.push(qt[2]);
+if(item.near_duplicate)findings.push(qt[3]);
+if(item.possible_blur)findings.push(qt[4]);
+if(item.quality==="low_resolution")findings.push(qt[5]);
+if(!findings.length)findings.push(item.quality==="ok"?"✓":item.quality||"?");
+for(const finding of findings){const quality=document.createElement("span");quality.className="qualityflag"+(item.duplicate?" duplicate":"");quality.textContent=finding;quality.title=qt[7];meta.append(quality)}
+}
 
 const button=document.createElement("button");button.type="button";button.textContent=tr[34];button.addEventListener("click",async()=>{if(!confirm(tr[31]))return;await batch("remove",[item.id])});meta.append(button);
 card.append(meta);fragment.append(card)}images.append(fragment)
@@ -134,7 +154,7 @@ $("scan-quality").addEventListener("click",qualityScan);
 $("cancel-scan").addEventListener("click",()=>{scanRun++;scanning=false;scanControls();$("scan-label").textContent="Scan cancelled; results already checked are preserved";refresh()});
 project.addEventListener("change",()=>{scanRun++;scanning=false;scanControls();selected.clear();refresh()});
 $("refresh").addEventListener("click",refresh);$("search").addEventListener("input",refresh);
-$("review-filter").addEventListener("change",refresh);$("sort").addEventListener("change",refresh);
+$("review-filter").addEventListener("change",refresh);$("sort").addEventListener("change",refresh);$("quality-filter").addEventListener("change",refresh);
 $("select-all").addEventListener("click",()=>{for(const item of current)selected.add(item.id);refreshSelection()});
 $("select-none").addEventListener("click",()=>{selected.clear();refreshSelection()});
 function refreshSelection(){for(const card of images.querySelectorAll(".card")){const checkbox=card.querySelector('input[type="checkbox"]');const item=current[[...images.children].indexOf(card)];if(item){checkbox.checked=selected.has(item.id);card.classList.toggle("selected",checkbox.checked)}}selectionUI()}

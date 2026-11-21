@@ -8,6 +8,7 @@ from pathlib import Path
 
 from flask import jsonify, request, send_file
 import dataset_quality
+from image_quality_visual import near_match
 
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp"}
 MIMES = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
@@ -102,9 +103,11 @@ def register(app, base):
           width INTEGER, height INTEGER,
           UNIQUE(project_id, path))""")
         existing = {row[1] for row in conn.execute("PRAGMA table_info(dataset_images)")}
-        for column in ("width", "height", "quality_sha256", "quality_flag", "quality_scanned_at"):
+        for column in ("width", "height", "quality_sha256", "quality_flag", "quality_scanned_at",
+                       "quality_dhash", "quality_blur_score", "quality_possible_blur"):
             if column not in existing:
-                conn.execute(f"ALTER TABLE dataset_images ADD COLUMN {column} " + ("INTEGER" if column in ("width", "height") else "TEXT"))
+                conn.execute(f"ALTER TABLE dataset_images ADD COLUMN {column} " + ("INTEGER" if column in ("width", "height", "quality_possible_blur")
+                    else "REAL" if column == "quality_blur_score" else "TEXT"))
         conn.execute("CREATE INDEX IF NOT EXISTS idx_dataset_project ON dataset_images(project_id)")
         return conn
 
@@ -134,25 +137,57 @@ def register(app, base):
                 return jsonify(error="Search too long"), 400
             review = request.args.get("review", "all")
             sort = request.args.get("sort", "name")
-            if review not in REVIEWS | {"all"} or sort not in ("name", "size", "resolution"):
+            quality_filter = request.args.get("quality", "all")
+            if (review not in REVIEWS | {"all"} or sort not in ("name", "size", "resolution")
+                    or quality_filter not in ("all", "exact", "near", "blur", "low_resolution", "unanalyzed")):
                 return jsonify(error="Invalid filter"), 400
             order = {"name": "name COLLATE NOCASE, id", "size": "bytes DESC, name COLLATE NOCASE, id",
                      "resolution": "(COALESCE(width,0)*COALESCE(height,0)) DESC, name COLLATE NOCASE, id"}[sort]
             with closing(db()) as conn:
                 rows = [dict(r) for r in conn.execute(
-                    "SELECT id,name,bytes,review,path,width,height,quality_sha256,quality_flag,quality_scanned_at FROM dataset_images WHERE project_id=? ORDER BY " + order + " LIMIT ?",
+                    "SELECT id,name,bytes,review,path,width,height,quality_sha256,quality_flag,quality_scanned_at, "
+                    "quality_dhash,quality_blur_score,quality_possible_blur FROM dataset_images "
+                    "WHERE project_id=? ORDER BY " + order + " LIMIT ?",
                     (project_id, MAX_IMAGES))]
             counts = {}
             for r in rows:
                 if r["quality_sha256"]:
                     counts[r["quality_sha256"]] = counts.get(r["quality_sha256"], 0) + 1
+            near_ids = set()
+            eligible = [r for r in rows if r["quality_dhash"] and r["quality_sha256"]]
+            for i, a in enumerate(eligible):
+                for b in eligible[i + 1:]:
+                    if a["quality_sha256"] == b["quality_sha256"]:
+                        continue
+                    if not a["width"] or not a["height"] or not b["width"] or not b["height"]:
+                        continue
+                    if abs(a["width"] * b["height"] - b["width"] * a["height"]) * 100 > 3 * b["width"] * a["height"]:
+                        continue
+                    if near_match(a["quality_dhash"], b["quality_dhash"]):
+                        near_ids.update((a["id"], b["id"]))
+            def matches_quality(r):
+                if quality_filter == "all":
+                    return True
+                if quality_filter == "exact":
+                    return bool(r["quality_sha256"] and counts[r["quality_sha256"]] > 1)
+                if quality_filter == "near":
+                    return r["id"] in near_ids
+                if quality_filter == "blur":
+                    return bool(r["quality_possible_blur"])
+                if quality_filter == "low_resolution":
+                    return r["quality_flag"] == "low_resolution"
+                return not r["quality_scanned_at"]
             return jsonify(images=[
                 {"id": r["id"], "name": r["name"], "bytes": r["bytes"],
                  "review": r["review"], "width": r["width"], "height": r["height"],
                  "missing": not Path(r["path"]).is_file(),
                  "quality": r["quality_flag"], "analyzed": bool(r["quality_scanned_at"]),
-                 "duplicate": bool(r["quality_sha256"] and counts[r["quality_sha256"]] > 1)}
-                for r in rows if query in r["name"].lower() and (review == "all" or r["review"] == review)])
+                 "duplicate": bool(r["quality_sha256"] and counts[r["quality_sha256"]] > 1),
+                 "near_duplicate": r["id"] in near_ids,
+                 "possible_blur": bool(r["quality_possible_blur"]),
+                 "blur_score": r["quality_blur_score"]}
+                for r in rows if query in r["name"].lower() and (review == "all" or r["review"] == review)
+                and matches_quality(r)])
         if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 4096:
             return jsonify(error="Invalid request"), 400
         body = request.get_json(silent=True)
