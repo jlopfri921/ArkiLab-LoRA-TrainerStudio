@@ -25,7 +25,7 @@ Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, e
 | --- | --- | --- | --- |
 | Windows CI unit tests | NOT VERIFIED | Workflow job URL + result for release SHA | Yes |
 | Linux CI unit tests | NOT VERIFIED | Workflow job URL + result for release SHA | Yes |
-| Browser trainer smoke test | NOT VERIFIED | `tools/smoke_test_ui.py` output + any failed engine | Yes for regression |
+| Browser trainer smoke test | REPORTED PASS — 3/3 (SDXL, Wan 2.2, YuE2) | User-supplied Windows console output; record commit SHA and run full suite | Yes for regression |
 | Workspace/ComfyUI connection gate | REPORTED | Connect/disconnect screen evidence and route behavior | Yes |
 | API-format workflow prepare/execute | REPORTED | Trusted graph identifier, status and output | Yes |
 | Bridge conversion of visual workflow | REPORTED | Graph, preparation stages, actual converted run | Yes |
@@ -44,6 +44,18 @@ Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, e
 Some user-reported hands-on runs are documented in project conversations; the evidence matrix [GPU_GENERATION_ACCEPTANCE.md](GPU_GENERATION_ACCEPTANCE.md) still shows `NOT TESTED` for the individual scenarios. Record observed outcomes there before setting this gate to PASS.
 
 **CI observation:** GitHub's combined commit status for the examined main commit returned no statuses; commit-associated PR workflow-run query also returned no runs. These results **do not establish that CI is absent or failed**. Check GitHub Actions on the precise candidate SHA and attach run links.
+
+## Recorded Windows smoke-test evidence (user-reported, 2026-11-21)
+
+The user ran from `D:\\orkilab\\orkilab-lora-trainerstudio` with the project's virtual-environment Python:
+
+```powershell
+.\venv\Scripts\python.exe tools\smoke_test_ui.py --only sdxl,wan22,yue2 --keep
+```
+
+**Observed console result:** `OK sdxl`, `OK wan22`, `OK yue2`, **`3/3 OK`**. Preserved logs for `server_sdxl`, `server_wan22` and `server_yue2` each contained `Serving Flask app` and `Debug mode: off`, with no reported startup exception. The earlier run via plain `python` yielded `0/3 OK` (servers did not start), suggesting an interpreter/environment mismatch; the exact earlier traceback was not preserved.
+
+This is **user-supplied evidence for the headless UI smoke test**, not an independent CI pass or proof of full GPU training. The script intercepts process starts and checks UI-triggered actions without running actual GPU jobs. The exact tested Git SHA was not supplied, and only three trainers were covered. A full smoke run and precise candidate-SHA verification remain necessary. The separately reported successful ComfyUI image generation is real-workflow evidence but does not turn these mocked trainer runs into GPU validation.
 
 ## Suggested safe operator command sequence
 
