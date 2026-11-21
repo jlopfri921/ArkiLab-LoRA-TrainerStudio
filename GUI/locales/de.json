@@ -2044,5 +2044,7 @@
   "Trainer quick navigation": "Schnellnavigation des Trainers",
   "Jump to": "Springen zu",
   "Console": "Konsole",
-  "Generated previews": "Erzeugte Vorschauen"
+  "Generated previews": "Erzeugte Vorschauen",
+  "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image: Bild- und Bearbeitungs-LoRAs. Video- und Audiosteuerungen stehen in diesem Modus nicht zur Verfügung.",
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: Video- und Audio-LoRAs."
 }

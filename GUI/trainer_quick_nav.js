@@ -50,6 +50,31 @@
       const target = grid.querySelector(selector);
       if (target) addTarget(label(text), target, target.closest('.panel'));
     }
+    // MiniMax-H3 Image is launched using the shared MiniMax-H3 trainer UI.
+    // Display the selected mode only after the server confirms it.
+    if (document.body.dataset.orkiEngine === 'minimaxh3') {
+      const modeInfo = document.createElement('p');
+      modeInfo.id = 'orkilab-h3-mode-info';
+      modeInfo.className = 'orkilab-h3-mode-info';
+      modeInfo.setAttribute('role', 'status');
+      modeInfo.hidden = true;
+      nav.append(modeInfo);
+      const showMode = (mode) => {
+        if (mode === 'image') {
+          modeInfo.textContent = label('MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.');
+          modeInfo.hidden = false;
+        } else if (mode === 'video') {
+          modeInfo.textContent = label('MiniMax-H3: video and audio LoRAs.');
+          modeInfo.hidden = false;
+        }
+      };
+      document.addEventListener('orkilab:trainer-mode', (event) => {
+        showMode(event.detail?.mode);
+      });
+      // Covers settings fetched before the DOM-ready event listener is installed.
+      if (document.body.dataset.orkiTrainerMode) showMode(document.body.dataset.orkiTrainerMode);
+      else if (window.H3_IMAGE === true) showMode('image');
+    }
     if (nav.querySelectorAll('button').length) grid.parentNode.insertBefore(nav, grid);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });

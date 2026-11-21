@@ -6,3 +6,6 @@
 .orkilab-quicknav-link:focus-visible{outline:2px solid #40d4c6;outline-offset:3px}
 .main-grid .panel, .main-grid #terminal, .main-grid #ds-grid, .main-grid #gallery{scroll-margin-top:18px}
 @media(max-width:760px){.orkilab-trainer-quicknav{gap:6px;padding:10px}.orkilab-quicknav-link{font-size:12px;padding:7px 9px}}
+
+/* Mode note appears only for the shared MiniMax-H3 video/image interface. */
+.orkilab-h3-mode-info{flex:1 1 100%;font-size:12px;line-height:1.5;color:#b6d8e9;margin:2px 0 0;padding:8px 10px;background:#102439;border-left:3px solid #40d4c6;border-radius:5px}
