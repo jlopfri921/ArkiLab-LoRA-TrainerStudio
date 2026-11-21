@@ -141,6 +141,9 @@
         context.querySelector("#orki-shell-context-title").textContent = page === "queue" ? words[1] : words[3];
         context.querySelector("#orki-shell-context-toggle-label").textContent = words[0];
         context.querySelector("#orki-shell-context-description").textContent = page === "queue" ? words[2] : words[4];
+        // Canonical source of truth: read the real Workspace chrome instead of
+        // reconstructing a similar-looking but divergent header and menu.
+        syncCanonicalWorkspaceChrome(page, nav, content);
         nav.setAttribute("aria-label", t[0]);
         nav.replaceChildren(element("span", "nav-heading", t[0]));
         routes.forEach(([id, to], idx) => {
@@ -157,6 +160,102 @@
         const line = element("span", null, "OrkiLab · " + t[9] + " · ");
         const back = link("/workspace", t[0]);
         footer.append(line, back);
+    }
+    async function syncCanonicalWorkspaceChrome(page, nav, content) {
+        try {
+            const response = await fetch("/workspace", {credentials:"same-origin", cache:"no-store"});
+            if (!response.ok) throw new Error("Workspace unavailable");
+            const html = await response.text();
+            const source = new DOMParser().parseFromString(html, "text/html");
+            const canonicalHeader = source.querySelector("body > header");
+            const canonicalNav = source.querySelector("#home-navigation");
+            const canonicalContext = source.querySelector("#workspace-context");
+            if (!canonicalHeader || !canonicalNav || !canonicalContext)
+                throw new Error("Workspace chrome missing");
+            // Clone exact markup, IDs and element order from Workspace.
+            const liveHeader = document.querySelector(".orki-shell-header");
+            if (liveHeader) {
+                const header = canonicalHeader.cloneNode(true);
+                header.classList.add("orki-shell-header");
+                liveHeader.replaceWith(header);
+                const selector = header.querySelector("#workspace-language");
+                if (selector && typeof I18N !== "undefined") {
+                    for (const [code, name] of I18N.languages) selector.add(new Option(name, code));
+                    selector.value = I18N.lang;
+                    selector.addEventListener("change", async () => {
+                        const old = I18N.lang;
+                        selector.disabled = true;
+                        try {
+                            const saved = await fetch("/api/i18n", {
+                                method:"POST", credentials:"same-origin",
+                                headers:{"Content-Type":"application/json"},
+                                body:JSON.stringify({language:selector.value})
+                            });
+                            if (!saved.ok) throw new Error("Language change failed");
+                            location.reload();
+                        } catch (err) {
+                            selector.value = old;
+                            selector.disabled = false;
+                            const alert = content.querySelector("#context-description");
+                            if (alert) { alert.textContent = err.message; alert.hidden = false; }
+                        }
+                    });
+                }
+                fetch("/api/workspace/overview", {credentials:"same-origin"})
+                    .then(r => r.ok ? r.json() : null)
+                    .then(data => { if (data && data.version) {
+                        const version = header.querySelector("#version");
+                        if (version) version.textContent = data.version;
+                    } }).catch(() => {});
+            }
+            const canonical = canonicalNav.cloneNode(true);
+            canonical.removeAttribute("id");
+            canonical.className = page === "queue" ? "queue-sidebar" : "studio-navigation";
+            // Hash navigation must resolve to Workspace, not this standalone page.
+            for (const a of canonical.querySelectorAll("a[href^='#']"))
+                a.href = "/workspace" + a.getAttribute("href");
+            const current = canonical.querySelector(page === "queue" ?
+                'a[href="/queue"]' : 'a[href="/workspace/datasets"]');
+            if (current) current.setAttribute("aria-current", "page");
+            for (const button of canonical.querySelectorAll("button")) {
+                const mode = button.id === "settings-open" ? "settings" :
+                             button.id === "shutdown-open" ? "shutdown" : null;
+                if (mode) {
+                    button.addEventListener("click", () => {
+                        location.href = "/workspace?dialog=" + mode;
+                    });
+                }
+            }
+            nav.replaceWith(canonical);
+            const oldContext = content.querySelector(".orki-shell-workspace-context");
+            if (oldContext) {
+                const titleText = oldContext.querySelector("#orki-shell-context-title")?.textContent || "";
+                const descriptionText = oldContext.querySelector("#orki-shell-context-description")?.textContent || "";
+                const labelText = oldContext.querySelector("#orki-shell-context-toggle-label")?.textContent || "";
+                const context = canonicalContext.cloneNode(true);
+                const title = context.querySelector("#context-title");
+                const description = context.querySelector("#context-description");
+                const toggle = context.querySelector("#context-toggle");
+                if (title) title.textContent = titleText;
+                if (description) { description.textContent = descriptionText; description.hidden = true; }
+                if (toggle) {
+                    const span = toggle.querySelector("span");
+                    if (span) span.textContent = labelText;
+                    toggle.setAttribute("aria-expanded", "false");
+                    toggle.addEventListener("click", () => {
+                        if (!description) return;
+                        const opened = description.hidden;
+                        description.hidden = !opened;
+                        toggle.setAttribute("aria-expanded", String(opened));
+                    });
+                }
+                context.classList.add("orki-shell-workspace-context");
+                oldContext.replaceWith(context);
+            }
+        } catch (error) {
+            // Keep the existing shell usable if the standalone page was loaded
+            // before Workspace became available; never break queue operations.
+        }
     }
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", render);
     else render();
