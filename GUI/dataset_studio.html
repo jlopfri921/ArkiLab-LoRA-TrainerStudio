@@ -51,8 +51,9 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 .actions button{padding:9px 12px}.count{margin:0;padding:12px 0}.loading{opacity:.7}
 @media(max-width:900px){.studio-layout{grid-template-columns:1fr}.studio-navigation{position:static;max-height:none;flex-direction:row;flex-wrap:wrap;gap:7px}.studio-navigation a{flex:1 1 140px}.studio-navigation .nav-heading{flex-basis:100%}}
 @media(max-width:780px){.toolbar{grid-template-columns:1fr}body{padding:12px}section{padding:14px}}
-</style></head><body>
-<header><a href="/workspace" id="back">← OrkiLab Workspace</a><h1>Dataset Studio <small class="muted">0.4 alpha</small></h1>
+</style><link rel="stylesheet" href="/assets/orkilab/orkilab-shell.css">
+</head><body>
+<header class="studio-local-heading"><a href="/workspace" id="back">← OrkiLab Workspace</a><h1>Dataset Studio <small class="muted">0.4 alpha</small></h1>
 <p class="muted" id="subtitle">Organize images by project without modifying your original files.</p></header>
 <div class="studio-layout">
 <nav class="studio-navigation" aria-label="OrkiLab general navigation">
@@ -286,4 +287,5 @@ $("compare-zoom").addEventListener("input",applyCompareZoom);
 $("comparison").addEventListener("close",()=>{for(const side of ["left","right"])$("compare-"+side).removeAttribute("src")});
 
 selectionUI();scanControls();projects();
-</script></body></html>
+</script><script src="/assets/orkilab/orkilab-shell.js"></script>
+</body></html>
