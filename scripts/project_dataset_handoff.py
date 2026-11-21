@@ -36,12 +36,17 @@ def project_data(base, project_id, engine_id):
         raise HandoffError("Selected trainer does not match the project")
     # Prefer an explicitly prepared, internally-managed image/caption folder.
     path = None
+    indexed_images = 0
     dataset_db = base / "settings" / "orkilab" / "datasets.sqlite3"
     if project["category"] == "image" and dataset_db.is_file():
         with closing(sqlite3.connect(dataset_db)) as conn:
-            exists = conn.execute("SELECT 1 FROM sqlite_master "
-                                  "WHERE type='table' AND name='dataset_preparations'").fetchone()
-            if exists:
+            tables = {row[0] for row in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'")}
+            if "dataset_images" in tables:
+                indexed_images = conn.execute(
+                    "SELECT COUNT(*) FROM dataset_images WHERE project_id=?",
+                    (project_id,)).fetchone()[0]
+            if "dataset_preparations" in tables:
                 row = conn.execute("SELECT path FROM dataset_preparations "
                                    "WHERE project_id=? ORDER BY rowid DESC LIMIT 1",
                                    (project_id,)).fetchone()
@@ -66,9 +71,13 @@ def project_data(base, project_id, engine_id):
     elif project["dataset"]:
         selected = Path(project["dataset"]).expanduser()
         if not selected.is_absolute() or not selected.is_dir():
+            if indexed_images:
+                raise HandoffError("Images are linked in Dataset Studio, but no training folder is prepared. Save descriptions and prepare the training folder there.")
             raise HandoffError("Project dataset folder does not exist; choose a valid absolute folder")
         project["selected_dataset"] = str(selected.resolve())
         project["dataset_origin"] = "project_path"
+    elif indexed_images:
+        raise HandoffError("Images are linked in Dataset Studio, but no training folder is prepared. Save descriptions and prepare the training folder there.")
     else:
         raise HandoffError("No dataset linked to this project; prepare one in Dataset Studio")
     return project
