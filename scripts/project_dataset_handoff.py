@@ -93,5 +93,7 @@ def make_draft(base, project_id, engine_id):
         saved["dataset_path"] = project["selected_dataset"]
         # Isolate default output/cache naming from existing projects.
         saved["project_name"] = "orkilab_" + project_id[:12]
+        if engine_id == "minimaxh3image":
+            saved["h3_model"] = "image"
         draft[section] = saved
     return draft, project
