@@ -1,61 +1,119 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>OrkiLab — Dataset Studio alpha</title>
+<script src="/i18n.js"></script>
 <style>
-:root{color-scheme:dark;font:15px system-ui,sans-serif;background:#0b1221;color:#e8f0fb}
-*{box-sizing:border-box}body{margin:0 auto;max-width:1400px;padding:24px}a{color:#3cdbd0}
-h1{margin:12px 0 6px}p{line-height:1.5}section{background:#152238;border:1px solid #293e58;border-radius:14px;padding:20px;margin:16px 0}
-input,button,select{background:#101d30;color:inherit;border:1px solid #49617e;padding:10px;border-radius:8px;font:inherit}
-button{cursor:pointer}button:disabled{opacity:.55}input{width:100%}label{display:grid;gap:8px}
-.toolbar{display:grid;grid-template-columns:minmax(180px,1fr) minmax(230px,2fr) auto;gap:12px;align-items:end}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px}
-.card{background:#101d30;border:1px solid #324762;border-radius:12px;overflow:hidden}
-.card img{display:block;width:100%;height:150px;object-fit:contain;background:#090f1b}
-.card .meta{padding:12px}.card strong{display:block;overflow-wrap:anywhere}
-.card button{font-size:13px;margin-top:8px}
-.muted{color:#a4b4cc}.status{min-height:24px;color:#f6c17d}
-@media(max-width:780px){.toolbar{grid-template-columns:1fr}body{padding:12px}}
+:root{color-scheme:dark;font:15px system-ui,sans-serif;background:#0b1221;color:#e8f0fb;--muted:#a4b4cc;--line:#324762;--accent:#3cdbd0}
+*{box-sizing:border-box}body{margin:0 auto;max-width:1460px;padding:24px}
+a{color:var(--accent)}h1{margin:12px 0 6px;font-size:clamp(25px,3vw,34px)}h2{margin:0 0 12px}
+p{line-height:1.5}section{background:#152238;border:1px solid #293e58;border-radius:14px;padding:20px;margin:16px 0}
+input,button,select{background:#101d30;color:inherit;border:1px solid #49617e;padding:10px;border-radius:8px;font:inherit;min-width:0}
+button{cursor:pointer}button:disabled{opacity:.55;cursor:default}input[type=text],input[type=search]{width:100%}
+label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.toolbar{display:grid;grid-template-columns:minmax(190px,1fr) minmax(250px,2fr) auto;gap:12px;align-items:end}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end}.controls label{flex:1 1 180px}.controls button{align-self:end}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;align-items:stretch}
+.card{background:#101d30;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.card.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.card img{display:block;width:100%;height:154px;object-fit:contain;background:#090f1b}
+.card .meta{padding:12px;flex:1;display:flex;flex-direction:column;gap:7px;min-width:0}
+.card strong{overflow-wrap:anywhere;font-size:13px}.card small{color:var(--muted)}.card button{font-size:13px;margin-top:auto}
+.picker{display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer}.picker input{width:18px;height:18px;accent-color:var(--accent)}
+.muted{color:var(--muted)}.status{min-height:24px;color:#f6c17d}.danger{border-color:#ae6471}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 0}
+.actions button{padding:9px 12px}.count{margin:0;padding:12px 0}.loading{opacity:.7}
+@media(max-width:780px){.toolbar{grid-template-columns:1fr}body{padding:12px}section{padding:14px}}
 </style></head><body>
-<header><a href="/workspace">← OrkiLab Workspace</a><h1>Dataset Studio <small class="muted">0.4 alpha</small></h1>
-<p class="muted">Organize image datasets by project. Indexed by reference: source files are never modified, moved or deleted.</p></header>
-<main><section aria-labelledby="help"><h2 id="help">Getting started</h2>
-<p>1. Select an existing image project. 2. Enter an absolute folder on this computer. 3. Import supported images (JPG, PNG, WebP, GIF or BMP), review them and remove references as needed. Subfolders and video/audio are not included yet.</p>
-<p class="muted">This is an early development preview. Thumbnails display source images through a local-only endpoint; no image processing or AI captioning is performed.</p></section>
+<header><a href="/workspace" id="back">← OrkiLab Workspace</a><h1>Dataset Studio <small class="muted">0.4 alpha</small></h1>
+<p class="muted" id="subtitle">Organize images by project without modifying your original files.</p></header>
+<main>
+<section aria-labelledby="help"><h2 id="help">How it works</h2>
+<p id="intro">Choose an existing image project, enter a folder on this computer, then inspect the library. Select items to mark reviewed or remove references. Source files are never changed.</p>
+<p class="muted" id="limits">Preview: image files only, one directory at a time (no subfolders). Captioning, quality checks and exports are planned.</p></section>
 <section aria-labelledby="library"><h2 id="library">Image library</h2>
-<div class="toolbar"><label>Project<select id="project"><option value="">Choose a project</option></select></label>
-<label>Folder on this computer<input id="folder" placeholder="D:\\datasets\\example" autocomplete="off"></label>
-<button id="import" type="button">Import images</button></div>
-<div class="toolbar" style="margin-top:16px"><label>Search images<input id="search" type="search" placeholder="Filter by name"></label>
-<p id="count" class="muted">No project selected</p><button type="button" id="refresh">Refresh</button></div>
+<div class="toolbar">
+<label><span id="project-label">Project</span><select id="project"><option value="">Choose a project</option></select></label>
+<label><span id="folder-label">Image folder (absolute path)</span><input id="folder" type="text" placeholder="D:\\datasets\\example" autocomplete="off"></label>
+<button id="import" type="button">Import images</button>
+</div>
+<div class="controls" style="margin-top:18px">
+<label><span id="search-label">Search by name</span><input id="search" type="search" placeholder="image_01"></label>
+<label><span id="filter-label">Review status</span><select id="review-filter"><option value="all">All</option><option value="unreviewed">Unreviewed</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></label>
+<label><span id="sort-label">Sort by</span><select id="sort"><option value="name">Name</option><option value="size">Size (largest first)</option><option value="resolution">Resolution (largest first)</option></select></label>
+<button id="refresh" type="button">Refresh</button></div>
+<div class="actions" aria-label="Selection actions">
+<button type="button" id="select-all">Select visible</button>
+<button type="button" id="select-none">Clear selection</button>
+<span class="muted" id="selected-count">0 selected</span>
+<button type="button" id="approve" disabled>Approve selected</button>
+<button type="button" id="reject" disabled>Reject selected</button>
+<button type="button" id="reset" disabled>Mark unreviewed</button>
+<button type="button" class="danger" id="remove" disabled>Remove selected references</button>
+</div>
+<p id="count" class="muted count">No project selected</p>
 <p role="status" aria-live="polite" class="status" id="status"></p>
-<div class="grid" id="images"></div></section></main>
+<div class="grid" id="images"></div>
+</section></main>
 <script>
 "use strict";
 const $=id=>document.getElementById(id), project=$("project"), images=$("images"), status=$("status");
-const translate={es:["Elige un proyecto","Carpeta en este equipo","Importar imágenes","Buscar imágenes","Actualizar","Sin proyecto seleccionado","No hay imágenes. Importa una carpeta para empezar.","Referencia eliminada; archivo original conservado."],
-en:["Choose a project","Folder on this computer","Import images","Search images","Refresh","No project selected","No images yet. Import a folder to begin.","Reference removed; original preserved."]};
-const lang=navigator.language.toLowerCase().startsWith("es")?"es":"en",tr=translate[lang];
-project.options[0].textContent=tr[0];document.querySelector('label:has(#folder)').firstChild.textContent=tr[1];
-$("import").textContent=tr[2];document.querySelector('label:has(#search)').firstChild.textContent=tr[3];
-$("refresh").textContent=tr[4];$("count").textContent=tr[5];
+const texts={
+en:["Choose a project","Image folder (absolute path)","Import images","Search by name","Refresh","No project selected","No images match these filters.","References removed; originals preserved.","Review status","Sort by","Select visible","Clear selection","Approve selected","Reject selected","Mark unreviewed","Remove selected references","selected","images","All","Unreviewed","Approved","Rejected","Name","Size (largest first)","Resolution (largest first)","Project","How it works","Image library","Organize images by project without modifying your original files.","Choose an image project, enter a folder on this computer, then inspect the library. Select items to mark reviewed or remove references. Source files are never changed.","Preview: image files only, one directory at a time (no subfolders). Captioning, quality checks and exports are planned.","Remove selected references from the library? Original images remain untouched.","Import completed; originals unchanged.","Missing","Remove reference"],
+es:["Elige un proyecto","Carpeta de imágenes (ruta absoluta)","Importar imágenes","Buscar por nombre","Actualizar","Ningún proyecto seleccionado","No hay imágenes con estos filtros.","Referencias retiradas; originales intactos.","Estado de revisión","Ordenar por","Seleccionar visibles","Limpiar selección","Aprobar selección","Rechazar selección","Marcar sin revisar","Retirar referencias seleccionadas","seleccionadas","imágenes","Todos","Sin revisar","Aprobadas","Rechazadas","Nombre","Tamaño (mayor primero)","Resolución (mayor primero)","Proyecto","Cómo funciona","Biblioteca de imágenes","Organiza imágenes por proyecto sin modificar los archivos originales.","Selecciona un proyecto de imágenes, introduce la carpeta local y consulta la biblioteca. Puedes revisar imágenes o retirar sus referencias sin modificar los originales.","Vista preliminar: solo imágenes, una carpeta cada vez (sin subcarpetas). El etiquetado, el análisis de calidad y la exportación llegarán después.","¿Retirar las referencias seleccionadas de la biblioteca? Los originales permanecerán intactos.","Importación terminada; originales intactos.","No disponible","Retirar referencia"],
+pt:["Escolha um projeto","Pasta de imagens (caminho absoluto)","Importar imagens","Pesquisar por nome","Atualizar","Nenhum projeto selecionado","Nenhuma imagem corresponde aos filtros.","Referências removidas; originais preservados.","Estado de revisão","Ordenar por","Selecionar visíveis","Limpar seleção","Aprovar selecionadas","Rejeitar selecionadas","Marcar não revistas","Remover referências selecionadas","selecionadas","imagens","Todas","Não revistas","Aprovadas","Rejeitadas","Nome","Tamanho (maior primeiro)","Resolução (maior primeiro)","Projeto","Como funciona","Biblioteca de imagens","Organize imagens por projeto sem alterar os originais.","Escolha um projeto, indique uma pasta local e reveja as imagens. Pode remover referências sem apagar os ficheiros.","Pré-visualização: só imagens, sem subpastas. Legendas, análise e exportação são futuras.","Remover as referências selecionadas? Os ficheiros originais serão mantidos.","Importação concluída; originais preservados.","Em falta","Remover referência"],
+fr:["Choisir un projet","Dossier d’images (chemin absolu)","Importer","Rechercher par nom","Actualiser","Aucun projet sélectionné","Aucune image correspondante.","Références supprimées, originaux conservés.","État de validation","Trier par","Tout sélectionner","Effacer la sélection","Approuver","Rejeter","Marquer non vérifié","Retirer les références","sélectionnées","images","Tous","À vérifier","Approuvées","Rejetées","Nom","Taille décroissante","Résolution décroissante","Projet","Mode d’emploi","Bibliothèque d’images","Organisez les images sans modifier les fichiers d’origine.","Choisissez un projet et un dossier local pour organiser vos images.","Aperçu : images uniquement, sans sous-dossiers. Légendes et analyses à venir.","Retirer les références sélectionnées ? Les originaux seront conservés.","Importation terminée, originaux conservés.","Manquante","Retirer"],
+de:["Projekt auswählen","Bildordner (absoluter Pfad)","Bilder importieren","Nach Namen suchen","Aktualisieren","Kein Projekt ausgewählt","Keine passenden Bilder.","Verweise entfernt; Originale bleiben erhalten.","Prüfstatus","Sortieren","Sichtbare auswählen","Auswahl aufheben","Freigeben","Ablehnen","Als ungeprüft markieren","Verweise entfernen","ausgewählt","Bilder","Alle","Ungeprüft","Freigegeben","Abgelehnt","Name","Größe absteigend","Auflösung absteigend","Projekt","Anleitung","Bildbibliothek","Bilder ohne Änderungen an Originalen organisieren.","Projekt und lokalen Ordner wählen, Bilder prüfen und Verweise verwalten.","Vorschau: nur Bilder ohne Unterordner. Beschriftung und Analyse folgen.","Ausgewählte Verweise entfernen? Originale bleiben erhalten.","Import abgeschlossen; Originale unverändert.","Fehlt","Verweis entfernen"],
+it:["Scegli progetto","Cartella immagini (percorso assoluto)","Importa immagini","Cerca per nome","Aggiorna","Nessun progetto selezionato","Nessuna immagine corrispondente.","Riferimenti rimossi, originali conservati.","Stato revisione","Ordina per","Seleziona visibili","Deseleziona","Approva","Rifiuta","Segna da rivedere","Rimuovi riferimenti","selezionate","immagini","Tutte","Da rivedere","Approvate","Rifiutate","Nome","Dimensione decrescente","Risoluzione decrescente","Progetto","Come funziona","Libreria immagini","Organizza le immagini senza modificare gli originali.","Scegli progetto e cartella locale per gestire i riferimenti alle immagini.","Anteprima: solo immagini senza sottocartelle. Didascalie e analisi arriveranno.","Rimuovere i riferimenti selezionati? Gli originali restano intatti.","Importazione completata; originali conservati.","Mancante","Rimuovi riferimento"],
+ja:["プロジェクトを選択","画像フォルダー（絶対パス）","画像を読み込む","名前で検索","更新","プロジェクト未選択","該当画像がありません。","参照を削除しました。元画像は保持されます。","確認状況","並べ替え","表示分を選択","選択解除","承認","却下","未確認に戻す","選択した参照を削除","選択","画像","すべて","未確認","承認済み","却下","名前","サイズ順","解像度順","プロジェクト","使い方","画像ライブラリ","元ファイルを変更せず画像を整理します。","プロジェクトとローカルフォルダーを選んで画像を確認できます。","プレビュー：画像のみ。サブフォルダーは対象外です。","選択した参照を削除しますか？元画像は残ります。","読み込み完了。元画像は変更されません。","見つかりません","参照を削除"],
+ko:["프로젝트 선택","이미지 폴더(절대 경로)","이미지 가져오기","이름 검색","새로 고침","프로젝트 미선택","일치하는 이미지가 없습니다.","참조만 제거했습니다. 원본은 유지됩니다.","검토 상태","정렬","보이는 항목 선택","선택 해제","승인","거부","미검토 표시","선택한 참조 제거","선택됨","이미지","전체","미검토","승인","거부","이름","크기순","해상도순","프로젝트","사용 방법","이미지 라이브러리","원본 파일을 수정하지 않고 이미지를 관리합니다.","프로젝트와 로컬 폴더를 선택해 이미지를 확인하세요.","미리보기: 이미지 전용. 하위 폴더는 제외됩니다.","선택한 참조를 제거할까요? 원본은 남습니다.","가져오기 완료. 원본은 그대로입니다.","없음","참조 제거"]};
+let lang=((typeof I18N!=="undefined"&&I18N.lang)||navigator.language||"en").slice(0,2).toLowerCase();if(!texts[lang])lang="en";const tr=texts[lang];document.documentElement.lang=lang;
+const bindings={"project-label":25,"folder-label":1,"import":2,"search-label":3,"refresh":4,"count":5,"review-filter":8,"sort-label":9,"select-all":10,"select-none":11,"approve":12,"reject":13,"reset":14,"remove":15,"help":26,"library":27,"subtitle":28,"intro":29,"limits":30};
+for(const [id,i] of Object.entries(bindings)){if(id!=="review-filter")$(id).textContent=tr[i]}
+project.options[0].textContent=tr[0];for(let i=0;i<4;i++)$("review-filter").options[i].textContent=tr[18+i];for(let i=0;i<3;i++)$("sort").options[i].textContent=tr[22+i];
+let current=[],selected=new Set(),busy=false,seq=0;
 function say(message){status.textContent=message}
-async function api(path,options={}){const response=await fetch(path,options);const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data}
+function endpoint(){return "/api/workspace/datasets/"+encodeURIComponent(project.value)}
+async function api(path,options={}){const response=await fetch(path,{credentials:"same-origin",...options});const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data}
+function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove"])$(id).disabled=busy||!project.value||!selected.size}
 async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}}catch(e){say(e.message)}}
-async function refresh(){images.replaceChildren();if(!project.value){$("count").textContent=tr[5];return}
-try{const search=$("search").value;const data=await api("/api/workspace/datasets/"+encodeURIComponent(project.value)+"?search="+encodeURIComponent(search));
-$("count").textContent=data.images.length+" images";
-if(!data.images.length){const p=document.createElement("p");p.className="muted";p.textContent=tr[6];images.append(p);return}
-for(const item of data.images){const card=document.createElement("article");card.className="card";
-if(!item.missing){const img=document.createElement("img");img.loading="lazy";img.alt=item.name;img.src="/api/workspace/datasets/"+encodeURIComponent(project.value)+"/"+encodeURIComponent(item.id);card.append(img)}
-const meta=document.createElement("div");meta.className="meta";const title=document.createElement("strong");title.textContent=item.name;meta.append(title);
-const detail=document.createElement("small");detail.className="muted";detail.textContent=(item.bytes/1048576).toFixed(2)+" MB"+(item.missing?" · Missing":"");meta.append(detail);
-const remove=document.createElement("button");remove.type="button";remove.textContent="Remove reference";remove.addEventListener("click",async()=>{if(!confirm("Remove library reference? Original image stays untouched."))return;try{await api("/api/workspace/datasets/"+encodeURIComponent(project.value)+"/"+item.id,{method:"DELETE"});say(tr[7]);await refresh()}catch(e){say(e.message)}});
-meta.append(document.createElement("br"),remove);card.append(meta);images.append(card)}
-}catch(e){say(e.message)}}
-project.addEventListener("change",refresh);$("refresh").addEventListener("click",refresh);
-$("search").addEventListener("input",refresh);
+function postJson(url,payload){return api(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})}
+async function refresh(){
+const requestSeq=++seq,projectId=project.value;images.replaceChildren();current=[];
+if(!projectId){$("count").textContent=tr[5];selected.clear();selectionUI();return}
+try{const qs=new URLSearchParams({search:$("search").value,review:$("review-filter").value,sort:$("sort").value});
+const data=await api(endpoint()+"?"+qs.toString());if(seq!==requestSeq||project.value!==projectId)return;
+current=data.images;const visible=new Set(current.map(item=>item.id));selected=new Set([...selected].filter(id=>visible.has(id)));
+$("count").textContent=current.length+" "+tr[17];selectionUI();
+if(!current.length){const p=document.createElement("p");p.className="muted";p.textContent=tr[6];images.append(p);return}
+const fragment=document.createDocumentFragment();
+for(const item of current){
+const card=document.createElement("article");card.className="card";card.classList.toggle("selected",selected.has(item.id));
+if(!item.missing){const img=document.createElement("img");img.loading="lazy";img.alt=item.name;img.src=endpoint()+"/"+encodeURIComponent(item.id);card.append(img)}
+const meta=document.createElement("div");meta.className="meta";const pick=document.createElement("label");pick.className="picker";
+const check=document.createElement("input");check.type="checkbox";check.checked=selected.has(item.id);check.setAttribute("aria-label",item.name);
+check.addEventListener("change",()=>{if(check.checked)selected.add(item.id);else selected.delete(item.id);card.classList.toggle("selected",check.checked);selectionUI()});
+const pickText=document.createElement("span");pickText.textContent=item.review;pick.append(check,pickText);meta.append(pick);
+const title=document.createElement("strong");title.textContent=item.name;meta.append(title);
+const detail=document.createElement("small");detail.textContent=(item.width&&item.height?item.width+" × "+item.height+" · ":"")+(item.bytes/1048576).toFixed(2)+" MB"+(item.missing?" · "+tr[33]:"");meta.append(detail);
+const button=document.createElement("button");button.type="button";button.textContent=tr[34];button.addEventListener("click",async()=>{if(!confirm(tr[31]))return;await batch("remove",[item.id])});meta.append(button);
+card.append(meta);fragment.append(card)}images.append(fragment)
+}catch(e){if(seq===requestSeq)say(e.message)}}
+async function batch(action,ids,review){
+if(!ids.length||busy||!project.value)return;busy=true;selectionUI();
+try{let updated=0;for(let n=0;n<ids.length;n+=200){const body={action,ids:ids.slice(n,n+200)};if(action==="review")body.review=review;const data=await postJson(endpoint()+"/batch",body);updated+=data.updated}
+selected.clear();say(updated+" · "+(action==="remove"?tr[7]:tr[12]));await refresh()
+}catch(e){say(e.message)}finally{busy=false;selectionUI()}}
+project.addEventListener("change",()=>{selected.clear();refresh()});
+$("refresh").addEventListener("click",refresh);$("search").addEventListener("input",refresh);
+$("review-filter").addEventListener("change",refresh);$("sort").addEventListener("change",refresh);
+$("select-all").addEventListener("click",()=>{for(const item of current)selected.add(item.id);refreshSelection()});
+$("select-none").addEventListener("click",()=>{selected.clear();refreshSelection()});
+function refreshSelection(){for(const card of images.querySelectorAll(".card")){const checkbox=card.querySelector('input[type="checkbox"]');const item=current[[...images.children].indexOf(card)];if(item){checkbox.checked=selected.has(item.id);card.classList.toggle("selected",checkbox.checked)}}selectionUI()}
+$("approve").addEventListener("click",()=>batch("review",[...selected],"approved"));
+$("reject").addEventListener("click",()=>batch("review",[...selected],"rejected"));
+$("reset").addEventListener("click",()=>batch("review",[...selected],"unreviewed"));
+$("remove").addEventListener("click",()=>{if(confirm(tr[31]))batch("remove",[...selected])});
 $("import").addEventListener("click",async()=>{if(!project.value){say(tr[0]);return}const folder=$("folder").value.trim();if(!folder){say(tr[1]);return}
-$("import").disabled=true;try{const data=await api("/api/workspace/datasets/"+encodeURIComponent(project.value),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({folder})});
-say(data.imported+" imported ("+data.scanned+" scanned). Originals unchanged.");await refresh()}catch(e){say(e.message)}finally{$("import").disabled=false}});
-projects();
+$("import").disabled=true;try{const data=await postJson(endpoint(),{folder});say(data.imported+" / "+data.scanned+" · "+tr[32]);await refresh()}catch(e){say(e.message)}finally{$("import").disabled=false}});
+selectionUI();projects();
 </script></body></html>
