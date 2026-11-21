@@ -68,6 +68,31 @@ class TrainingDatasetExportTests(unittest.TestCase):
         self.assertEqual(self.image.read_bytes(), self.original)
         self.assertFalse(self.image.with_suffix(".txt").exists())
 
+    def test_local_preparation_is_isolated_and_never_overwrites(self):
+        no_caption = self.client.post(self.export, json={
+            "mode": "prepare", "image_ids": [self.image_id], "confirm": True})
+        self.assertEqual(no_caption.status_code, 409)
+        caption = self.path + "/" + self.image_id + "/caption"
+        self.assertEqual(self.client.put(caption, json={
+            "caption": "test subject", "expected_revision": 0}).status_code, 200)
+        not_confirmed = self.client.post(self.export, json={
+            "mode": "prepare", "image_ids": [self.image_id]})
+        self.assertEqual(not_confirmed.status_code, 400)
+        payload = {"mode": "prepare", "image_ids": [self.image_id], "confirm": True}
+        first = self.client.post(self.export, json=payload)
+        second = self.client.post(self.export, json=payload)
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(second.status_code, 200)
+        first_path = Path(first.get_json()["path"])
+        second_path = Path(second.get_json()["path"])
+        self.assertNotEqual(first_path, second_path)
+        self.assertEqual((first_path / "test.png").read_bytes(), self.original)
+        self.assertEqual((first_path / "test.txt").read_text(encoding="utf-8"), "test subject")
+        self.assertTrue((first_path / "manifest.json").is_file())
+        self.assertFalse(first.get_json()["trainer_ready"])
+        self.assertEqual(self.image.read_bytes(), self.original)
+        self.assertFalse(self.image.with_suffix(".txt").exists())
+
     def test_invalid_cross_project_and_changed_source(self):
         invalid = self.client.post(self.export, json={
             "mode": "preview", "image_ids": ["b" * 32]})
