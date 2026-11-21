@@ -70,7 +70,7 @@ def register(app, base, load_config):
             projects = store.list(request.args.get("archived") == "1")
             # Image references live in Dataset Studio's separate SQLite database.
             dataset_db = base / "settings" / "orkilab" / "datasets.sqlite3"
-            counts, captioned = {}, {}
+            counts, captioned, sources, prepared = {}, {}, {}, {}
             if dataset_db.is_file():
                 try:
                     with sqlite3.connect(dataset_db, timeout=5) as conn:
@@ -84,12 +84,24 @@ def register(app, base, load_config):
                                 "JOIN dataset_captions c ON c.image_id=i.id AND c.project_id=i.project_id "
                                 "WHERE i.review != 'rejected' AND LENGTH(TRIM(c.caption)) > 0 "
                                 "GROUP BY i.project_id")}
+                        for project_id, path in conn.execute(
+                                "SELECT project_id,path FROM dataset_images ORDER BY project_id,path"):
+                            sources.setdefault(project_id, set()).add(str(Path(path).parent))
+                        if "dataset_preparations" in tables:
+                            for project_id, path in conn.execute(
+                                    "SELECT project_id,path FROM dataset_preparations ORDER BY rowid DESC"):
+                                prepared.setdefault(project_id, path)
                 except sqlite3.Error:
-                    counts, captioned = {}, {}
+                    counts, captioned, sources, prepared = {}, {}, {}, {}
             for project in projects:
-                project["dataset_image_count"] = counts.get(project["id"], 0)
-                project["dataset_caption_count"] = captioned.get(project["id"], 0)
-                project["dataset_train_ready"] = False  # Engine-specific export still pending.
+                project_id = project["id"]
+                project["dataset_image_count"] = counts.get(project_id, 0)
+                project["dataset_caption_count"] = captioned.get(project_id, 0)
+                project["dataset_source_folders"] = sorted(sources.get(project_id, ()))
+                prepared_path = prepared.get(project_id)
+                project["dataset_prepared_path"] = (
+                    prepared_path if prepared_path and Path(prepared_path).is_dir() else None)
+                project["dataset_train_ready"] = False  # Engine-specific validation pending.
             return jsonify({"projects": projects})
         if request.mimetype != "application/json":
             return jsonify({"error": "JSON required"}), 415
