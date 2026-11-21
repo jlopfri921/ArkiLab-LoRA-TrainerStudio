@@ -24,6 +24,12 @@ OLLAMA_BASE = "http://127.0.0.1:11434"
 MAX_MODEL_ITEMS = 40
 MAX_OLLAMA_JSON = 1024 * 1024
 MODEL_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,99}$")
+def cloud_model_name(name):
+    # Ollama can route an apparently local endpoint to cloud-backed models.
+    # Keep this adapter explicitly offline-only.
+    lower = name.lower()
+    return lower.endswith(":cloud") or lower.endswith("-cloud") or lower.endswith("/cloud")
+
 class NoRedirects(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, request, fp, code, message, headers, newurl):
         # Prevent Ollama/misconfigured local proxies from redirecting image
@@ -115,10 +121,10 @@ def register(app, db, project_exists, local, valid_origin):
                 raise ValueError("Invalid Ollama model list")
             matches = []
             for item in models[:MAX_MODEL_ITEMS]:
-                if not isinstance(item, dict) or item.get("remote_host"):
+                if not isinstance(item, dict) or item.get("remote_host") or item.get("remote_model"):
                     continue
                 name = item.get("name") or item.get("model")
-                if not isinstance(name, str) or not MODEL_PATTERN.fullmatch(name):
+                if not isinstance(name, str) or not MODEL_PATTERN.fullmatch(name) or cloud_model_name(name):
                     continue
                 try:
                     info = ollama_json("/api/show", {"model": name}, timeout=3)
@@ -180,7 +186,7 @@ def register(app, db, project_exists, local, valid_origin):
         if request_id is not None and (not isinstance(request_id, str)
                                      or not re.fullmatch("[0-9a-f]{32}", request_id)):
             return jsonify(error="Invalid generation token"), 400
-        if not isinstance(model, str) or not MODEL_PATTERN.fullmatch(model):
+        if not isinstance(model, str) or not MODEL_PATTERN.fullmatch(model) or cloud_model_name(model):
             return jsonify(error="Choose an installed Ollama vision model"), 400
         if not isinstance(prompt, str) or not 0 < len(prompt) <= MAX_PROMPT:
             return jsonify(error="Invalid caption prompt"), 400
