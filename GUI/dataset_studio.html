@@ -214,7 +214,7 @@ async function api(path,options={}){const response=await fetch(path,{credentials
 function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars"])$(id).disabled=busy||!project.value||!selected.size;
 $("compare-images").disabled=!project.value||scanning||busy}
 function scanControls(){ $("scan-quality").disabled=scanning||!project.value; $("cancel-scan").disabled=!scanning }
-async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}}catch(e){say(e.message)}}
+async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}const requested=new URLSearchParams(location.search).get("project");if(requested&&[...project.options].some(o=>o.value===requested)){project.value=requested;project.dispatchEvent(new Event("change"));}}catch(e){say(e.message)}}
 function postJson(url,payload){return api(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})}
 async function refresh(){
 const requestSeq=++seq,projectId=project.value;images.replaceChildren();current=[];
