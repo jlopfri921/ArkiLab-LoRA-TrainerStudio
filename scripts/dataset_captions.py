@@ -2,11 +2,15 @@
 
 No sidecar writes, model calls, image mutations or cloud requests.
 """
+import io
+import json
+import re
 import sqlite3
+import zipfile
 from contextlib import closing
 from datetime import datetime, timezone
 
-from flask import jsonify, request
+from flask import jsonify, request, send_file
 
 MAX_CAPTION_CHARS = 2000
 MAX_HISTORY = 25
@@ -97,6 +101,85 @@ def register(app, db, project_exists, local, valid_origin):
             except sqlite3.Error:
                 return jsonify(error="Could not save caption"), 500
             return jsonify(caption=caption, revision=revision, updated_at=now)
+
+
+    @app.post("/api/workspace/datasets/<project_id>/captions/export")
+    def export_caption_sidecars(project_id):
+        """Preview / download standalone UTF-8 .txt sidecars, never write to sources.
+
+        The generated archive contains captions/ and a JSON manifest. It does
+        not include or modify original images, .txt sidecars or project data.
+        """
+        if not local() or not valid_origin():
+            return jsonify(error="Caption exports require a local same-origin request"), 403
+        if not project_exists(project_id):
+            return jsonify(error="Active project not found"), 404
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 16000:
+            return jsonify(error="Invalid caption export request"), 400
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict):
+            return jsonify(error="Invalid caption export body"), 400
+        mode, image_ids = body.get("mode"), body.get("image_ids")
+        if (mode not in ("preview", "download") or not isinstance(image_ids, list)
+                or not 0 < len(image_ids) <= 200):
+            return jsonify(error="Select 1–200 indexed images"), 400
+        if any(not isinstance(value, str) or len(value) != 32
+               or any(c not in "0123456789abcdef" for c in value) for value in image_ids):
+            return jsonify(error="Invalid image identifier"), 400
+        if mode == "download" and body.get("confirm") is not True:
+            return jsonify(error="Confirm the non-destructive export first"), 400
+        image_ids = list(dict.fromkeys(image_ids))
+        with closing(db()) as conn:
+            ensure_schema(conn)
+            values = ",".join("?" for _ in image_ids)
+            found = conn.execute(
+                "SELECT images.id, images.name, captions.caption, captions.revision "
+                "FROM dataset_images AS images "
+                "LEFT JOIN dataset_captions AS captions "
+                "ON captions.image_id=images.id AND captions.project_id=images.project_id "
+                "WHERE images.project_id=? AND images.id IN (" + values + ")",
+                (project_id, *image_ids)
+            ).fetchall()
+        rows = {row["id"]: row for row in found}
+        if len(rows) != len(image_ids):
+            return jsonify(error="Selection contains missing project image references"), 409
+        items = []
+        for image_id in image_ids:
+            row = rows[image_id]
+            caption = row["caption"] or ""
+            if not caption.strip():
+                continue
+            # The ID suffix guarantees archive-name uniqueness even for equal
+            # basenames from different folders, Unicode names and case variants.
+            stem = row["name"].rsplit(".", 1)[0][:80]
+            stem = re.sub(r"[^\\w. -]", "_", stem, flags=re.UNICODE)
+            stem = stem.strip(" ._") or "image"
+            target = "captions/" + stem + "__" + image_id + ".txt"
+            items.append({"image_id": image_id, "image_name": row["name"],
+                          "file": target, "revision": row["revision"],
+                          "caption": caption})
+        result = {"selected": len(image_ids), "exportable": len(items),
+                  "skipped_empty": len(image_ids) - len(items),
+                  "files": [{"image_id": item["image_id"], "name": item["image_name"],
+                             "sidecar": item["file"], "revision": item["revision"]}
+                            for item in items]}
+        if mode == "preview":
+            return jsonify(result)
+        if not items:
+            return jsonify(error="No saved non-empty captions to export"), 400
+        output = io.BytesIO()
+        with zipfile.ZipFile(output, mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
+            for item in items:
+                archive.writestr(item["file"], item["caption"].encode("utf-8"))
+            archive.writestr("captions-manifest.json", json.dumps(
+                {"format": "orkilab-caption-sidecars-v1", "project_id": project_id,
+                 **result}, ensure_ascii=False, indent=2).encode("utf-8"))
+        output.seek(0)
+        response = send_file(output, mimetype="application/zip", as_attachment=True,
+                             download_name="orkilab-captions-" + project_id[:8] + ".zip")
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        return response
 
     @app.get("/api/workspace/datasets/<project_id>/<image_id>/caption/history")
     def caption_history(project_id, image_id):
