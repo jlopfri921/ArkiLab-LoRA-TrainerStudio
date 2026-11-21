@@ -72,7 +72,8 @@
         showMode(event.detail?.mode);
       });
       // Covers settings fetched before the DOM-ready event listener is installed.
-      if (window.H3_IMAGE === true) showMode('image');
+      if (document.body.dataset.orkiTrainerMode) showMode(document.body.dataset.orkiTrainerMode);
+      else if (window.H3_IMAGE === true) showMode('image');
     }
     if (nav.querySelectorAll('button').length) grid.parentNode.insertBefore(nav, grid);
   }
