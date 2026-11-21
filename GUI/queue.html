@@ -180,10 +180,41 @@
             .row img { width: 44px; height: 44px; }
             .top img { height: 40px; }
         }
+
+        /* Keep Job queue inside the same left-side Workspace navigation layout. */
+        body { padding: 0; }
+        .queue-shell { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 24px;
+                       width: min(1440px, 100%); margin: 0 auto; padding: 24px; align-items: start; }
+        .queue-sidebar { display: flex; flex-direction: column; gap: 8px; position: sticky; top: 24px;
+                         align-self: start; min-width: 0; }
+        .queue-sidebar a { display: block; padding: 12px; background: #152238; border: 1px solid transparent;
+                           border-radius: 9px; color: #e8f0fb; font: 15px system-ui, sans-serif;
+                           text-decoration: none; overflow-wrap: anywhere; }
+        .queue-sidebar a:hover { border-color: #3cdbd0; }
+        .queue-sidebar a[aria-current="page"] { background: #123445; border-color: #3cdbd0; color: #3cdbd0; }
+        .queue-sidebar a:focus-visible { outline: 2px solid #3cdbd0; outline-offset: 2px; }
+        .queue-sidebar .queue-zone-entry { border-color: #3cdbd0; color: #3cdbd0; font-weight: 600; }
+        .queue-shell > .wrap { min-width: 0; max-width: none; width: 100%; }
+        @media(max-width: 760px) {
+            .queue-shell { grid-template-columns: minmax(0,1fr); gap: 14px; padding: 14px; }
+            .queue-sidebar { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+            .queue-sidebar a { padding: 10px; font-size: 14px; }
+        }
     </style>
 <link rel="stylesheet" href="/assets/orkilab/orkilab-ui.css">
 </head>
 <body>
+<div class="queue-shell">
+<nav class="queue-sidebar" aria-label="Workspace sections">
+    <a href="/workspace#overview">Dashboard</a>
+    <a href="/workspace#projects">Projects</a>
+    <a href="/workspace#engines">Training engines</a>
+    <a href="/workspace#gpu-manager">GPU Manager</a>
+    <a href="/workspace#settings">Settings</a>
+    <a href="/workspace#shutdown">Pause all and exit</a>
+    <a href="/queue" aria-current="page">Job queue</a>
+    <a href="/workspace/comfyui" class="queue-zone-entry">ComfyUI Zone</a>
+</nav>
 <div class="wrap">
     <div class="top">
         <a href="/"><img src="/assets/orkilab/orkilab-logo-dark.svg" alt="OrkiLab"></a>
@@ -221,6 +252,7 @@
                 onclick="event.preventDefault(); clearHistory()">Clear history</button></span></summary>
         <div class="list" id="history"></div>
     </details>
+</div>
 </div>
 
 <div id="confirm" onclick="if (event.target === this) closeConfirm(false)">
