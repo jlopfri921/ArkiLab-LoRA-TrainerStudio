@@ -72,6 +72,10 @@ def model_evidence(graph):
         classes.append(kind)
         standard_loader = standard_loader or kind in NODE_LOADER
         if ui:
+            # The LoRA's filename must never be mistaken for evidence of
+            # which base diffusion model is loaded by this workflow.
+            if kind in NODE_LOADER or "lora" in kind.lower() or "lycoris" in kind.lower():
+                continue
             if "loader" not in kind.lower() and "checkpoint" not in kind.lower():
                 continue
             values = node.get("widgets_values", [])
