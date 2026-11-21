@@ -70,6 +70,7 @@ class LocalCaptionPreviewTests(unittest.TestCase):
                 self.assertFalse(body["stream"])
         fake = FakeOpener()
         fake.assertEqual = self.assertEqual
+        fake.assertIs = self.assertIs
         fake.assertFalse = self.assertFalse
         fake.data = self.data
         with patch("dataset_caption_vision.urllib.request.build_opener", return_value=fake):
