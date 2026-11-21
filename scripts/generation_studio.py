@@ -236,7 +236,7 @@ def register(app, base):
                     row = workflows_db.execute("SELECT category,name FROM workflows WHERE id=?", (item[1],)).fetchone()
                 if not row:
                     return jsonify(error="Saved workflow unavailable"),404
-                compatibility = assess_workflow(json.loads(saved), row[0], discovered["engine"], row[1])
+                compatibility = assess_workflow(item[4], row[0], discovered["engine"], row[1])
                 if compatibility["status"] != "candidate":
                     return jsonify(error="Workflow model family is not verified compatible with this project",
                                    detail=compatibility["reason"]),409

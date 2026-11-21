@@ -2060,5 +2060,12 @@
   "images have captions. Dataset prepared for training.": "개 이미지에 설명이 있습니다. 학습 데이터셋이 준비되었습니다.",
   "images have captions. Finish the descriptions and prepare the dataset before training.": "개 이미지에 설명이 있습니다. 설명을 완성하고 학습 전에 데이터셋을 준비하세요.",
   "images have captions. Prepare the dataset before training.": "개 이미지에 설명이 있습니다. 학습 전에 데이터셋을 준비하세요.",
-  "No images indexed for this project yet.": "이 프로젝트에 아직 등록된 이미지가 없습니다."
+  "No images indexed for this project yet.": "이 프로젝트에 아직 등록된 이미지가 없습니다.",
+  "LoRA Comparator": "LoRA 비교기",
+  "Select LoRA node": "LoRA 노드 선택",
+  "Confirm comparison": "비교 확인",
+  "Run comparison": "비교 실행",
+  "Project": "프로젝트",
+  "Stop after current": "현재 작업 후 중지",
+  "Compare results": "결과 비교"
 }

@@ -625,6 +625,12 @@ const compatibilityHints={
 };
 const compatText=compatibilityHints[I18N.lang]||compatibilityHints.en;
 function comparisonCatalog(){return checkMode()&&$("compare-checkpoint-project").value?projectCompareWorkflows:workflows}
+function selectedCompareWorkflow(){
+ const id=$("compare-workflow").value;
+ // When changing projects, the filtered catalog may be loading or may omit
+ // the already-prepared workflow. Keep its selection available for inspection.
+ return comparisonCatalog().find(w=>w.id===id)||workflows.find(w=>w.id===id);
+}
 function compatibilityReason(w){
  const compatibility=w.compatibility;
  if(!compatibility)return "";
@@ -643,6 +649,13 @@ function fillCompareWorkflows(){
  const matching=catalog.filter(w=>!search||(w.name+" "+(w.source||"")).toLowerCase().includes(search));
  const list=matching.filter(w=>!scoped||showAll||["candidate","needs_lora"].includes(w.compatibility?.status)||w.compatibility?.reason==="name_hint")
   .sort((a,b)=>scoped?Number(b.compatibility?.status==="candidate")-Number(a.compatibility?.status==="candidate")||a.name.localeCompare(b.name):order[compareCompatibility(a)]-order[compareCompatibility(b)]||a.name.localeCompare(b.name));
+ // Keep the selected workflow even if the new project's compatibility filter
+ // would hide it. Otherwise the dropdown clears and the prepared LoRA node
+ // appears to disappear, despite the Bridge having finished successfully.
+ if(scoped&&old&&!list.some(w=>w.id===old)){
+  const pinned=catalog.find(w=>w.id===old)||workflows.find(w=>w.id===old);
+  if(pinned)list.unshift(pinned);
+ }
  for(const w of list){
   const c=compareCompatibility(w);
   const prefix=scoped?(w.compatibility?.status==="candidate"?(I18N.lang==="es"?"Listo para comprobar":"Ready to validate"):w.compatibility?.status==="needs_lora"?(I18N.lang==="es"?"Falta LoRA loader":"Needs LoRA loader"):w.compatibility?.status==="incompatible"?compatText.incompatible:compatText.unverified)
@@ -662,7 +675,7 @@ function fillCompareWorkflows(){
  updateCompareSelection();
 }
 function updateCompareSelection(){
- const w=comparisonCatalog().find(w=>w.id===$("compare-workflow").value);
+ const w=selectedCompareWorkflow();
  const info=$("compare-workflow-help"),c=w?compareCompatibility(w):null,scoped=checkMode()&&!!$("compare-checkpoint-project").value;
  info.textContent=!w?t("Choose a workflow to begin."):
   scoped?compatibilityReason(w):
@@ -712,6 +725,8 @@ function updateCompareRunState(){
  const selected=checkMode()?chosenCheckpoints().length:0;
  const checkpointOk=!checkMode()||(
   !!$("compare-checkpoint-project").value&&selected>=2&&selected<=6);
+ // Compatibility must be verified using the Bridge-converted API graph on
+ // the server. The original UI workflow may contain opaque subgraphs.
  $("compare-run").disabled=compareRunning||!ready||!usable||!checkpointOk
   ||!$("compare-confirm").checked;
 }
@@ -799,12 +814,12 @@ $("compare-checkpoint-refresh").onclick=loadProjectCheckpoints;
 loadCheckpointProjects();
 
 $("gen-open-compare").onclick=()=>{$("compare-search").value="";fillCompareWorkflows();const chosen=[...$("compare-workflow").options].find(o=>o.value===$("generation-workflow").value&&!o.disabled);if(chosen)$("compare-workflow").value=chosen.value;updateCompareSelection();location.hash="compare";};
-$("compare-inspect").onclick=()=>{const w=comparisonCatalog().find(x=>x.id===$("compare-workflow").value);if(w)inspectWorkflow(w);};
+$("compare-inspect").onclick=()=>{const w=selectedCompareWorkflow();if(w)inspectWorkflow(w);};
 $("compare-search").oninput=fillCompareWorkflows;
 $("compare-workflow").onchange=()=>{$("compare-prepare-status").textContent="";updateCompareSelection();};
 $("compare-prepare").onclick=async()=>{
  if(compareRunning||generationBusy||generationPreparing)return;
- const id=$("compare-workflow").value,w=comparisonCatalog().find(x=>x.id===id);
+ const id=$("compare-workflow").value,w=selectedCompareWorkflow();
  if(!w)return;
  const out=$("compare-prepare-status");
  const scoped=checkMode()&&!!$("compare-checkpoint-project").value;
@@ -827,17 +842,17 @@ $("compare-prepare").onclick=async()=>{
   if(!generationToken)throw Error($("generation-status").textContent||t("Workflow preparation failed"));
   refreshCompare();
   const count=$("compare-node").options.length-1;
-  if(scoped&&w.compatibility?.status!=="candidate"){
-   out.textContent=(I18N.lang==="es"?"Workflow convertido, pero aún no está autorizado para comparar checkpoints: ":"Workflow converted but not yet eligible for checkpoint comparison: ")+compatibilityReason(w);
+  if(count){
+   out.textContent=t("Ready: {count} LoRA loader(s) available for comparison.",{count})+
+    (scoped&&w.compatibility?.status!=="candidate"
+     ?(I18N.lang==="es"?" · La compatibilidad del modelo se comprobará sobre el workflow convertido al ejecutar la comparación.":" · Model compatibility will be verified using the converted workflow when the comparison starts.")
+     :"");
   }else{
-   if(count)out.textContent=t("Ready: {count} LoRA loader(s) available for comparison.",{count});
-   else{
     const graph=JSON.parse($("generation-graph").textContent||"{}");
     const loaders=Object.values(graph).filter(n=>["LoraLoader","LoraLoaderModelOnly"].includes(n?.class_type));
     out.textContent=loaders.length
      ?(I18N.lang==="es"?"Workflow preparado, pero el cargador LoRA no tiene lora_name y strength_model editables. Comprueba sus conexiones.":"Workflow prepared, but lora_name and strength_model are not editable on its LoRA loader. Check its links.")
      :t("No compatible standard LoRA loader found. Try a workflow with LoraLoader or LoraLoaderModelOnly.");
-   }
   }
  }catch(e){out.textContent=e.message;}
  finally{bridgeViaComparator=false;updateCompareSelection();}
