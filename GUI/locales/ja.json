@@ -2047,5 +2047,15 @@
   "Console": "コンソール",
   "Generated previews": "生成プレビュー",
   "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image: 画像および編集用 LoRA。このモードでは動画・音声の設定は使用できません。",
-  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: 動画・音声用 LoRA。"
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: 動画・音声用 LoRA。",
+  "Train project": "プロジェクトを学習",
+  "Opens the trainer selected in this project. First prepare a compatible dataset.": "このプロジェクトで選んだトレーナーを開きます。先に対応データセットを準備してください。",
+  "No images indexed for this project yet. Import images in Dataset Studio.": "画像がまだ紐付いていません。Dataset Studioで読み込んでください。",
+  "{count} of {total} images have saved descriptions. A training folder has been prepared.": "{total}枚中{count}枚に説明が保存されています。学習用フォルダーは準備済みです。",
+  "{count} of {total} images have saved descriptions. Add the missing descriptions in Dataset Studio, then select the images and prepare the training folder.": "{total}枚中{count}枚に説明が保存されています。Dataset Studioで残りの説明を追加し、画像を選んで学習用フォルダーを準備してください。",
+  "All {total} images have descriptions. Select them in Dataset Studio and prepare the training folder.": "{total}枚すべてに説明があります。Dataset Studioで選択し、学習用フォルダーを準備してください。",
+  "Project dataset folder does not exist; choose a valid absolute folder": "プロジェクトのデータセットフォルダーが存在しません。有効な絶対パスを選んでください。",
+  "No dataset linked to this project; prepare one in Dataset Studio": "このプロジェクトにデータセットが紐付いていません。Dataset Studioで準備してください。",
+  "Prepared dataset was moved or removed; prepare it again": "準備済みデータセットが移動または削除されました。再度準備してください。",
+  "Selected trainer does not match the project": "選択したトレーナーがプロジェクトの設定と一致しません。"
 }
