@@ -132,6 +132,31 @@
             }).catch(() => {});
         }
         head.classList.add("orki-app-header");
+        // Pre-rendered canonical header is interactive even if the Workspace
+        // fetch fails; the later canonical clone will rebind its own controls.
+        const readySelector=head.querySelector("#workspace-language");
+        if(readySelector&&typeof I18N!=="undefined"&&!readySelector.options.length){
+            for(const [code,label] of I18N.languages)readySelector.add(new Option(label,code));
+            readySelector.value=I18N.lang;
+            readySelector.addEventListener("change",async()=>{
+                const previous=I18N.lang;readySelector.disabled=true;
+                try{
+                    const response=await fetch("/api/i18n",{method:"POST",credentials:"same-origin",
+                        headers:{"Content-Type":"application/json"},
+                        body:JSON.stringify({language:readySelector.value})});
+                    if(!response.ok)throw Error("Language change failed");
+                    location.reload();
+                }catch(error){
+                    readySelector.value=previous;
+                    readySelector.disabled=false;
+                }
+            });
+            fetch("/api/workspace/overview",{credentials:"same-origin"})
+                .then(response=>response.ok?response.json():null)
+                .then(data=>{const version=head.querySelector("#version");
+                    if(version&&data?.version)version.textContent=data.version})
+                .catch(()=>{});
+        }
         const languageText = head.querySelector("#orki-shell-language-label");
         if (languageText) languageText.textContent = typeof I18N !== "undefined" ? I18N.translate("Language") : "Language";
         const selector = head.querySelector("#orki-shell-language");
