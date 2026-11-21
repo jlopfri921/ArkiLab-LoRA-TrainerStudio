@@ -63,6 +63,18 @@ class ProjectHandoffTests(unittest.TestCase):
         with self.assertRaises(HandoffError):
             make_draft(self.root, self.project, "flux1")
 
+    def test_indexed_images_with_placeholder_path_get_actionable_error(self):
+        with closing(sqlite3.connect(self.projects_db)) as conn, conn:
+            conn.execute("UPDATE projects SET dataset='para probar' WHERE id=?",
+                         (self.project,))
+        with closing(sqlite3.connect(self.dataset_db)) as conn, conn:
+            conn.execute("DELETE FROM dataset_preparations")
+            conn.execute("CREATE TABLE dataset_images (id TEXT PRIMARY KEY, project_id TEXT)")
+            conn.execute("INSERT INTO dataset_images VALUES (?,?)",
+                         ("c" * 32, self.project))
+        with self.assertRaisesRegex(HandoffError, "Images are linked in Dataset Studio"):
+            make_draft(self.root, self.project, "flux1")
+
     def test_other_modality_can_use_explicit_project_directory(self):
         dataset = self.root / "audio_data"
         dataset.mkdir()
