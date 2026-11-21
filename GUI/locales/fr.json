@@ -2047,5 +2047,13 @@
   "Console": "Console",
   "Generated previews": "Aperçus générés",
   "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image : LoRA d’image et de retouche. Les contrôles vidéo et audio ne sont pas disponibles dans ce mode.",
-  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3 : LoRA vidéo et audio."
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3 : LoRA vidéo et audio.",
+  "Comparison type": "Type de comparaison",
+  "Project checkpoints": "Checkpoints du projet",
+  "LoRA strengths": "Intensités LoRA",
+  "Refresh checkpoints": "Actualiser les checkpoints",
+  "Select image project": "Choisir un projet d’images",
+  "Select 2–6 checkpoints. To generate images, copy their .safetensors files into ComfyUI/models/loras and refresh ComfyUI. All variants use the unchanged workflow prompt and seed. Generation is blocked during training.": "Sélectionnez 2 à 6 checkpoints. Copiez les fichiers .safetensors dans ComfyUI/models/loras et actualisez les modèles ComfyUI. Toutes les variantes conservent le même prompt et la même graine. La génération est bloquée pendant l’entraînement.",
+  "The selected LoRA strength or checkpoint is the only setting that changes. Prompt, seed and all other settings remain unchanged. Runs are sequential; Stop prevents new submissions but does not interrupt the current job.": "Seule la force LoRA ou le checkpoint sélectionné change. Le prompt, la graine et les autres paramètres restent identiques. Les générations sont séquentielles ; Arrêter empêche de nouveaux envois mais ne stoppe pas le travail en cours.",
+  "Projects link datasets and detect saved training checkpoints. Checkpoint comparison requires a compatible workflow and LoRA files available to ComfyUI; OrkiLab never copies them automatically.": "Les projets associent les datasets et détectent les checkpoints enregistrés. La comparaison nécessite un workflow compatible et les fichiers LoRA présents dans ComfyUI ; OrkiLab ne les copie jamais automatiquement."
 }

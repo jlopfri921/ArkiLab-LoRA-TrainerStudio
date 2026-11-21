@@ -2047,5 +2047,13 @@
   "Console": "Konsole",
   "Generated previews": "Erzeugte Vorschauen",
   "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image: Bild- und Bearbeitungs-LoRAs. Video- und Audiosteuerungen stehen in diesem Modus nicht zur Verfügung.",
-  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: Video- und Audio-LoRAs."
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: Video- und Audio-LoRAs.",
+  "Comparison type": "Vergleichstyp",
+  "Project checkpoints": "Projekt-Checkpoints",
+  "LoRA strengths": "LoRA-Stärken",
+  "Refresh checkpoints": "Checkpoints aktualisieren",
+  "Select image project": "Bildprojekt auswählen",
+  "Select 2–6 checkpoints. To generate images, copy their .safetensors files into ComfyUI/models/loras and refresh ComfyUI. All variants use the unchanged workflow prompt and seed. Generation is blocked during training.": "Wähle 2–6 Checkpoints. Kopiere die .safetensors-Dateien nach ComfyUI/models/loras und aktualisiere die Modelle in ComfyUI. Alle Varianten verwenden denselben Prompt und Seed. Während des Trainings ist die Generierung gesperrt.",
+  "The selected LoRA strength or checkpoint is the only setting that changes. Prompt, seed and all other settings remain unchanged. Runs are sequential; Stop prevents new submissions but does not interrupt the current job.": "Nur die LoRA-Stärke oder der ausgewählte Checkpoint ändert sich. Prompt, Seed und alle anderen Einstellungen bleiben gleich. Generierungen laufen nacheinander; Stopp verhindert weitere Einreichungen, unterbricht jedoch nicht den aktuellen Auftrag.",
+  "Projects link datasets and detect saved training checkpoints. Checkpoint comparison requires a compatible workflow and LoRA files available to ComfyUI; OrkiLab never copies them automatically.": "Projekte verknüpfen Datensätze und erkennen gespeicherte Checkpoints. Für den Vergleich sind ein kompatibler Workflow und verfügbare LoRA-Dateien in ComfyUI erforderlich; OrkiLab kopiert diese niemals automatisch."
 }

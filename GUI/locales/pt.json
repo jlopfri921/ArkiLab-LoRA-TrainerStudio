@@ -2047,5 +2047,13 @@
   "Console": "Consola",
   "Generated previews": "Pré-visualizações geradas",
   "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image: LoRA de imagem e edição. Os controlos de vídeo e áudio não estão disponíveis neste modo.",
-  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: LoRA de vídeo e áudio."
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: LoRA de vídeo e áudio.",
+  "Comparison type": "Tipo de comparação",
+  "Project checkpoints": "Checkpoints do projeto",
+  "LoRA strengths": "Intensidades LoRA",
+  "Refresh checkpoints": "Atualizar checkpoints",
+  "Select image project": "Escolher projeto de imagens",
+  "Select 2–6 checkpoints. To generate images, copy their .safetensors files into ComfyUI/models/loras and refresh ComfyUI. All variants use the unchanged workflow prompt and seed. Generation is blocked during training.": "Selecione 2–6 checkpoints. Copie os ficheiros .safetensors para ComfyUI/models/loras e atualize os modelos no ComfyUI. Todas as variantes mantêm o mesmo prompt e seed. A geração fica bloqueada durante o treino.",
+  "The selected LoRA strength or checkpoint is the only setting that changes. Prompt, seed and all other settings remain unchanged. Runs are sequential; Stop prevents new submissions but does not interrupt the current job.": "Só muda a intensidade LoRA ou o checkpoint selecionado. O prompt, a seed e os outros parâmetros mantêm-se. As gerações são sequenciais; Parar impede novos envios mas não interrompe o trabalho atual.",
+  "Projects link datasets and detect saved training checkpoints. Checkpoint comparison requires a compatible workflow and LoRA files available to ComfyUI; OrkiLab never copies them automatically.": "Os projetos ligam datasets e detetam checkpoints guardados. A comparação requer um workflow compatível e os ficheiros LoRA disponíveis no ComfyUI; o OrkiLab nunca os copia automaticamente."
 }

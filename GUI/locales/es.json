@@ -2217,5 +2217,13 @@
   "Console": "Consola",
   "Generated previews": "Vistas previas generadas",
   "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image: LoRA de imagen y edición. Los controles de vídeo y audio no están disponibles en este modo.",
-  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: LoRA de vídeo y audio."
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: LoRA de vídeo y audio.",
+  "Comparison type": "Tipo de comparación",
+  "Project checkpoints": "Checkpoints del proyecto",
+  "LoRA strengths": "Intensidades LoRA",
+  "Refresh checkpoints": "Actualizar checkpoints",
+  "Select image project": "Selecciona un proyecto de imágenes",
+  "Select 2–6 checkpoints. To generate images, copy their .safetensors files into ComfyUI/models/loras and refresh ComfyUI. All variants use the unchanged workflow prompt and seed. Generation is blocked during training.": "Selecciona entre 2 y 6 checkpoints. Para generar imágenes, copia los archivos .safetensors en ComfyUI/models/loras y actualiza los modelos de ComfyUI. Todas las versiones usan el mismo prompt y semilla. No se permite generar durante un entrenamiento.",
+  "The selected LoRA strength or checkpoint is the only setting that changes. Prompt, seed and all other settings remain unchanged. Runs are sequential; Stop prevents new submissions but does not interrupt the current job.": "Solo cambia la intensidad LoRA o el checkpoint seleccionado. El prompt, la semilla y el resto de parámetros permanecen iguales. Las generaciones son secuenciales; Detener evita nuevos envíos, pero no interrumpe la generación en curso.",
+  "Projects link datasets and detect saved training checkpoints. Checkpoint comparison requires a compatible workflow and LoRA files available to ComfyUI; OrkiLab never copies them automatically.": "Los proyectos vinculan datasets y detectan checkpoints guardados. Para compararlos hace falta un workflow compatible y disponer de los archivos LoRA en ComfyUI; OrkiLab nunca los copia automáticamente."
 }

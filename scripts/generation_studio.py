@@ -195,6 +195,70 @@ def register(app, base):
         except (ValueError,TypeError,KeyError,RecursionError) as exc:
             return jsonify(error="Comparison preparation failed",detail=str(exc)[:300]),400
 
+    @app.post("/api/workspace/generation/compare/checkpoints")
+    def compare_project_checkpoints():
+        """Prepare checkpoint variants; never copy model files or change the saved workflow.
+
+        Each candidate must be an existing project checkpoint and a recognized
+        lora_name choice in this ComfyUI install. The graph's prompt/seed and
+        all other parameters are unchanged across the variants.
+        """
+        if not local():
+            return jsonify(error="Manage checkpoints on the launcher PC"), 403
+        if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 8192:
+            return jsonify(error="Invalid request"), 400
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict):
+            return jsonify(error="Invalid request"), 400
+        token, node_id, project_id = body.get("token"), body.get("node"), body.get("project_id")
+        names = body.get("checkpoints")
+        if not all(isinstance(v, str) for v in (token, node_id, project_id)):
+            return jsonify(error="Select a prepared workflow, LoRA node and project"), 400
+        if not isinstance(names, list) or not 2 <= len(names) <= 6 or not all(isinstance(x,str) for x in names) or len(names) != len(set(names)):
+            return jsonify(error="Choose 2 to 6 different checkpoints"), 400
+        cfg = config()
+        if cfg["mode"] == "native":
+            return jsonify(error="ComfyUI is disabled in native mode"), 409
+        import project_checkpoints
+        try:
+            discovered = project_checkpoints.inventory(base, project_id)
+            if not all(name in {x["name"] for x in discovered["checkpoints"]} for name in names):
+                return jsonify(error="One or more checkpoints are missing from the project outputs"), 409
+            with lock:
+                item = prepared.get(token)
+                if not item or time.monotonic()-item[0]>1800 or item[2]!=cfg["url"]:
+                    return jsonify(error="Prepare workflow before generating"),409
+                node = item[4].get(node_id, {})
+                if node.get("class_type") not in ("LoraLoader", "LoraLoaderModelOnly"):
+                    return jsonify(error="Choose a standard LoRA loader"),400
+                lora_field = next((f for f in item[5] if f["node"]==node_id and f["name"]=="lora_name"), None)
+                if not lora_field or lora_field.get("kind")!="choice":
+                    return jsonify(error="The workflow LoRA filename is not editable"),409
+                choices = set(x for x in lora_field["choices"] if isinstance(x, str))
+                missing = [name for name in names if name not in choices]
+                if missing:
+                    return jsonify(error="Checkpoints not installed in ComfyUI/models/loras",
+                                   detail="Copy the project checkpoint files into ComfyUI's LoRA folder and refresh ComfyUI model lists: "+", ".join(missing)[:300]),409
+                if len(prepared)+len(names)>20:
+                    for key in list(prepared):
+                        if key != token and len(prepared)+len(names)>20:
+                            prepared.pop(key)
+                if len(prepared)+len(names)>20:
+                    return jsonify(error="Too many pending comparison variants"),409
+                variants=[]
+                for name in names:
+                    graph=apply_edits(item[4],item[5],[{"node":node_id,"name":"lora_name","value":name}])
+                    validate_prompt(graph,item[6])
+                    key=uuid.uuid4().hex
+                    prepared[key]=(time.monotonic(),*item[1:4],graph,editable_fields(graph,item[6]),item[6])
+                    step=next(x["step"] for x in discovered["checkpoints"] if x["name"]==name)
+                    variants.append({"step":step,"name":name,"token":key})
+            return jsonify(workflow_id=item[1], variants=variants)
+        except LookupError as exc:
+            return jsonify(error=str(exc)),404
+        except (OSError,ValueError,TypeError,KeyError,RecursionError) as exc:
+            return jsonify(error="Checkpoint comparison preparation failed",detail=str(exc)[:300]),400
+
     @app.post("/api/workspace/generation")
     def generation_submit():
         if not local():
