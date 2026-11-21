@@ -77,7 +77,7 @@ class ProjectCheckpointUiTests(unittest.TestCase):
             'id="compare-checkpoint-refresh"', 'function loadProjectCheckpoints()',
             'function chosenCheckpoints()', '/checkpoints',
             '/api/workspace/generation/compare/checkpoints', 'checkpointMode',
-            'compare.href="/workspace?checkpoint_project="',
+            'compare.href="/workspace/comfyui?checkpoint_project="',
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, self.html)
