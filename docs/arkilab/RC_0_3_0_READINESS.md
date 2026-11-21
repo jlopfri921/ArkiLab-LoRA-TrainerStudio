@@ -23,8 +23,8 @@ Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, e
 
 | Gate | Status as of review | Proof needed | Blocking when failing? |
 | --- | --- | --- | --- |
-| Windows CI unit tests | PASS — PR #39 CI branch commit | Actions run 44846938042 and foundation run 44846938103; revalidate exact final release commit | Yes |
-| Linux CI unit tests | PASS — PR #39 CI branch commit | Actions run 44846938042 and foundation run 44846938103; revalidate exact final release commit | Yes |
+| Windows CI unit tests | PASS — PR #42 head (before latest docs edit) | RC run 44847212885 + foundation run 44847212900; rerun on final merged commit | Yes |
+| Linux CI unit tests | PASS — PR #42 head (before latest docs edit) | RC run 44847212885 + foundation run 44847212900; rerun on final merged commit | Yes |
 | Browser trainer smoke test | REPORTED PASS — full local suite | User confirms all trainers OK after 3/3 observed sample; exact count, log and SHA not attached | Yes for regression |
 | Workspace/ComfyUI connection gate | REPORTED PASS — disconnect state | Operator confirms correct ComfyUI disconnected-state display; connect and broader routes not separately evidenced | Yes |
 | API-format workflow prepare/execute | REPORTED | Trusted graph identifier, status and output | Yes |
@@ -37,8 +37,8 @@ Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, e
 | LoRA Comparator standard-loader path | DEFERRED — not verified in this RC | Do not claim comparator stability; run two-strength test before a later validated release | No — explicitly excluded from rc.1 acceptance |
 | 8-language Workspace navigation | NOT VERIFIED | Browser screenshots/smoke, English fallback | Yes for UI regression |
 | Trainer representative image/video/audio | NOT VERIFIED | Brief per-family tests, saved settings parity | Yes for regression |
-| Failure handling / auth / invalid node | NOT VERIFIED | Negative tests including missing ComfyUI and malformed workflow | Yes |
-| Preservation and safe update | NOT VERIFIED | Clean upgrade from preceding RC, diff and data retention | Yes |
+| Failure handling / auth / invalid node | REPORTED PASS — invalid workflow, offline state | Operator tested an invalid workflow and earlier disconnected-state behavior; malformed-graph details, auth and hostile/unauthorized requests NOT VERIFIED | Yes — remaining critical cases |
+| Preservation and safe update | REPORTED PASS — safe update | Operator confirms updating OrkiLab preserved projects, settings and workflows; exact SHA and data inventory not attached | Yes |
 | Changelog, README, limitations | PARTIAL | Updated results and known limitations before tag | Yes |
 
 Some user-reported hands-on runs are documented in project conversations; the evidence matrix [GPU_GENERATION_ACCEPTANCE.md](GPU_GENERATION_ACCEPTANCE.md) still shows `NOT TESTED` for the individual scenarios. Record observed outcomes there before setting this gate to PASS.
@@ -100,6 +100,24 @@ PR #39 was merged into `main` with squash commit `289e6859843c1bf6c93591a84023ea
 
 The proposed version bump, README badge and changelog from draft PR #40 have been reapplied onto current `main` on branch `release/0.3.0-rc.1-final-checks`, which includes the merged Windows/Linux CI workflow. **The branch is a candidate, not a publication.** Both CI platforms must pass on this branch and on the final merged/tagged release commit. The user reported successful local tests and core ComfyUI scenarios, but missing failure/upgrade screenshots or logs remain unverified and must not be inferred as passed.
 
+## Final operator acceptance: invalid workflow and upgrade (2026-11-21)
+
+The operator explicitly reported:
+
+| Scenario | Operator result | Recorded limitation |
+| --- | --- | --- |
+| Invalid workflow | **REPORTED PASS** | The specific error type, before/after queue state and failure message were not supplied; do not extrapolate to unauthorized connections, custom-node failures or other malformed inputs |
+| Safe OrkiLab update | **REPORTED PASS** | Exact before/after SHA and backed-up data inventory were not supplied; does not prove clean-install portability or rollback |
+
+**Four CI jobs verified on PR #42 head commit `52b4a98f3089c26ce8201cf37d0f25dd1f7a55a4`:** run `44847212885` (`OrkiLab RC validation`) passed Python 3.13 on Windows and Ubuntu; run `44847212900` (`OrkiLab foundation checks`) passed on Windows and Ubuntu. These results are independently verified GitHub Actions outcomes for the candidate prior to this documentation edit, **not** proof of the final merge commit.
+
+### Still to resolve before tagging
+
+- Unauthorized remote access and sensitive-data safety have not been explicitly exercised as acceptance cases. Do not claim security validation based on the invalid-workflow test.
+- Multi-language navigation/fallback, exact GPU sensor parity and every media-preview format have not been separately verified. Document these as RC limitations or run the missing cases.
+- Confirm the final PR SHA checks and the eventual `main` release SHA are green. The detailed scenario-specific GPU matrix still has unchecked entries; the operator-level checklist must not be misrepresented as equivalent evidence.
+- No tag or GitHub prerelease should be called published without a successful GitHub action creating them.
+
 ## Suggested safe operator command sequence
 
 Run in the local Windows installation with ComfyUI Desktop; stop on errors rather than resetting uncommitted work:
@@ -134,4 +152,4 @@ Then follow the step-by-step [GPU/Generation acceptance matrix](GPU_GENERATION_A
 5. Publish a GitHub prerelease with installation/update and rollback instructions, supported workflow examples, known issues and links to the evidence.
 6. Retain prior candidate as rollback option; do not force-reset or overwrite datasets, workflows, settings or outputs.
 
-**Next decision:** collect release-commit CI and critical ComfyUI/GPU acceptance evidence, then prepare the release PR. Do not gate rc.1 on the unverified comparator. This document alone does not unblock publishing.
+**Next decision:** PR #42 is the candidate. Confirm remaining security/error cases and exact-release-commit CI, then publish if no critical risk is outstanding. The experimental LoRA Comparator is not a release gate.
