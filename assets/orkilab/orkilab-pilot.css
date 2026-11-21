@@ -32,50 +32,50 @@ body.orki-pilot .panel-title{scroll-margin-top:155px}
 .orki-pilot-nav .orki-setting-results button:focus-visible{outline:2px solid #3cdbd0;outline-offset:2px}
 @media(max-width:960px){.orki-pilot-nav .orki-setting-search{flex:1 1 100%}}
 
-/* SDXL first compact panel pilot. Scoped to the already active modern layout.
+/* Shared image trainer compact panels (SDXL, FLUX and Qwen). Scoped to the active modern layout.
    Existing controls, values, IDs, handlers and mode visibility are unchanged. */
 @media (min-width: 961px) {
-  body.orki-pilot[data-orki-engine="sdxl"] .main-grid { grid-template-columns: 210px minmax(0,1fr); }
-  body.orki-pilot[data-orki-engine="sdxl"] .sidebar .panel-body { max-width: none; }
-  body.orki-pilot[data-orki-engine="sdxl"] .sidebar .panel-body > .form-group { max-width: 100%; }
-  body.orki-pilot[data-orki-engine="sdxl"] .sidebar .form-row {
+  body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .main-grid { grid-template-columns: 210px minmax(0,1fr); }
+  body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .panel-body { max-width: none; }
+  body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .panel-body > .form-group { max-width: 100%; }
+  body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .form-row {
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(min(220px,100%),1fr));
     gap: 10px 16px;
     align-items: start;
   }
 }
-body.orki-pilot[data-orki-engine="sdxl"] .sidebar .panel {
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .panel {
   min-width: 0;
   padding: clamp(12px,1.8vw,20px);
 }
-body.orki-pilot[data-orki-engine="sdxl"] .sidebar .panel-title {
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .panel-title {
   margin-bottom: 12px;
   padding-bottom: 10px;
 }
-body.orki-pilot[data-orki-engine="sdxl"] .sidebar .form-group { min-width: 0; margin-bottom: 9px; }
-body.orki-pilot[data-orki-engine="sdxl"] .sidebar .form-group input:not([type=checkbox]):not([type=radio]),
-body.orki-pilot[data-orki-engine="sdxl"] .sidebar .form-group select,
-body.orki-pilot[data-orki-engine="sdxl"] .sidebar .form-group textarea { min-width: 0; max-width: 100%; }
-body.orki-pilot[data-orki-engine="sdxl"] .sidebar .form-group > div[style*="display:flex"] {
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .form-group { min-width: 0; margin-bottom: 9px; }
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .form-group input:not([type=checkbox]):not([type=radio]),
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .form-group select,
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .form-group textarea { min-width: 0; max-width: 100%; }
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .form-group > div[style*="display:flex"] {
   min-width:0; flex-wrap:wrap;
 }
-body.orki-pilot[data-orki-engine="sdxl"] .sidebar .form-group > div[style*="display:flex"] > input {
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .form-group > div[style*="display:flex"] > input {
   flex:1 1 190px;
 }
-body.orki-pilot[data-orki-engine="sdxl"] .orki-pilot-nav {
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .orki-pilot-nav {
   border-radius: 13px;
 }
-body.orki-pilot[data-orki-engine="sdxl"] .orki-pilot-nav .orki-mode-row {
+body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .orki-pilot-nav .orki-mode-row {
   border-top: 1px solid #30445e;
   padding-top: 10px;
   margin-top: 4px;
 }
 @media(max-width: 960px) {
-  body.orki-pilot[data-orki-engine="sdxl"] .sidebar .form-row {
+  body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .form-row {
     grid-template-columns: repeat(auto-fit,minmax(min(190px,100%),1fr));
   }
 }
 @media(max-width: 520px) {
-  body.orki-pilot[data-orki-engine="sdxl"] .sidebar .form-row { grid-template-columns: 1fr; }
+  body.orki-pilot:is([data-orki-engine="sdxl"],[data-orki-engine="flux1"],[data-orki-engine="flux3klein"],[data-orki-engine="klein9b"],[data-orki-engine="qwenimage21"],[data-orki-engine="qwenimage2512"]) .sidebar .form-row { grid-template-columns: 1fr; }
 }
