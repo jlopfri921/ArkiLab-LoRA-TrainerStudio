@@ -712,6 +712,10 @@ $("gpu-history-clear").onclick=()=>{gpuHistory=[];renderGpuHistory();};
 let gpuTimer=null,gpuLoading=false;
 const gpuFormat=(v,u="")=>typeof v==="number"&&Number.isFinite(v)?new Intl.NumberFormat(I18N.lang,{maximumFractionDigits:1}).format(v)+u:t("Unavailable");
 function gpuStat(label,value){const x=el("div",undefined,"gpu-stat");x.append(el("span",t(label),"muted"),el("strong",value));return x;}
+// Preserve each GPU's explicit expand/collapse choice across telemetry updates.
+// Rendering recreates the cards every 5 seconds, so native <details> state
+// must be restored before the card is inserted into the document.
+const gpuHardwareDetailsOpen=new Map();
 function renderGpu(data){
  const root=$("gpu-cards"),overview=$("gpu-overview");root.replaceChildren();overview.replaceChildren();
  const cards=data.gpus||[];
@@ -749,6 +753,13 @@ function renderGpu(data){
    gpuStat("Power draw",gpuFormat(gpu.power_draw_w," W")));
   card.append(stats);
   const details=el("details",undefined,"gpu-more"),summary=el("summary",t("Hardware and driver details"));
+  const hardwareKey=String(gpu.pci_bus_id||"gpu-index-"+gpu.index);
+  details.open=gpuHardwareDetailsOpen.get(hardwareKey)===true;
+  details.addEventListener("toggle",()=>{
+   // Ignore delayed initial toggle events from stale, replaced card nodes.
+   if(!details.isConnected)return;
+   gpuHardwareDetailsOpen.set(hardwareKey,details.open);
+  });
   const extra=el("div",undefined,"gpu-stats");
   const value=(v)=>typeof v==="string"&&v&&!v.toLowerCase().includes("n/a")?v:t("Unavailable");
   extra.append(gpuStat("Power limit",gpuFormat(gpu.power_limit_w," W")),
