@@ -15,7 +15,7 @@
 
 ## Immediate milestone: 0.3.0-rc.1 — ComfyUI integration candidate
 
-**Status:** scope agreed, candidate **not tagged or released**. The version in `VERSION_ARKILAB` remains `0.2.0-rc.1` until the release gate passes.
+**Status:** **published as a prerelease on 2026-11-21** (tag `v0.3.0-rc.1`, commit `3d7dde0ce19d1937320cd2517523a5b36860b098`). The release is not designated stable; further acceptance and follow-up fixes are tracked separately.
 
 **Release evidence register:** [0.3.0-rc.1 readiness and test evidence](RC_0_3_0_READINESS.md). Use it to distinguish observed passes, reported runs and unverified gates before tagging.
 
@@ -30,7 +30,7 @@
 - Existing standard-LoRA-loader comparison UI remains accessible **as experimental / unverified**, excluded from the rc.1 stability promise. GPU validation of the comparator is deferred to a subsequent release.
 - Preserved existing trainer launching and queue; no claim of full trainer-interface modernization in 0.3.
 
-**Exit criteria before changing the version to `0.3.0-rc.1`:**
+**Original release acceptance criteria (historical):**
 
 1. CI passes on Windows and Linux; unit tests include connection/navigation, Bridge parsing, execution safety, RAM/VRAM diagnostics and existing trainer launch routes.
 2. Record **actual** Windows + RTX 3090 + ComfyUI Desktop smoke-test evidence: connected/disconnected state, one known-good API graph, one visual graph via Bridge, execution progress, cancellation, history/output links and memory release without interrupting unrelated queue jobs.

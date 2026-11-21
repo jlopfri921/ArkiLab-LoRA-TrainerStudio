@@ -13,7 +13,7 @@
 
 # OrkiLab — LoRA Trainer Studio
 
-Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Workspace is the default interface. This prerelease candidate still requires completion of the documented release acceptance gates before publication.
+Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Workspace is the default interface. **Version 0.3.0-rc.1 was published as a GitHub prerelease on 2026-11-21**; it is not a stable release. See [the official release](https://github.com/jlopfri921/OrkiLab-LoRA-TrainerStudio/releases/tag/v0.3.0-rc.1) and the [acceptance register](docs/arkilab/RC_0_3_0_READINESS.md).
 
 ## Ecosystem spotlight — owner-managed announcement
 
@@ -23,17 +23,17 @@ The Dashboard includes a small, dismissible **OrkiLab ecosystem** announcement c
 
 The manifest uses `{"version":1,"items":[...]}`. Items support `id`, `enabled`, multilingual `title` and `description` objects (`es`, `en`, etc.) and an HTTPS `url`. Links are limited to the project's approved domains in `scripts/promotions_feed.py`; updating that allowlist requires shipping a code change. The UI uses text only (no HTML, third-party JavaScript, embedded images, cookies or tracking). Remote requests are made by the local server to the fixed file, not directly from visitors' browsers; no visitor identifiers are sent.
 
-## OrkiLab 0.3.0-rc.1 — candidate release (draft; not published until validation)
+## OrkiLab 0.3.0-rc.1 — published prerelease (2026-11-21)
 
-The next release candidate focuses on a **stable, locally verified ComfyUI integration** rather than expanding all trainers at once. The expected scope is ComfyUI Zone onboarding and connection verification; read-only models/nodes; trusted workflow import, inspection and Bridge preparation; explicit Generation Studio submission with progress, safe cancellation, results and history; GPU monitoring; optional model/cache release; system-wide RAM/VRAM readings per generation; and the existing, **experimental and not yet GPU-validated** LoRA strength-comparison UI (not part of the rc.1 stability promise).
+This prerelease focuses on a **locally exercised ComfyUI integration** rather than expanding all trainers at once. The expected scope is ComfyUI Zone onboarding and connection verification; read-only models/nodes; trusted workflow import, inspection and Bridge preparation; explicit Generation Studio submission with progress, safe cancellation, results and history; GPU monitoring; optional model/cache release; system-wide RAM/VRAM readings per generation; and the existing, **experimental and not yet GPU-validated** LoRA strength-comparison UI (not part of the rc.1 stability promise).
 
-**Not included as complete 0.3 commitments:** full per-trainer interface replacement, Dataset Studio, multiview tools, Ollama Copilot, Hub integrations, a packaged desktop installer, or support for every third-party ComfyUI node/workflow. Existing trainers remain accessible. The RC must pass Windows/Linux CI and documented on-device smoke tests; do not mark the version as 0.3 until then.
+**Not included as complete 0.3 commitments:** full per-trainer interface replacement, Dataset Studio, multiview tools, Ollama Copilot, Hub integrations, a packaged desktop installer, or support for every third-party ComfyUI node/workflow. Existing trainers remain accessible. Windows/Linux GitHub Actions passed on the exact tagged commit; on-device operator checks are recorded separately and do not guarantee all engine/model combinations.
 
 **Project status (November 21, 2026):** the user reports completion of the hands-on ComfyUI/GPU tests; detailed outcomes, supported workflow samples and hardware evidence still need recording in the [acceptance checklist](docs/arkilab/GPU_GENERATION_ACCEPTANCE.md). Trainer modernization is underway. See the [0.3 RC scope and release gates](docs/arkilab/ROADMAP.md#immediate-milestone-030-rc1--comfyui-integration-candidate).
 
 ## What's new in OrkiLab — modern Workspace and ComfyUI integration
 
-> **Development status (November 20, 2026).** The features below have been implemented on the repository's default branch, but **have not yet passed end-to-end tests with real ComfyUI Desktop workflows and GPU jobs**. The 0.3.0-rc.1 candidate is prepared on a draft release branch, **not tagged or published until acceptance**; do not interpret development milestones as stable releases. Keep backups of important workflows and datasets.
+> **Prerelease status (2026-11-21).** The 0.3.0-rc.1 tag and GitHub prerelease are published. Windows/Linux CI passed on the tagged commit, and an operator reported successful image generation and selected ComfyUI flows. Not all trainer/GPU workflows have undergone full end-to-end acceptance; keep backups of important workflows and datasets.
 
 OrkiLab is growing beyond a collection of LoRA trainers into a unified **local-first training, generation and model-management workspace**, while keeping the existing training engines. The newer interfaces prioritize focused screens, contextual help, collapsible advanced options, and internationalization.
 
