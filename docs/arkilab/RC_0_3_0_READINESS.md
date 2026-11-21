@@ -23,8 +23,8 @@ Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, e
 
 | Gate | Status as of review | Proof needed | Blocking when failing? |
 | --- | --- | --- | --- |
-| Windows CI unit tests | NOT VERIFIED | Workflow job URL + result for release SHA | Yes |
-| Linux CI unit tests | NOT VERIFIED | Workflow job URL + result for release SHA | Yes |
+| Windows CI unit tests | PASS — PR #39 CI branch commit | Actions run 44846938042 and foundation run 44846938103; revalidate exact final release commit | Yes |
+| Linux CI unit tests | PASS — PR #39 CI branch commit | Actions run 44846938042 and foundation run 44846938103; revalidate exact final release commit | Yes |
 | Browser trainer smoke test | REPORTED PASS — full local suite | User confirms all trainers OK after 3/3 observed sample; exact count, log and SHA not attached | Yes for regression |
 | Workspace/ComfyUI connection gate | REPORTED PASS — disconnect state | Operator confirms correct ComfyUI disconnected-state display; connect and broader routes not separately evidenced | Yes |
 | API-format workflow prepare/execute | REPORTED | Trusted graph identifier, status and output | Yes |
@@ -43,7 +43,7 @@ Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, e
 
 Some user-reported hands-on runs are documented in project conversations; the evidence matrix [GPU_GENERATION_ACCEPTANCE.md](GPU_GENERATION_ACCEPTANCE.md) still shows `NOT TESTED` for the individual scenarios. Record observed outcomes there before setting this gate to PASS.
 
-**CI observation:** GitHub's combined commit status for the examined main commit returned no statuses; commit-associated PR workflow-run query also returned no runs. These results **do not establish that CI is absent or failed**. Check GitHub Actions on the precise candidate SHA and attach run links.
+**CI observation:** both GitHub Actions workflows completed successfully on the PR #39 branch (Windows and Linux), as detailed below. **Exact-final-release-commit** verification remains necessary.
 
 ## Recorded Windows smoke-test evidence (user-reported, 2026-11-21)
 
@@ -83,6 +83,17 @@ The operator submitted five manual-check outcomes for the local OrkiLab–ComfyU
 | Run a comparison of two LoRA strengths | **DEFERRED / NOT TESTED** | Existing interface remains experimental; no assertion that comparisons or particular LoRAs work in rc.1 |
 
 **Do not misinterpret** reported image-history success as verified outputs for all media, or the broad cancel success as proof of the exact E03/E04 adversarial queue scenarios. Preserve those detailed cases as `NOT TESTED` in the separate GPU acceptance matrix until scenario-specific evidence exists. Windows/Linux GitHub CI on release commit, negative security/invalid-node checks, navigation/i18n and update-safety review remain to be closed before tagging. Comparator acceptance is deferred and must not be presented as complete.
+
+## Verified CI results for PR #39 (2026-11-21)
+
+GitHub Actions returned **completed / success** for the following workflow runs associated with commit `1ce30c6182e486160c17e59e2842db27b99e4f05`:
+
+- **OrkiLab RC validation**, run ID `44846938042`: `Python unit tests (windows-latest, Python 3.13)` **success**, `Python unit tests (ubuntu-latest, Python 3.13)` **success**.
+- **OrkiLab foundation checks**, run ID `44846938103`: `tests (windows-latest)` **success**, `tests (ubuntu-latest)` **success**.
+
+PR #39 was merged into `main` with squash commit `289e6859843c1bf6c93591a84023eaca943ac4f2`.
+
+**Scope note:** CI on the PR branch is confirmed. The combined-status and PR-workflow-only queries have **not** yet established successful runs on the eventual final `v0.3.0-rc.1` commit. Repeat or verify both platform checks for the exact release SHA before tagging. These are GPU-free tests; they complement, rather than replace, real on-device ComfyUI acceptance.
 
 ## Suggested safe operator command sequence
 
