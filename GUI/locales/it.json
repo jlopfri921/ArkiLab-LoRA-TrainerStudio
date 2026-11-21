@@ -2047,5 +2047,15 @@
   "Console": "Console",
   "Generated previews": "Anteprime generate",
   "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image: LoRA per immagini e modifica. I controlli video e audio non sono disponibili in questa modalità.",
-  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: LoRA per video e audio."
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: LoRA per video e audio.",
+  "Train project": "Addestra progetto",
+  "Opens the trainer selected in this project. First prepare a compatible dataset.": "Apre il trainer scelto per questo progetto. Prepara prima un dataset compatibile.",
+  "No images indexed for this project yet. Import images in Dataset Studio.": "Nessuna immagine associata. Importala in Dataset Studio.",
+  "{count} of {total} images have saved descriptions. A training folder has been prepared.": "{count} immagini su {total} hanno descrizioni salvate. È stata preparata una cartella per l'addestramento.",
+  "{count} of {total} images have saved descriptions. Add the missing descriptions in Dataset Studio, then select the images and prepare the training folder.": "{count} immagini su {total} hanno descrizioni salvate. Completa le descrizioni in Dataset Studio, seleziona le immagini e prepara la cartella di addestramento.",
+  "All {total} images have descriptions. Select them in Dataset Studio and prepare the training folder.": "Tutte le {total} immagini hanno descrizioni. Selezionale in Dataset Studio e prepara la cartella di addestramento.",
+  "Project dataset folder does not exist; choose a valid absolute folder": "La cartella del dataset del progetto non esiste. Scegli un percorso assoluto valido.",
+  "No dataset linked to this project; prepare one in Dataset Studio": "Questo progetto non ha un dataset associato. Preparalo in Dataset Studio.",
+  "Prepared dataset was moved or removed; prepare it again": "La cartella preparata è stata spostata o eliminata. Preparala di nuovo.",
+  "Selected trainer does not match the project": "Il trainer scelto non corrisponde al progetto."
 }
