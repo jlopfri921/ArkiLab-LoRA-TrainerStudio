@@ -71,6 +71,45 @@ class UnifiedChromeTests(unittest.TestCase):
             with self.subTest(js=needle):
                 self.assertIn(needle, self.js)
 
+    def test_queue_and_dataset_headers_use_exact_workspace_markup(self):
+        from html.parser import HTMLParser
+        class Header(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.found = False
+                self.depth = 0
+                self.tokens = []
+            def handle_starttag(self, tag, attrs):
+                if tag == "header" and not self.found:
+                    self.found = True
+                    self.depth = 1
+                elif self.depth:
+                    self.depth += 1
+                if self.depth:
+                    self.tokens.append((tag, tuple((k, v) for k, v in attrs
+                                                   if k not in ("class", "role"))))
+            def handle_endtag(self, tag):
+                if self.depth:
+                    self.depth -= 1
+        base = Header()
+        base.feed((ROOT / "GUI" / "workspace.html").read_text(encoding="utf-8"))
+        for page in ("queue.html", "dataset_studio.html"):
+            with self.subTest(page=page):
+                other = Header()
+                other.feed((ROOT / "GUI" / page).read_text(encoding="utf-8"))
+                self.assertEqual(other.tokens, base.tokens)
+                html = (ROOT / "GUI" / page).read_text(encoding="utf-8")
+                self.assertIn('class="orki-shell-header orki-app-header"', html)
+
+    def test_navigation_returns_to_page_top_on_all_pages(self):
+        workspace = (ROOT / "GUI" / "workspace.html").read_text(encoding="utf-8")
+        for key in ("history.scrollRestoration", 'window.addEventListener("pageshow"',
+                    'window.scrollTo(0,0)', 'document.addEventListener("click"'):
+            with self.subTest(key=key):
+                self.assertTrue(key in self.js or key in workspace)
+        self.assertIn("scrollWorkspaceTop();", workspace)
+        self.assertNotIn('<a href="/workspace" class="back-link">', workspace)
+
     def test_queue_does_not_acquire_a_second_language_selector(self):
         helper = (ROOT / "assets" / "orkilab" / "orkilab-ui.js").read_text(encoding="utf-8")
         self.assertIn("#ui-lang,#workspace-language,#orki-language,.queue-shell,.studio-layout", helper)
