@@ -603,8 +603,8 @@ function compareCompatibility(w){
 }
 let projectCompareWorkflows=[],projectCompatibilityId="",projectCompatibilityRequest=0;
 const compatibilityHints={
- es:{candidate:"Posible compatibilidad por familia de modelo; falta validar con ComfyUI.",incompatible:"Incompatible",unverified:"Familia sin verificar",non_image:"Es un workflow de vídeo, audio u otra categoría.",no_loader:"No contiene un cargador LoRA estándar.",different_family:"El modelo base pertenece a otra familia.",unknown_family:"No se identifica con seguridad la familia del modelo base.",mixed_models:"Se detectan varias familias de modelos.",unknown_project_family:"No se reconoce la familia del entrenador.",invalid_graph:"El workflow no se puede inspeccionar."},
- en:{candidate:"Candidate: model family detected. ComfyUI must still validate the workflow.",incompatible:"Incompatible",unverified:"Model family unverified",non_image:"The workflow is not an image workflow.",no_loader:"No standard LoRA loader was found.",different_family:"The base model belongs to a different family.",unknown_family:"The model family cannot be determined reliably.",mixed_models:"Several model families detected.",unknown_project_family:"Project trainer family not recognized.",invalid_graph:"Workflow could not be inspected."}
+ es:{candidate:"Posible compatibilidad por familia de modelo; falta validar con ComfyUI.",incompatible:"Incompatible",unverified:"Familia sin verificar",needs_lora:"Modelo de la familia correcta · falta un cargador LoRA compatible.",name_hint:"El nombre sugiere FLUX.3 Klein, pero falta confirmar el modelo base.",non_image:"Es un workflow de vídeo, audio u otra categoría.",no_loader:"No contiene un cargador LoRA estándar.",different_family:"El modelo base pertenece a otra familia.",unknown_family:"No se identifica con seguridad la familia del modelo base.",mixed_models:"Se detectan varias familias de modelos.",unknown_project_family:"No se reconoce la familia del entrenador.",invalid_graph:"El workflow no se puede inspeccionar."},
+ en:{candidate:"Candidate: model family detected. ComfyUI must still validate the workflow.",incompatible:"Incompatible",unverified:"Model family unverified",needs_lora:"Matching model family · a compatible LoRA loader is missing.",name_hint:"Filename suggests FLUX.3 Klein but its base model is not verified.",non_image:"The workflow is not an image workflow.",no_loader:"No standard LoRA loader was found.",different_family:"The base model belongs to a different family.",unknown_family:"The model family cannot be determined reliably.",mixed_models:"Several model families detected.",unknown_project_family:"Project trainer family not recognized.",invalid_graph:"Workflow could not be inspected."}
 };
 const compatText=compatibilityHints[I18N.lang]||compatibilityHints.en;
 function comparisonCatalog(){return checkMode()&&$("compare-checkpoint-project").value?projectCompareWorkflows:workflows}
@@ -612,6 +612,7 @@ function compatibilityReason(w){
  const compatibility=w.compatibility;
  if(!compatibility)return "";
  if(compatibility.status==="candidate")return compatText.candidate;
+ if(compatibility.status==="needs_lora")return compatText.needs_lora;
  const names=(compatibility.detected||[]).join(", ");
  return (compatText[compatibility.reason]||compatText.unverified)+(names?" ("+names+")":"");
 }
@@ -623,25 +624,25 @@ function fillCompareWorkflows(){
  select.replaceChildren(new Option(t("Select workflow"),""));
  const order={detected:0,check:1,none:2};
  const matching=catalog.filter(w=>!search||(w.name+" "+(w.source||"")).toLowerCase().includes(search));
- const list=matching.filter(w=>!scoped||showAll||w.compatibility?.status==="candidate")
+ const list=matching.filter(w=>!scoped||showAll||["candidate","needs_lora"].includes(w.compatibility?.status))
   .sort((a,b)=>scoped?Number(b.compatibility?.status==="candidate")-Number(a.compatibility?.status==="candidate")||a.name.localeCompare(b.name):order[compareCompatibility(a)]-order[compareCompatibility(b)]||a.name.localeCompare(b.name));
  for(const w of list){
   const c=compareCompatibility(w);
-  const prefix=scoped?(w.compatibility?.status==="candidate"?(I18N.lang==="es"?"Candidato":"Candidate"):w.compatibility?.status==="incompatible"?compatText.incompatible:compatText.unverified)
+  const prefix=scoped?(w.compatibility?.status==="candidate"?(I18N.lang==="es"?"Listo para comprobar":"Ready to validate"):w.compatibility?.status==="needs_lora"?(I18N.lang==="es"?"Falta LoRA loader":"Needs LoRA loader"):w.compatibility?.status==="incompatible"?compatText.incompatible:compatText.unverified)
    :c==="detected"?t("LoRA detected"):c==="check"?t("LoRA needs checking"):t("No standard LoRA detected");
   const option=new Option(prefix+" · "+w.name+" ["+w.format.toUpperCase()+"]"+(scoped&&w.compatibility?.status!=="candidate"?" · "+compatibilityReason(w):""),w.id);
   if(scoped&&w.compatibility?.status!=="candidate")option.disabled=true;
   option.title=compatibilityReason(w);
   select.add(option);
  }
- if([...select.options].some(x=>x.value===old&&!x.disabled))select.value=old;
+ if([...select.options].some(x=>x.value===old))select.value=old;
  else if(list.length===1&&(!scoped||list[0].compatibility?.status==="candidate"))select.value=list[0].id;
  const stat=$("compare-compat-status");
- const matched=matching.filter(w=>w.compatibility?.status==="candidate").length;
+ const matched=matching.filter(w=>w.compatibility?.status==="candidate").length,needs=matching.filter(w=>w.compatibility?.status==="needs_lora").length;
  stat.textContent=!scoped?(I18N.lang==="es"?"Selecciona un proyecto para filtrar por modelo.":"Choose a project to filter by model family."):
    projectCompatibilityId!==$("compare-checkpoint-project").value?(I18N.lang==="es"?"Comprobando compatibilidad…":"Checking compatibility…"):
-   (I18N.lang==="es"?"Workflows candidatos: ":"Candidate workflows: ")+matched+" / "+matching.length+
-   (matched?"":I18N.lang==="es"?" · No se detectaron candidatos: revisa los workflows o importa uno compatible.":" · No candidate found: inspect workflows or import a compatible one.");
+   (I18N.lang==="es"?"Candidatos: ":"Candidates: ")+matched+" / "+matching.length+(needs?(I18N.lang==="es"?" · Requieren nodo LoRA: ":" · Need LoRA loader: ")+needs:"")+
+   (matched?"":I18N.lang==="es"?" · Inspecciona los workflows: puede faltar el nodo LoRA o la referencia al modelo base.":" · Inspect workflows: the LoRA loader or base-model reference may be missing.");
  updateCompareSelection();
 }
 function updateCompareSelection(){
