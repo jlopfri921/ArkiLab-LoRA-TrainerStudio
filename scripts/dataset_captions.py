@@ -152,7 +152,7 @@ def register(app, db, project_exists, local, valid_origin):
             # The ID suffix guarantees archive-name uniqueness even for equal
             # basenames from different folders, Unicode names and case variants.
             stem = row["name"].rsplit(".", 1)[0][:80]
-            stem = re.sub(r"[^\\w. -]", "_", stem, flags=re.UNICODE)
+            stem = re.sub(r"[^\w. -]", "_", stem, flags=re.UNICODE)
             stem = stem.strip(" ._") or "image"
             target = "captions/" + stem + "__" + image_id + ".txt"
             items.append({"image_id": image_id, "image_name": row["name"],
