@@ -21,7 +21,7 @@ def dimensions(path):
     try:
         with open(path, "rb") as source:
             h = source.read(32)
-            if h.startswith(b"\\x89PNG\\r\\n\\x1a\\n") and h[12:16] == b"IHDR":
+            if h.startswith(b"\x89PNG\\r\\n\x1a\\n") and h[12:16] == b"IHDR":
                 w, hgt = struct.unpack(">II", h[16:24])
             elif h[:3] in (b"GIF",) and h[3:6] in (b"87a", b"89a"):
                 w, hgt = struct.unpack("<HH", h[6:10])
@@ -31,19 +31,19 @@ def dimensions(path):
             elif h[:4] == b"RIFF" and h[8:12] == b"WEBP" and h[12:16] == b"VP8X":
                 w = 1 + int.from_bytes(h[24:27], "little")
                 hgt = 1 + int.from_bytes(h[27:30], "little")
-            elif h[:3] == b"\\xff\\xd8\\xff":
+            elif h[:3] == b"\xff\xd8\xff":
                 source.seek(2)
                 w = hgt = None
                 for _ in range(120):
                     marker = source.read(1)
                     if not marker:
                         break
-                    if marker != b"\\xff":
+                    if marker != b"\xff":
                         continue
                     marker = source.read(1)
-                    while marker == b"\\xff":
+                    while marker == b"\xff":
                         marker = source.read(1)
-                    if marker in (b"\\xd8", b"\\xd9", b"\\x00"):
+                    if marker in (b"\xd8", b"\xd9", b"\x00"):
                         continue
                     length_bytes = source.read(2)
                     if len(length_bytes) != 2:
