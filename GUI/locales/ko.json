@@ -2057,5 +2057,6 @@
   "Project dataset folder does not exist; choose a valid absolute folder": "프로젝트 데이터셋 폴더가 없습니다. 유효한 절대 경로를 선택하세요.",
   "No dataset linked to this project; prepare one in Dataset Studio": "이 프로젝트에 연결된 데이터셋이 없습니다. Dataset Studio에서 준비하세요.",
   "Prepared dataset was moved or removed; prepare it again": "준비된 데이터셋 폴더가 이동되었거나 삭제되었습니다. 다시 준비하세요.",
-  "Selected trainer does not match the project": "선택한 트레이너가 프로젝트 설정과 일치하지 않습니다."
+  "Selected trainer does not match the project": "선택한 트레이너가 프로젝트 설정과 일치하지 않습니다.",
+  "Images are linked in Dataset Studio, but no training folder is prepared. Save descriptions and prepare the training folder there.": "Dataset Studio에 이미지가 연결되어 있지만 학습 폴더가 아직 준비되지 않았습니다. 설명을 저장하고 학습 폴더를 준비하세요."
 }
