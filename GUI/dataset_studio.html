@@ -43,6 +43,7 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 .caption-dialog .caption-history{width:100%}
 .caption-dialog .caption-ai{border:1px solid #45607b;border-radius:10px;padding:12px;margin:14px 0}
 .caption-dialog .caption-ai legend{font-weight:700;color:#3cdbd0}
+.caption-dialog .caption-ai select{min-width:180px;max-width:100%;flex:1 1 200px;background:#0f172a;border:1px solid #486482;border-radius:8px;padding:10px;color:#f8fafc;font:inherit}
 .caption-dialog .caption-ai input,.caption-dialog .caption-ai textarea{width:100%;min-width:0;margin:6px 0 10px;background:#0f172a;color:#f8fafc;border:1px solid #486482;border-radius:8px;padding:10px;font:inherit}
 .caption-dialog .caption-ai p{line-height:1.5}
 .caption-dialog .caption-ai label{display:block}
@@ -143,9 +144,12 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <p class="muted" id="caption-count">0 / 2000</p>
 <fieldset class="caption-ai"><legend id="caption-ai-title">Local AI suggestion · Ollama (optional)</legend>
 <p class="muted" id="caption-ai-help">Requires your own running Ollama and an already-installed vision model. No models are downloaded. Generation uses your GPU; nothing is saved automatically.</p>
-<label for="caption-ai-model" id="caption-ai-model-label">Installed Ollama vision model</label>
+<label for="caption-ai-select" id="caption-ai-select-label">Detected vision models</label>
+<div class="caption-actions"><select id="caption-ai-select" aria-describedby="caption-ai-discovery-status"><option value="">Select a local vision model</option></select><button type="button" id="caption-ai-refresh">Refresh installed models</button></div>
+<p class="muted" id="caption-ai-discovery-status" role="status" aria-live="polite"></p>
+<label for="caption-ai-model" id="caption-ai-model-label">Installed Ollama vision model (or enter manually)</label>
 <input id="caption-ai-model" type="text" maxlength="100" autocomplete="off" placeholder="e.g. qwen3-vl:8b">
-<button type="button" id="caption-ai-generate">Generate preview locally</button>
+<div class="caption-actions"><button type="button" id="caption-ai-generate">Generate preview locally</button><button type="button" id="caption-ai-cancel" hidden>Cancel generation</button></div>
 <label for="caption-ai-result" id="caption-ai-result-label">Suggested caption (review before applying)</label>
 <textarea id="caption-ai-result" readonly rows="4"></textarea>
 <div class="caption-actions"><button type="button" id="caption-ai-apply" disabled>Use suggestion in editor</button><span id="caption-ai-status" role="status" aria-live="polite"></span></div>
@@ -371,26 +375,93 @@ ko:["로컬 AI 제안 · Ollama (선택)","실행 중인 Ollama와 설치된 비
 const visionTr=localVisionText[lang];
 const visionIDs=["caption-ai-title","caption-ai-help","caption-ai-model-label","caption-ai-generate","caption-ai-result-label","caption-ai-apply"];
 visionIDs.forEach((id,index)=>$(id).textContent=visionTr[index]);
-let visionRequest=0;
+const visionExtraText={
+en:["Detected local vision models","Select an installed model","Refresh installed models","No installed vision models found, or Ollama unavailable. Enter a model name manually if needed.","Loaded vision models: ","Cancel generation","Cancellation requested…","Generation cancelled."],
+es:["Modelos de visión locales detectados","Selecciona un modelo instalado","Actualizar modelos instalados","No se encontraron modelos de visión instalados o Ollama no está disponible. Puedes introducir un modelo manualmente.","Modelos de visión encontrados: ","Cancelar generación","Solicitando cancelación…","Generación cancelada."],
+pt:["Modelos de visão locais detetados","Escolha um modelo instalado","Atualizar modelos instalados","Nenhum modelo de visão detetado ou Ollama indisponível. Pode inserir um nome manualmente.","Modelos de visão: ","Cancelar geração","A pedir cancelamento…","Geração cancelada."],
+fr:["Modèles de vision locaux détectés","Choisir un modèle installé","Actualiser les modèles installés","Aucun modèle de vision détecté ou Ollama indisponible. Vous pouvez saisir un modèle manuellement.","Modèles de vision : ","Annuler la génération","Annulation demandée…","Génération annulée."],
+de:["Erkannte lokale Vision-Modelle","Installiertes Modell auswählen","Installierte Modelle aktualisieren","Kein Vision-Modell gefunden oder Ollama nicht verfügbar. Manuelle Eingabe ist möglich.","Vision-Modelle: ","Generierung abbrechen","Abbruch angefordert…","Generierung abgebrochen."],
+it:["Modelli visivi locali rilevati","Seleziona un modello installato","Aggiorna modelli installati","Nessun modello visivo trovato o Ollama non disponibile. Puoi inserire un nome manualmente.","Modelli visivi: ","Annulla generazione","Annullamento richiesto…","Generazione annullata."],
+ja:["検出されたローカル画像モデル","インストール済みモデルを選択","インストール済みモデルを更新","画像対応モデルが見つからないか、Ollamaが利用できません。モデル名の手動入力は可能です。","画像モデル: ","生成をキャンセル","キャンセルを要求中…","生成をキャンセルしました。"],
+ko:["감지된 로컬 비전 모델","설치된 모델 선택","설치된 모델 새로고침","비전 모델을 찾을 수 없거나 Ollama를 사용할 수 없습니다. 모델명을 직접 입력할 수 있습니다.","비전 모델: ","생성 취소","취소 요청 중…","생성이 취소되었습니다."]
+};
+const visionExtra=visionExtraText[lang];
+$("caption-ai-select-label").textContent=visionExtra[0];
+$("caption-ai-refresh").textContent=visionExtra[2];
+$("caption-ai-cancel").textContent=visionExtra[5];
+$("caption-ai-select").addEventListener("change",()=>{
+ if($("caption-ai-select").value)$("caption-ai-model").value=$("caption-ai-select").value;
+});
+let visionDiscovery=0;
+async function refreshVisionModels(){
+ const run=++visionDiscovery,button=$("caption-ai-refresh");
+ button.disabled=true;$("caption-ai-discovery-status").textContent="…";
+ try{
+  const result=await api("/api/workspace/ollama/vision-models");
+  if(run!==visionDiscovery)return;
+  const previous=$("caption-ai-model").value.trim(),select=$("caption-ai-select");
+  select.replaceChildren();
+  select.add(new Option(visionExtra[1],""));
+  for(const item of result.models||[])select.add(new Option(item.name,item.name));
+  const names=(result.models||[]).map(item=>item.name);
+  if(names.includes(previous))select.value=previous;
+  else if(!previous&&names.length){select.value=names[0];$("caption-ai-model").value=names[0]}
+  $("caption-ai-discovery-status").textContent=names.length?
+      visionExtra[4]+names.length+(result.truncated?" · "+result.examined+" examined":""):
+      visionExtra[3];
+ }catch(error){if(run===visionDiscovery)$("caption-ai-discovery-status").textContent=visionExtra[3]}
+ finally{if(run===visionDiscovery)button.disabled=false}
+}
+$("caption-ai-refresh").addEventListener("click",refreshVisionModels);
+let visionRequest=0,visionController=null,visionActive=null;
+function cancelVision(){
+ if(!visionActive)return;
+ const current=visionActive;
+ visionActive=null;
+ ++visionRequest;
+ $("caption-ai-status").textContent=visionExtra[6];
+ $("caption-ai-cancel").hidden=true;
+ $("caption-ai-generate").disabled=false;
+ $("caption-ai-apply").disabled=true;
+ $("caption-ai-result").value="";
+ visionController?.abort();
+ visionController=null;
+ fetch("/api/workspace/datasets/"+encodeURIComponent(current.project)+"/"+encodeURIComponent(current.id)+"/caption/suggest/cancel",{
+  method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({request_id:current.requestId})
+ }).then(async response=>{
+  if(!response.ok&&response.status!==404)throw Error("Cancel failed");
+  $("caption-ai-status").textContent=visionExtra[7];
+ }).catch(()=>{$("caption-ai-status").textContent=visionExtra[6]});
+}
+$("caption-ai-cancel").addEventListener("click",cancelVision);
 $("caption-ai-generate").addEventListener("click",async()=>{
  if(!captionActive)return;
  const model=$("caption-ai-model").value.trim();
  if(!model){$("caption-ai-status").textContent=visionTr[2];$("caption-ai-model").focus();return}
  const image={...captionActive},run=++visionRequest;
+ const requestId=crypto.randomUUID().replaceAll("-","");
+ const controller=new AbortController();
+ visionController=controller;visionActive={...image,requestId};
  const button=$("caption-ai-generate");button.disabled=true;
+ $("caption-ai-cancel").hidden=false;
  $("caption-ai-apply").disabled=true;$("caption-ai-result").value="";
  $("caption-ai-status").textContent=visionTr[6];
  try{
    const result=await api("/api/workspace/datasets/"+encodeURIComponent(image.project)+"/"+encodeURIComponent(image.id)+"/caption/suggest",{
      method:"POST",headers:{"Content-Type":"application/json"},
-     body:JSON.stringify({model,confirm:true})
+     body:JSON.stringify({model,confirm:true,request_id:requestId}),
+     signal:controller.signal
    });
    if(run!==visionRequest||!captionActive||image.id!==captionActive.id||image.project!==captionActive.project)return;
    $("caption-ai-result").value=result.caption;
    $("caption-ai-apply").disabled=false;
    $("caption-ai-status").textContent=visionTr[7]+" "+visionTr[8];
  }catch(error){if(run===visionRequest)$("caption-ai-status").textContent=error.message}
- finally{if(run===visionRequest)button.disabled=false}
+ finally{if(run===visionRequest){
+   button.disabled=false;$("caption-ai-cancel").hidden=true;
+   visionActive=null;visionController=null;
+ }}
 });
 $("caption-ai-apply").addEventListener("click",()=>{
  if(!captionActive||$("caption-ai-apply").disabled)return;
@@ -419,6 +490,8 @@ $("caption-image").alt=item.name;$("caption-image").removeAttribute("src");
 if(!item.missing)$("caption-image").src="/api/workspace/datasets/"+encodeURIComponent(openProject)+"/"+encodeURIComponent(item.id);
 captionCount();$("caption-status").textContent="";
 ++visionRequest;$("caption-ai-generate").disabled=false;$("caption-ai-apply").disabled=true;
+$("caption-ai-cancel").hidden=true;
+refreshVisionModels();
 $("caption-ai-result").value="";$("caption-ai-status").textContent="";
 await captionVersions();$("caption-dialog").showModal();$("caption-text").focus()
 }catch(e){say(e.message)}
@@ -438,7 +511,7 @@ if(old){$("caption-text").value=old.caption;captionCount();$("caption-status").t
 function requestCaptionClose(){if($("caption-text").value!==captionOriginal&&!confirm(capTr[12]))return;$("caption-dialog").close()}
 $("caption-close").addEventListener("click",requestCaptionClose);
 $("caption-dialog").addEventListener("cancel",e=>{if($("caption-text").value!==captionOriginal&&!confirm(capTr[12]))e.preventDefault()});
-$("caption-dialog").addEventListener("close",()=>{++visionRequest;captionActive=null;$("caption-image").removeAttribute("src")});
+$("caption-dialog").addEventListener("close",()=>{cancelVision();++visionDiscovery;++visionRequest;captionActive=null;$("caption-image").removeAttribute("src")});
 
 
 const sidecarExportText={
