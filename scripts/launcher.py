@@ -63,6 +63,7 @@ def load_config():
 # Cola de trabajos de todos los entrenadores (ver job_queue.py): rutas /api/queue... y su hilo.
 QUEUE = job_queue.register(app, lambda: load_config()["trainers"])
 
+import project_dataset_handoff
 import workspace_routes
 workspace_routes.register(app, BASE_DIR, load_config)
 
@@ -461,6 +462,26 @@ def launch():
     if error:
         return jsonify({"status": "error", "error": error}), 404
 
+    # Project-specific launch never edits shared trainer configuration or
+    # interrupts another trainer. It starts (or reuses) an isolated draft.
+    if req.get("project_id") is not None:
+        project_id = req.get("project_id")
+        try:
+            draft_settings, project = project_dataset_handoff.make_draft(
+                BASE_DIR, project_id, trainer_id)
+        except (project_dataset_handoff.HandoffError, OSError) as exc:
+            return jsonify({"status": "error", "error": str(exc)}), 409
+        previous = next((i for i in extra_instances()
+                         if i.get("project_id") == project_id
+                         and i["id"] == trainer_id and not i.get("edit")), None)
+        if previous:
+            return jsonify({"status": "ok", "url": url_for_port(previous["port"]),
+                            "port": previous["port"], "already": _port_open(previous["port"]),
+                            "project_id": project_id})
+        result = launch_second(trainer_id, run, draft=draft_settings,
+                               project_id=project_id)
+        return result
+
     # Borrador: el mismo entrenador en otro puerto con su propia copia de los ajustes, para preparar otro
     # entrenamiento del mismo modelo mientras este entrena (el que entrena relee los ajustes normales).
     # Draft: the same trainer on another port with its own settings copy, to prepare another training.
@@ -586,7 +607,7 @@ def queue_template(jid):
     return launch_second(trainer_id, run, draft=settings, template=jid)
 
 
-def launch_second(trainer_id, run, draft=None, edit=None, template=None):
+def launch_second(trainer_id, run, draft=None, edit=None, template=None, project_id=None):
     """Abre el entrenador en un puerto libre (trainer_port + 1...), con su consola, sin cerrar el del
     puerto principal, que está entrenando. Lo que se prepare ahí va a la cola.
     draft (dict con "train" / "pre_cache"): borrador con su propia copia de los ajustes, que parte de esos
@@ -622,6 +643,7 @@ def launch_second(trainer_id, run, draft=None, edit=None, template=None):
         pid = _launch_linux(run, env)
     _save_instances(extra_instances() + [{"id": trainer_id, "port": port, "pid": pid, "started": time.time(),
                                           "draft": draft is not None,
+                                          **({"project_id": project_id} if project_id else {}),
                                           **({"edit": edit} if edit else {}),
                                           **({"template": template} if template else {})}])
     if edit:
