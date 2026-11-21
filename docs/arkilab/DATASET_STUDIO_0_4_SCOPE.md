@@ -57,6 +57,8 @@ Users can select up to 200 image references, preview saved non-empty captions an
 
 ### Optional local vision caption suggestions (beta.1 development slice)
 
+
+The next slice provides installed vision-model detection with bounded local `/api/tags` → `/api/show` lookups (up to 40 models, no pull/installation), a dropdown with manual fallback, and per-request cancellation using a random one-use token. The backend interrupts the active Ollama HTTP stream; the stop of GPU inference is **best effort** and subject to Ollama behavior. The UI never saves suggestions implicitly. Real Windows/Ollama smoke tests must verify cancellation, no unwanted continued GPU use and model-memory cleanup.
 An optional per-image Ollama adapter can be invoked **only by explicit user action** from Caption Studio. Ollama must be already installed and running locally with an image-capable model; neither installations nor downloads occur automatically. Requests are loopback-only (port 11434), prevent redirects/proxy forwarding, are single-flight, are limited to 12 MiB source images, and time out after 120 seconds. A generated caption is initially a **read-only suggestion**. Applying it to the editor and saving with the normal versioned API are two separate deliberate actions; source files and sidecars are never written.
 
 **Acceptance remains pending:** real Windows Ollama+RTX 3090 workflow, supported vision-model inventory/compatibility, UI cancellation, GPU contention tests, opt-in model management, and full integration with the existing Qwen3-VL shared captioner. Unit tests mock the local backend and do not certify actual GPU inference.
