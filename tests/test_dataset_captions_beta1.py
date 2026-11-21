@@ -155,6 +155,39 @@ class CaptionStudioTests(unittest.TestCase):
             self.assertTrue(safe.endswith(".txt"))
         self.assertEqual(self.picture.read_bytes(), self.original)
 
+    def test_same_image_basenames_are_disambiguated_deterministically(self):
+        first_id = self.caption.split("/")[-2]
+        second_id = "d" * 32
+        second = self.folder / "second.png"
+        second.write_bytes(b"independent original")
+        database = self.base / "settings" / "orkilab" / "datasets.sqlite3"
+        with closing(sqlite3.connect(database)) as conn, conn:
+            conn.execute(
+                "INSERT INTO dataset_images(id,project_id,path,name,bytes,review) "
+                "VALUES(?,?,?,?,?,?)",
+                (second_id, self.project, str(second), "sample.png", 20, "unreviewed")
+            )
+        first = self.client.put(self.caption, json={"caption": "first", "expected_revision": 0})
+        other_url = self.library + "/" + second_id + "/caption"
+        other = self.client.put(other_url, json={"caption": "second", "expected_revision": 0})
+        self.assertEqual((first.status_code, other.status_code), (200, 200))
+        endpoint = self.library + "/captions/export"
+        preview = self.client.post(endpoint, json={
+            "mode": "preview", "image_ids": [first_id, second_id]}).get_json()
+        self.assertEqual(preview["exportable"], 2)
+        names = [item["sidecar"] for item in preview["files"]]
+        self.assertEqual(len(names), len(set(names)))
+        self.assertTrue(all(name.startswith("captions/sample__") for name in names))
+        result = self.client.post(endpoint, json={
+            "mode": "download", "image_ids": [first_id, second_id],
+            "confirm": True})
+        self.assertEqual(result.status_code, 200)
+        with zipfile.ZipFile(io.BytesIO(result.data)) as archive:
+            self.assertEqual({archive.read(name).decode("utf-8") for name in names},
+                             {"first", "second"})
+        self.assertEqual(self.picture.read_bytes(), self.original)
+        self.assertEqual(second.read_bytes(), b"independent original")
+
     def test_history_is_bounded_and_unchanged_caption_does_not_increment(self):
         for revision in range(31):
             saved = self.client.put(self.caption,
