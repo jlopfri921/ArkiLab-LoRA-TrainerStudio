@@ -134,7 +134,7 @@
   "Saves the training settings, previews included. While training, they apply on the next step.": "미리보기를 포함한 학습 설정을 저장합니다. 학습 중에는 다음 스텝부터 적용됩니다.",
   "Console Output": "콘솔 출력",
   "IDLE": "대기 중",
-  "Dataset Manager": "데이터셋 관리자",
+  "Dataset Manager": "데이터셋 관리",
   "Search...": "검색...",
   "Uploads files or a .zip into the dataset folder (you can also drag them here). Useful from another device or RunPod.": "파일이나 .zip을 데이터셋 폴더로 업로드합니다(여기로 끌어다 놓을 수도 있습니다). 다른 기기나 RunPod에서 쓸 때 유용합니다.",
   "⬆ Upload": "⬆ 업로드",
@@ -2040,5 +2040,9 @@
   "Multimodal training checklist": "멀티모달 학습 준비",
   "Check which input modalities and dataset structure this engine supports. Confirm compatible model weights, resolution or duration, GPU memory and checkpoints before training.": "지원 입력 유형과 데이터 구조를 확인하세요. 호환 모델 가중치, 해상도 또는 길이, GPU 메모리, 체크포인트를 확인하세요.",
   "Before opening this trainer": "트레이너를 열기 전에",
-  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "정확한 호환성, 권장 GPU 메모리 및 체크포인트 기능은 해당 트레이너에서 확인해야 합니다. 이 안내는 설정을 변경하지 않습니다."
+  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "정확한 호환성, 권장 GPU 메모리 및 체크포인트 기능은 해당 트레이너에서 확인해야 합니다. 이 안내는 설정을 변경하지 않습니다.",
+  "Trainer quick navigation": "트레이너 빠른 탐색",
+  "Jump to": "이동",
+  "Console": "콘솔",
+  "Generated previews": "생성된 미리보기"
 }
