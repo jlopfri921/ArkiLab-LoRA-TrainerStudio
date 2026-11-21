@@ -43,6 +43,12 @@ Prepare, inspect and export **image** datasets for LoRA training in one local-fi
 
 Before calling 0.3.0 stable, review outstanding ComfyUI custom-node/Bridge failures, browser regressions, history/media persistence, unsupported media types and on-device security; label anything unverified. Boogu's compact-layout change is a post-0.3.0-rc.1 development improvement and is not backdated into that tag.
 
+## 0.4.0-beta.1 manual-caption slice — development status (2026-11-21)
+
+**Code available in development `main` after PR #56, not a released beta tag.** Per-image manual captions are stored in local SQLite and can be retrieved, edited and cleared via a modal. Updates require the latest revision number (stale writes return HTTP 409), with 25 saved revisions available to load and save as new revisions. Captions are limited to 2,000 characters. No automatic AI inference, internet request, original image modification or sidecar overwrite occurs.
+
+**Remaining beta.1 scope:** batch caption editing and preview; optional explicitly configured local captioner; standalone sidecar export/validation; reversible non-destructive resize/crop export; real Windows browser exercise with user datasets. Do not certify the full 0.4.0-beta.1 milestone until these acceptance gates are met.
+
 ## Acceptance model
 
 `PASS`: test command/result, commit and environment recorded. `REPORTED PASS`: operator result without retained detailed log. `NOT VERIFIED`: no sufficient evidence; not equal to failure. CI without a GPU **cannot** certify actual end-to-end training. Maintain a separate acceptance record for each 0.4 milestone.
