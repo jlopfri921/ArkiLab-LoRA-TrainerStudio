@@ -70,17 +70,26 @@ def register(app, base, load_config):
             projects = store.list(request.args.get("archived") == "1")
             # Image references live in Dataset Studio's separate SQLite database.
             dataset_db = base / "settings" / "orkilab" / "datasets.sqlite3"
-            counts = {}
+            counts, captioned = {}, {}
             if dataset_db.is_file():
                 try:
                     with sqlite3.connect(dataset_db, timeout=5) as conn:
                         counts = {pid: count for pid, count in conn.execute(
                             "SELECT project_id, COUNT(*) FROM dataset_images GROUP BY project_id")}
+                        tables = {row[0] for row in conn.execute(
+                            "SELECT name FROM sqlite_master WHERE type='table'")}
+                        if "dataset_captions" in tables:
+                            captioned = {pid: count for pid, count in conn.execute(
+                                "SELECT i.project_id, COUNT(*) FROM dataset_images i "
+                                "JOIN dataset_captions c ON c.image_id=i.id AND c.project_id=i.project_id "
+                                "WHERE i.review != 'rejected' AND LENGTH(TRIM(c.caption)) > 0 "
+                                "GROUP BY i.project_id")}
                 except sqlite3.Error:
-                    counts = {}
+                    counts, captioned = {}, {}
             for project in projects:
                 project["dataset_image_count"] = counts.get(project["id"], 0)
-                project["dataset_train_ready"] = False  # Per-engine export is pending.
+                project["dataset_caption_count"] = captioned.get(project["id"], 0)
+                project["dataset_train_ready"] = False  # Engine-specific export still pending.
             return jsonify({"projects": projects})
         if request.mimetype != "application/json":
             return jsonify({"error": "JSON required"}), 415
