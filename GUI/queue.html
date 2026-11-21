@@ -212,7 +212,8 @@
 <link rel="stylesheet" href="/assets/orkilab/orkilab-shell.css">
 <link rel="stylesheet" href="/assets/orkilab/orkilab-app-shell.css">
 </head>
-<body>
+<body class="orki-queue-theme orki-app-frame orki-standalone-shell">
+<header class="orki-shell-header orki-app-header"><a href="/workspace"><img src="/assets/orkilab/orkilab-logo-dark.svg" alt="OrkiLab"></a><div class="row"><label><span>Language</span><select id="workspace-language" class="no-i18n"></select></label><span id="version" class="muted no-i18n">OrkiLab</span><a class="orki-header-kofi no-i18n" href="https://ko-fi.com/jorgelf" target="_blank" rel="noopener noreferrer" title="Voluntary support for the open-source OrkiLab project">♡ Ko-fi · Support OrkiLab</a></div></header>
 <div class="queue-shell">
 <nav class="queue-sidebar" aria-label="Workspace sections">
     <a href="/workspace#overview">Dashboard</a>
@@ -227,16 +228,13 @@
     
 </nav>
 <div class="wrap">
-    <div class="top">
-        <a href="/"><img src="/assets/orkilab/orkilab-logo-dark.svg" alt="OrkiLab"></a>
+    <div class="top orki-queue-section-heading">
         <div>
             <h1>Job queue</h1>
             <p>Trainings and pre-caches, one after another on the GPU</p>
         </div>
         <div class="spacer"></div>
         <span class="pill-state idle no-i18n" id="queue-state"></span>
-        <a class="orki-header-kofi no-i18n" href="https://ko-fi.com/jorgelf" target="_blank" rel="noopener noreferrer" title="Voluntary support for the open-source OrkiLab project">♡ Ko-fi · Support OrkiLab</a>
-        <a class="btn" href="/"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Workspace</span></a>
     </div>
 
     <div class="panel controls">

@@ -71,6 +71,29 @@ class UnifiedChromeTests(unittest.TestCase):
             with self.subTest(js=needle):
                 self.assertIn(needle, self.js)
 
+    def test_queue_and_dataset_headers_use_exact_workspace_markup(self):
+        import re
+        def first_header(page):
+            html = (ROOT / "GUI" / page).read_text(encoding="utf-8")
+            match = re.search(r"<header(?:[ ]+[^>]*)?>(.*?)</header>", html, re.DOTALL)
+            self.assertIsNotNone(match, page)
+            return match.group(1)
+        original = first_header("workspace.html")
+        for page in ("queue.html", "dataset_studio.html"):
+            with self.subTest(page=page):
+                self.assertEqual(first_header(page), original)
+                html = (ROOT / "GUI" / page).read_text(encoding="utf-8")
+                self.assertIn('class="orki-shell-header orki-app-header"', html)
+
+    def test_navigation_returns_to_page_top_on_all_pages(self):
+        workspace = (ROOT / "GUI" / "workspace.html").read_text(encoding="utf-8")
+        for key in ("history.scrollRestoration", 'window.addEventListener("pageshow"',
+                    'window.scrollTo(0,0)', 'document.addEventListener("click"'):
+            with self.subTest(key=key):
+                self.assertTrue(key in self.js or key in workspace)
+        self.assertIn("scrollWorkspaceTop();", workspace)
+        self.assertNotIn('<a href="/workspace" class="back-link">', workspace)
+
     def test_queue_does_not_acquire_a_second_language_selector(self):
         helper = (ROOT / "assets" / "orkilab" / "orkilab-ui.js").read_text(encoding="utf-8")
         self.assertIn("#ui-lang,#workspace-language,#orki-language,.queue-shell,.studio-layout", helper)

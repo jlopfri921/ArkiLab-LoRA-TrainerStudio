@@ -2,6 +2,18 @@
    Never rewrites queue controls, image controls or their listeners. */
 (function () {
     "use strict";
+    // Every menu transition must begin at the top, not at the previous
+    // section's scroll offset (including browser back/forward restoration).
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    const goTop=()=>window.scrollTo(0,0);
+    window.addEventListener("pageshow",goTop);
+    document.addEventListener("click",event=>{
+        if(event.defaultPrevented||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+        const link=event.target.closest?.(
+            "#home-navigation a,#comfy-navigation a,.queue-sidebar a,.studio-navigation a"
+        );
+        if(link)goTop();
+    });
     // Same item order as #home-navigation in GUI/workspace.html.
     const routes = [
         ["overview", "/workspace#overview", 1],
@@ -132,6 +144,31 @@
             }).catch(() => {});
         }
         head.classList.add("orki-app-header");
+        // Pre-rendered canonical header is interactive even if the Workspace
+        // fetch fails; the later canonical clone will rebind its own controls.
+        const readySelector=head.querySelector("#workspace-language");
+        if(readySelector&&typeof I18N!=="undefined"&&!readySelector.options.length){
+            for(const [code,label] of I18N.languages)readySelector.add(new Option(label,code));
+            readySelector.value=I18N.lang;
+            readySelector.addEventListener("change",async()=>{
+                const previous=I18N.lang;readySelector.disabled=true;
+                try{
+                    const response=await fetch("/api/i18n",{method:"POST",credentials:"same-origin",
+                        headers:{"Content-Type":"application/json"},
+                        body:JSON.stringify({language:readySelector.value})});
+                    if(!response.ok)throw Error("Language change failed");
+                    location.reload();
+                }catch(error){
+                    readySelector.value=previous;
+                    readySelector.disabled=false;
+                }
+            });
+            fetch("/api/workspace/overview",{credentials:"same-origin"})
+                .then(response=>response.ok?response.json():null)
+                .then(data=>{const version=head.querySelector("#version");
+                    if(version&&data?.version)version.textContent=data.version})
+                .catch(()=>{});
+        }
         const languageText = head.querySelector("#orki-shell-language-label");
         if (languageText) languageText.textContent = typeof I18N !== "undefined" ? I18N.translate("Language") : "Language";
         const selector = head.querySelector("#orki-shell-language");
