@@ -65,7 +65,7 @@ class DatasetIndexTests(unittest.TestCase):
 
     def test_metadata_review_filter_sort_and_batch_no_file_changes(self):
         import struct
-        first = b"\\x89PNG\\r\\n\\x1a\\n" + b"\\x00\\x00\\x00\\x0dIHDR" + struct.pack(">II", 640, 480) + b"\\x08\\x02\\x00\\x00\\x00"
+        first = b"\x89PNG\\r\\n\x1a\\n" + b"\x00\x00\x00\x0dIHDR" + struct.pack(">II", 640, 480) + b"\x08\x02\x00\x00\x00"
         self.photo.write_bytes(first)
         other = self.folder / "other.gif"
         other.write_bytes(b"GIF89a" + struct.pack("<HH", 120, 90) + b"x" * 10)
