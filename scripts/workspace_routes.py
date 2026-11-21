@@ -7,6 +7,7 @@ from workspace_store import ProjectStore
 import comfyui_connect
 import workflow_library
 import generation_studio
+import dataset_studio
 import gpu_monitor
 import gpu_stats
 import project_layout
@@ -19,7 +20,12 @@ def register(app, base, load_config):
     comfyui_connect.register(app, base)
     workflow_library.register(app, base)
     generation_studio.register(app, base)
+    dataset_studio.register(app, base)
     store = ProjectStore(base / "settings" / "orkilab" / "projects.sqlite3")
+
+    @app.get("/workspace/datasets")
+    def dataset_studio_page():
+        return send_from_directory(str(base / "GUI"), "dataset_studio.html")
 
     @app.get("/workspace/comfyui")
     @app.get("/workspace")
