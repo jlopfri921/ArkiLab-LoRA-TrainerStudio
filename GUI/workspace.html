@@ -629,13 +629,13 @@ function fillCompareWorkflows(){
   const c=compareCompatibility(w);
   const prefix=scoped?(w.compatibility?.status==="candidate"?(I18N.lang==="es"?"Candidato":"Candidate"):w.compatibility?.status==="incompatible"?compatText.incompatible:compatText.unverified)
    :c==="detected"?t("LoRA detected"):c==="check"?t("LoRA needs checking"):t("No standard LoRA detected");
-  const option=new Option(prefix+" · "+w.name+" ["+w.format.toUpperCase()+"]",w.id);
+  const option=new Option(prefix+" · "+w.name+" ["+w.format.toUpperCase()+"]"+(scoped&&w.compatibility?.status!=="candidate"?" · "+compatibilityReason(w):""),w.id);
   if(scoped&&w.compatibility?.status!=="candidate")option.disabled=true;
   option.title=compatibilityReason(w);
   select.add(option);
  }
  if([...select.options].some(x=>x.value===old&&!x.disabled))select.value=old;
- else if(list.length===1&&list[0].compatibility?.status==="candidate"||!scoped&&list.length===1)select.value=list[0].id;
+ else if(list.length===1&&(!scoped||list[0].compatibility?.status==="candidate"))select.value=list[0].id;
  const stat=$("compare-compat-status");
  const matched=matching.filter(w=>w.compatibility?.status==="candidate").length;
  stat.textContent=!scoped?(I18N.lang==="es"?"Selecciona un proyecto para filtrar por modelo.":"Choose a project to filter by model family."):
@@ -742,7 +742,7 @@ function updateCheckpointMode(){
  $("compare-confirm").checked=false;
  refreshCompare();updateCheckpointCount();fillCompareWorkflows();
 }
-$("compare-mode").onchange=()=>{updateCheckpointMode();if(checkMode())loadCheckpointProjects()};
+$("compare-mode").onchange=()=>{updateCheckpointMode();if(checkMode()){loadCheckpointProjects();loadCompareCompatibility();}else{projectCompatibilityRequest++;projectCompatibilityId="";projectCompareWorkflows=[];fillCompareWorkflows();}};
 $("compare-checkpoint-project").onchange=async()=>{await Promise.all([loadProjectCheckpoints(),loadCompareCompatibility()]);};
 $("compare-checkpoint-refresh").onclick=loadProjectCheckpoints;
 loadCheckpointProjects();
