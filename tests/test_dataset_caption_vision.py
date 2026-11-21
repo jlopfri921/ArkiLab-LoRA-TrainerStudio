@@ -85,6 +85,8 @@ class LocalCaptionPreviewTests(unittest.TestCase):
             ({"model": "vision-local:latest"}, 400),
             ({"confirm": False, "model": "vision-local:latest"}, 400),
             ({"confirm": True, "model": "bad model"}, 400),
+            ({"confirm": True, "model": "vision:cloud"}, 400),
+            ({"confirm": True, "model": "vision:8b-cloud"}, 400),
             ({"confirm": True, "model": "x"*101}, 400),
             ({"confirm": True, "model": "valid", "prompt": ""}, 400),
             ({"confirm": True, "model": "valid", "prompt": "x"*701}, 400),
@@ -107,6 +109,8 @@ class LocalCaptionPreviewTests(unittest.TestCase):
                         {"name": "llava:latest", "size": 123},
                         {"name": "text-only:latest", "size": 88},
                         {"name": "remote:cloud", "remote_host": "https://remote.example"},
+                        {"name": "remote2:latest", "remote_model": "vision:cloud"},
+                        {"name": "remote3:cloud"},
                         {"name": "unknown:latest"},
                     ]}).encode())
                 if request.full_url.endswith("/api/show"):
@@ -121,7 +125,7 @@ class LocalCaptionPreviewTests(unittest.TestCase):
             result = self.client.get("/api/workspace/ollama/vision-models")
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.get_json()["models"], [{"name": "llava:latest", "size": 123}])
-        self.assertEqual(result.get_json()["examined"], 4)
+        self.assertEqual(result.get_json()["examined"], 6)
         self.assertEqual(self.client.get("/api/workspace/ollama/vision-models",
             headers={"Origin": "https://other.example"}).status_code, 403)
         self.assertEqual(self.client.get("/api/workspace/ollama/vision-models",
