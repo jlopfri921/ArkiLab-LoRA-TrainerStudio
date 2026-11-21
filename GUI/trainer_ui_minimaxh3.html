@@ -2024,6 +2024,13 @@
                     if (!(data.train && data.train.preview_size)) document.getElementById('train_preview_size').value = '1024';
                     if (!(data.pre_cache && data.pre_cache.max_side)) document.getElementById('precache_max_side').value = 2048;
                 }
+                // The MiniMax-H3 Image launcher uses this same page; publish the
+                // server-confirmed mode for optional, read-only navigation help.
+                const confirmedH3Mode = data.h3_model_forced === 'image' ? 'image' : 'video';
+                document.body.dataset.orkiTrainerMode = confirmedH3Mode;
+                document.dispatchEvent(new CustomEvent('orkilab:trainer-mode', {
+                    detail: { mode: confirmedH3Mode }
+                }));
                 if (data.export && data.export.export_models_dir) document.getElementById('export_models_dir').value = data.export.export_models_dir;
                 if (data.pre_cache) {
                     const p = data.pre_cache;
