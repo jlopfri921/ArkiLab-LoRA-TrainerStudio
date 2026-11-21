@@ -2055,5 +2055,10 @@
   "Select image project": "Seleziona progetto immagini",
   "Select 2–6 checkpoints. To generate images, copy their .safetensors files into ComfyUI/models/loras and refresh ComfyUI. All variants use the unchanged workflow prompt and seed. Generation is blocked during training.": "Seleziona 2–6 checkpoint. Copia i file .safetensors in ComfyUI/models/loras e aggiorna i modelli di ComfyUI. Tutte le varianti mantengono prompt e seed invariati. La generazione è bloccata durante l'addestramento.",
   "The selected LoRA strength or checkpoint is the only setting that changes. Prompt, seed and all other settings remain unchanged. Runs are sequential; Stop prevents new submissions but does not interrupt the current job.": "Cambia soltanto l'intensità LoRA o il checkpoint selezionato. Prompt, seed e tutti gli altri parametri restano invariati. Le generazioni sono sequenziali; Arresta impedisce nuovi invii ma non interrompe quello in corso.",
-  "Projects link datasets and detect saved training checkpoints. Checkpoint comparison requires a compatible workflow and LoRA files available to ComfyUI; OrkiLab never copies them automatically.": "I progetti collegano i dataset e rilevano i checkpoint salvati. Il confronto richiede un workflow compatibile e i file LoRA disponibili in ComfyUI; OrkiLab non li copia mai automaticamente."
+  "Projects link datasets and detect saved training checkpoints. Checkpoint comparison requires a compatible workflow and LoRA files available to ComfyUI; OrkiLab never copies them automatically.": "I progetti collegano i dataset e rilevano i checkpoint salvati. Il confronto richiede un workflow compatibile e i file LoRA disponibili in ComfyUI; OrkiLab non li copia mai automaticamente.",
+  "Train project": "Addestra progetto",
+  "images have captions. Dataset prepared for training.": "Immagini con descrizioni. Dataset pronto per l'addestramento.",
+  "images have captions. Finish the descriptions and prepare the dataset before training.": "Immagini con descrizioni. Completa le descrizioni e prepara il dataset prima dell'addestramento.",
+  "images have captions. Prepare the dataset before training.": "Immagini con descrizioni. Prepara il dataset prima dell'addestramento.",
+  "No images indexed for this project yet.": "Nessuna immagine indicizzata per questo progetto."
 }
