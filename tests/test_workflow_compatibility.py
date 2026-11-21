@@ -68,6 +68,28 @@ class WorkflowCompatibilityTests(unittest.TestCase):
         ]}
         self.assertEqual(assess_workflow(graph,"image","flux3klein")["status"],"candidate")
 
+    def test_flux3_base_without_lora_loader_is_visible_as_needs_lora(self):
+        result=assess_workflow(api_graph("FLUX.3-Image-Klein.safetensors",False),
+                               "image","flux3klein","image_flux3_klein_t2i")
+        self.assertEqual(result["status"],"needs_lora")
+        self.assertEqual(result["reason"],"no_loader")
+        self.assertFalse(result["standard_loader"])
+
+    def test_title_only_is_reviewable_but_not_executable(self):
+        result=assess_workflow(api_graph("mystery.safetensors",False),
+                               "image","flux3klein","image_flux3_klein_image_edit")
+        self.assertEqual(result["status"],"unverified")
+        self.assertEqual(result["reason"],"name_hint")
+
+    def test_visual_lora_filename_does_not_prove_base_model(self):
+        graph={"nodes":[
+            {"id":1,"type":"CheckpointLoaderSimple","widgets_values":["unknown.safetensors"]},
+            {"id":2,"type":"LoraLoaderModelOnly","widgets_values":["Flux3Klein_LoRA_step_100.safetensors",1.0]}
+        ]}
+        result=assess_workflow(graph,"image","flux3klein")
+        self.assertEqual(result["status"],"unverified")
+        self.assertEqual(result["reason"],"unknown_family")
+
     def test_project_engine_names_are_normalized(self):
         self.assertEqual(family_from_engine("flux3klein"),"flux3klein")
         self.assertEqual(family_from_engine("flux2klein"),"flux2klein")
@@ -84,8 +106,11 @@ class WorkflowCompatibilityIntegrationChecks(unittest.TestCase):
             self.assertIn(token,library)
         for token in ('id="compare-show-all"', 'id="compare-compat-status"',
                       'function loadCompareCompatibility()', 'w.compatibility?.status==="candidate"',
-                      'option.disabled=true', 'id="compare-checkpoint-project"'):
+                      'id="compare-checkpoint-project"'):
             self.assertIn(token,html)
+        self.assertIn('id="compare-inspect"',html)
+        self.assertIn('"needs_lora"',html)
+        self.assertIn('"name_hint"',html)
         self.assertIn('compatibility = assess_workflow(',gen)
         self.assertIn('if compatibility["status"] != "candidate"',gen)
 
