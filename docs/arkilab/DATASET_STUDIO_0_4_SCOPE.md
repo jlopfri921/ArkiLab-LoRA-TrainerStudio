@@ -74,3 +74,7 @@ An optional per-image Ollama adapter can be invoked **only by explicit user acti
 - The paired export requires an existing saved caption and explicit download confirmation. Supported file types: JPEG, PNG, WebP and BMP. Maximum 200 selected entries, 40 MiB per file and 256 MiB total indexed image bytes per export.
 - **Important:** This ZIP is **not** an engine-specific export adapter, does not set the trainer's dataset path, and does not itself trigger training. A user must extract the ZIP and select a compatible dataset directory in the target trainer.
 - Future work: true per-trainer profile, safe managed output directory, project dataset path persistence/hand-off, train/validation split and real Windows + GPU acceptance.
+
+### Native dataset folder browser (PR #61 development)
+
+The Image folder field continues to accept a pasted or typed absolute path. The new **Browse…** button asks the **launcher computer's** Windows/Linux desktop session for a native folder using a local-only, same-origin API. Cancelling does not erase the text field. Linux headless servers without a GUI session show an error and retain manual-path input. Browser-only file input is intentionally not used because browsers do not reliably expose the local absolute path of a directory. No files are imported by selecting a folder; the user must explicitly click **Import images**. Real Windows and Linux GUI acceptance is still pending.
