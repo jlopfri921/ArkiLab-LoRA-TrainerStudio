@@ -32,6 +32,20 @@
 | R02 | Representative trainer from image, video and audio families opens and runs a *small authorized smoke job* without regression (record per-engine evidence) | NOT TESTED | |
 | L01 | Progress, errors, cancellation and GPU labels translate appropriately in all supported locale options | NOT TESTED | |
 
+## Operator-reported final checks (2026-11-21)
+
+These results were provided by the operator through the release-readiness checklist. `REPORTED PASS` means the operator confirmed the scenario; no screenshots, logs, GPU readings, test commit SHA or workflow JSON are attached. This register does not convert narrower tests in the technical matrix above into PASS where their full expectations were not explicitly checked.
+
+| Scenario | Result | Important qualification |
+| --- | --- | --- |
+| Generate image and find it in OrkiLab history | **REPORTED PASS** | Image path only; output persistence across refresh/restart and other media types not yet recorded |
+| Cancel generation without affecting other jobs | **REPORTED PASS** | Active/pending distinctions and queue state logs not recorded |
+| Observe RAM/VRAM before and after releasing ComfyUI models | **REPORTED PASS** | Numerical measurements, peak and process attribution not recorded |
+| Disconnect ComfyUI; OrkiLab reflects disconnected state | **REPORTED PASS** | Does not cover all authentication, malformed workflow or offline cases |
+| Compare two LoRA strengths | **PENDING — NOT TESTED** | Standard-loader comparator remains part of the scoped 0.3 RC |
+
+See [the 0.3.0-rc.1 release readiness register](RC_0_3_0_READINESS.md) for publication gates. Windows/Linux CI evidence, detailed queue-safety cases, failures/recovery, multi-format media, i18n and upgrade checks remain open.
+
 ## Manual test procedure
 
 1. Capture idle `nvidia-smi` before opening GPU Manager; compare available sensor fields without treating missing telemetry as a fatal error.
