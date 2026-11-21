@@ -118,12 +118,24 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <button type="button" id="export-sidecars" disabled>Export selected captions (.txt ZIP)</button>
 <button type="button" id="export-training" disabled>Export image + caption dataset (ZIP)</button>
 <button type="button" id="prepare-training" disabled>Prepare local training folder</button>
+<button type="button" id="batch-captions" disabled>AI captions for selected images</button>
 </div>
 <div class="qualitybar" aria-label="Dataset quality scan"><button type="button" id="scan-quality">Analyze image quality</button><button type="button" id="cancel-scan" disabled>Cancel scan</button><button type="button" id="compare-images">Compare similar images</button><progress id="scan-progress" max="100" value="0" aria-label="Scan progress"></progress><span id="scan-label" class="muted" role="status" aria-live="polite">No scan running</span></div>
 <p id="count" class="muted count">No project selected</p>
 <p role="status" aria-live="polite" class="status" id="status"></p>
 <div class="grid" id="images"></div>
 </section></main></div>
+<dialog class="caption-dialog" id="batch-caption-dialog" aria-labelledby="batch-caption-title">
+<div class="caption-head"><h2 id="batch-caption-title">Generate captions in bulk · Local Ollama</h2><button id="batch-caption-close" type="button" aria-label="Close">✕</button></div>
+<p id="batch-caption-help" class="muted">Only the selected images are processed. OrkiLab calls your locally installed Ollama vision model one image at a time. Results are proposals: review each description before saving. Existing captions are skipped, never replaced automatically.</p>
+<label for="batch-caption-model" id="batch-caption-model-label">Installed vision model</label>
+<div class="caption-actions"><select id="batch-caption-model" style="min-width:220px"><option value="">Searching...</option></select><button id="batch-caption-model-refresh" type="button">Refresh models</button></div>
+<div class="caption-actions"><button id="batch-caption-start" type="button">Generate previews</button><button id="batch-caption-cancel" type="button" disabled>Cancel generation</button></div>
+<progress id="batch-caption-progress" max="100" value="0" style="width:100%"></progress>
+<p id="batch-caption-status" class="muted" role="status" aria-live="polite"></p>
+<div id="batch-caption-results" style="display:grid;gap:12px;max-height:50vh;overflow:auto"></div>
+<div class="caption-actions"><button id="batch-caption-save" type="button" disabled>Save approved captions</button><button id="batch-caption-done" type="button">Close</button></div>
+</dialog>
 <dialog class="comparison-dialog" id="comparison" aria-labelledby="compare-title">
 <div class="compare-header"><h2 id="compare-title">Compare images</h2><button type="button" id="compare-close" aria-label="Close comparison">✕</button></div>
 <p class="compare-tip" id="compare-intro">Review possible matches side by side. Similarity and blur are suggestions, not automatic deletion decisions.</p>
@@ -213,7 +225,7 @@ let comparePairs=[],compareItems=new Map(),compareIndex=0;
 function say(message){status.textContent=message}
 function endpoint(){return "/api/workspace/datasets/"+encodeURIComponent(project.value)}
 async function api(path,options={}){const response=await fetch(path,{credentials:"same-origin",...options});const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data}
-function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars","export-training","prepare-training"])$(id).disabled=busy||!project.value||!selected.size;
+function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove","export-sidecars","export-training","prepare-training","batch-captions"])$(id).disabled=busy||!project.value||!selected.size;
 $("compare-images").disabled=!project.value||scanning||busy}
 function scanControls(){ $("scan-quality").disabled=scanning||!project.value; $("cancel-scan").disabled=!scanning }
 async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}const requested=new URLSearchParams(location.search).get("project");if(requested&&[...project.options].some(o=>o.value===requested)){project.value=requested;project.dispatchEvent(new Event("change"));}}catch(e){say(e.message)}}
