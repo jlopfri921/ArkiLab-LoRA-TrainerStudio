@@ -134,7 +134,7 @@
   "Saves the training settings, previews included. While training, they apply on the next step.": "Salva le impostazioni di addestramento, anteprime incluse. Durante l'addestramento valgono dal passo successivo.",
   "Console Output": "Output della console",
   "IDLE": "INATTIVO",
-  "Dataset Manager": "Gestore del dataset",
+  "Dataset Manager": "Gestione dataset",
   "Search...": "Cerca...",
   "Uploads files or a .zip into the dataset folder (you can also drag them here). Useful from another device or RunPod.": "Carica file o un .zip nella cartella del dataset (puoi anche trascinarli qui). Utile da un altro dispositivo o da RunPod.",
   "⬆ Upload": "⬆ Carica",
@@ -2040,5 +2040,9 @@
   "Multimodal training checklist": "Preparazione multimodale",
   "Check which input modalities and dataset structure this engine supports. Confirm compatible model weights, resolution or duration, GPU memory and checkpoints before training.": "Controlla le modalità e la struttura dati supportate. Verifica pesi compatibili, risoluzione o durata, memoria GPU e checkpoint.",
   "Before opening this trainer": "Prima di aprire questo trainer",
-  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "Compatibilità esatta, memoria GPU consigliata e checkpoint supportati devono essere verificati nel trainer. Questa guida non modifica le impostazioni."
+  "Exact compatibility, recommended GPU memory and supported checkpoint features must be verified in the selected trainer. This guide does not change its settings.": "Compatibilità esatta, memoria GPU consigliata e checkpoint supportati devono essere verificati nel trainer. Questa guida non modifica le impostazioni.",
+  "Trainer quick navigation": "Navigazione rapida del trainer",
+  "Jump to": "Vai a",
+  "Console": "Console",
+  "Generated previews": "Anteprime generate"
 }
