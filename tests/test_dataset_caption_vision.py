@@ -66,6 +66,7 @@ class LocalCaptionPreviewTests(unittest.TestCase):
                 self.assertFalse(body["stream"])
         fake = FakeOpener()
         fake.assertEqual = self.assertEqual
+        fake.assertFalse = self.assertFalse
         fake.data = self.data
         with patch("dataset_caption_vision.urllib.request.build_opener", return_value=fake):
             result = self.client.post(self.endpoint, json={"confirm": True, "model": "vision-local:latest"})
