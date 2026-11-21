@@ -853,6 +853,11 @@ function routeWorkspaceActions(){
 }
 window.addEventListener("hashchange",routeWorkspaceActions);
 window.addEventListener("hashchange",routeWorkspace);routeWorkspace();routeHome();routeWorkspaceActions();
+const requestedDialog=new URLSearchParams(location.search).get("dialog");
+if(requestedDialog==="settings"||requestedDialog==="shutdown"){
+  const button=$(requestedDialog==="settings"?"settings-open":"shutdown-open");
+  if(button)button.click();
+}
 overview().catch(e=>notice(e.message)).finally(()=>projects().catch(e=>notice(e.message)));
 </script><script src="/assets/orkilab/orkilab-ui.js"></script>
 </body></html>
