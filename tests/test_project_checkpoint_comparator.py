@@ -1,5 +1,6 @@
 """Project checkpoint inventory and ComfyUI comparator UI regression."""
 import sqlite3
+from contextlib import closing
 import sys
 import tempfile
 import unittest
@@ -22,7 +23,7 @@ class ProjectCheckpointInventoryTests(unittest.TestCase):
         self.project = "c" * 32
         db = self.base / "settings" / "orkilab" / "projects.sqlite3"
         db.parent.mkdir(parents=True)
-        with sqlite3.connect(db) as conn:
+        with closing(sqlite3.connect(db)) as conn, conn:
             conn.execute("CREATE TABLE projects(id TEXT PRIMARY KEY, engine TEXT, category TEXT, archived INTEGER)")
             conn.execute("INSERT INTO projects VALUES (?,?,?,0)", (self.project, "flux3klein", "image"))
         self.output = self.base / "Outputs" / ("flux3klein_lora_output_orkilab_" + self.project[:12])
@@ -43,7 +44,7 @@ class ProjectCheckpointInventoryTests(unittest.TestCase):
     def test_unknown_archived_and_nonimage_projects_rejected(self):
         with self.assertRaises(LookupError):
             project_checkpoints.inventory(self.base, "d" * 32)
-        with sqlite3.connect(self.base / "settings" / "orkilab" / "projects.sqlite3") as conn:
+        with closing(sqlite3.connect(self.base / "settings" / "orkilab" / "projects.sqlite3")) as conn, conn:
             conn.execute("UPDATE projects SET archived=1")
         with self.assertRaises(LookupError):
             project_checkpoints.inventory(self.base, self.project)
