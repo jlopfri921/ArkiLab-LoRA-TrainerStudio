@@ -21,7 +21,7 @@ def dimensions(path):
     try:
         with open(path, "rb") as source:
             h = source.read(32)
-            if h.startswith(b"\x89PNG\\r\\n\x1a\\n") and h[12:16] == b"IHDR":
+            if h.startswith(b"\x89PNG\r\n\x1a\n") and h[12:16] == b"IHDR":
                 w, hgt = struct.unpack(">II", h[16:24])
             elif h[:3] in (b"GIF",) and h[3:6] in (b"87a", b"89a"):
                 w, hgt = struct.unpack("<HH", h[6:10])
