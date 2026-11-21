@@ -2055,5 +2055,10 @@
   "Select image project": "이미지 프로젝트 선택",
   "Select 2–6 checkpoints. To generate images, copy their .safetensors files into ComfyUI/models/loras and refresh ComfyUI. All variants use the unchanged workflow prompt and seed. Generation is blocked during training.": "2~6개의 체크포인트를 선택하세요. .safetensors 파일을 ComfyUI/models/loras에 복사하고 ComfyUI 모델 목록을 새로 고치세요. 모든 버전은 동일한 프롬프트와 시드를 사용합니다. 학습 중에는 생성이 차단됩니다.",
   "The selected LoRA strength or checkpoint is the only setting that changes. Prompt, seed and all other settings remain unchanged. Runs are sequential; Stop prevents new submissions but does not interrupt the current job.": "선택한 LoRA 강도 또는 체크포인트만 변경됩니다. 프롬프트, 시드 및 다른 모든 설정은 유지됩니다. 생성은 순차적으로 진행되며 중지는 추가 제출만 막고 진행 중인 작업은 중단하지 않습니다.",
-  "Projects link datasets and detect saved training checkpoints. Checkpoint comparison requires a compatible workflow and LoRA files available to ComfyUI; OrkiLab never copies them automatically.": "프로젝트는 데이터셋을 연결하고 저장된 체크포인트를 감지합니다. 비교에는 호환되는 워크플로와 ComfyUI에서 사용할 수 있는 LoRA 파일이 필요하며 OrkiLab은 이를 자동으로 복사하지 않습니다."
+  "Projects link datasets and detect saved training checkpoints. Checkpoint comparison requires a compatible workflow and LoRA files available to ComfyUI; OrkiLab never copies them automatically.": "프로젝트는 데이터셋을 연결하고 저장된 체크포인트를 감지합니다. 비교에는 호환되는 워크플로와 ComfyUI에서 사용할 수 있는 LoRA 파일이 필요하며 OrkiLab은 이를 자동으로 복사하지 않습니다.",
+  "Train project": "프로젝트 학습",
+  "images have captions. Dataset prepared for training.": "개 이미지에 설명이 있습니다. 학습 데이터셋이 준비되었습니다.",
+  "images have captions. Finish the descriptions and prepare the dataset before training.": "개 이미지에 설명이 있습니다. 설명을 완성하고 학습 전에 데이터셋을 준비하세요.",
+  "images have captions. Prepare the dataset before training.": "개 이미지에 설명이 있습니다. 학습 전에 데이터셋을 준비하세요.",
+  "No images indexed for this project yet.": "이 프로젝트에 아직 등록된 이미지가 없습니다."
 }
