@@ -24,6 +24,11 @@ class DatasetStudioUiChecks(unittest.TestCase):
                 self.assertIn('id="' + selector + '"', self.html)
         for locale in ("en", "es", "pt", "fr", "de", "it", "ja", "ko"):
             self.assertIn(chr(10) + locale + ":[", self.html)
+        self.assertIn('id="quality-filter"', self.html)
+        self.assertIn('quality:$("quality-filter").value', self.html)
+        self.assertIn('item.near_duplicate', self.html)
+        self.assertIn('item.possible_blur', self.html)
+        self.assertIn('qualityTexts={', self.html)
         self.assertIn('I18N.lang', self.html)
         self.assertIn('batch("remove"', self.html)
         self.assertIn('batch("review"', self.html)
