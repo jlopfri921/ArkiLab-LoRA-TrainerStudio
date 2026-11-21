@@ -87,7 +87,7 @@ def register(app, base):
                     if project_engine is not None:
                         try:
                             entry["compatibility"] = assess_workflow(
-                                json.loads(row["graph"]), row["category"], project_engine)
+                                json.loads(row["graph"]), row["category"], project_engine, row["name"])
                         except (ValueError,TypeError,RecursionError):
                             entry["compatibility"] = {
                                 "status":"unverified","reason":"invalid_graph","detected":[],
