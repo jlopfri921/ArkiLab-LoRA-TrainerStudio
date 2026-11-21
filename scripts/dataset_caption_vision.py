@@ -19,6 +19,13 @@ MAX_CAPTION = 2000
 MAX_PROMPT = 700
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
 MODEL_PATTERN = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_./:-]{0,99}$")
+class NoRedirects(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, fp, code, message, headers, newurl):
+        # Prevent Ollama/misconfigured local proxies from redirecting image
+        # bytes to a remote destination.
+        return None
+
+
 DEFAULT_PROMPT = ("Describe the visible content of this image for image-model LoRA "
                   "training. Be factual and concise. Include subject, appearance, "
                   "clothing, action, composition, background and lighting when visible. "
@@ -79,7 +86,7 @@ def register(app, db, project_exists, local, valid_origin):
             )
             try:
                 # A fixed loopback destination: no user-controlled remote host.
-                with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(
+                with urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirects()).open(
                         req, timeout=120) as response:
                     result = json.load(response)
             except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError) as exc:
