@@ -2047,5 +2047,15 @@
   "Console": "Consola",
   "Generated previews": "Pré-visualizações geradas",
   "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image: LoRA de imagem e edição. Os controlos de vídeo e áudio não estão disponíveis neste modo.",
-  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: LoRA de vídeo e áudio."
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: LoRA de vídeo e áudio.",
+  "Train project": "Treinar projeto",
+  "Opens the trainer selected in this project. First prepare a compatible dataset.": "Abre o treinador escolhido para este projeto. Prepara primeiro um dataset compatível.",
+  "No images indexed for this project yet. Import images in Dataset Studio.": "Ainda não existem imagens associadas. Importa-as no Dataset Studio.",
+  "{count} of {total} images have saved descriptions. A training folder has been prepared.": "{count} de {total} imagens têm descrições guardadas. A pasta de treino já está preparada.",
+  "{count} of {total} images have saved descriptions. Add the missing descriptions in Dataset Studio, then select the images and prepare the training folder.": "{count} de {total} imagens têm descrições guardadas. Completa as descrições no Dataset Studio, seleciona as imagens e prepara a pasta de treino.",
+  "All {total} images have descriptions. Select them in Dataset Studio and prepare the training folder.": "Todas as {total} imagens têm descrições. Seleciona-as no Dataset Studio e prepara a pasta de treino.",
+  "Project dataset folder does not exist; choose a valid absolute folder": "A pasta do dataset do projeto não existe. Escolhe um caminho absoluto válido.",
+  "No dataset linked to this project; prepare one in Dataset Studio": "Este projeto não tem um dataset associado. Prepara-o no Dataset Studio.",
+  "Prepared dataset was moved or removed; prepare it again": "A pasta preparada foi movida ou removida. Prepara-a novamente.",
+  "Selected trainer does not match the project": "O treinador selecionado não corresponde ao projeto."
 }
