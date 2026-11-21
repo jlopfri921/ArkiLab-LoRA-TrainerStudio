@@ -2230,5 +2230,12 @@
   "images have captions. Dataset prepared for training.": "imágenes tienen descripción. Dataset preparado para entrenar.",
   "images have captions. Finish the descriptions and prepare the dataset before training.": "imágenes tienen descripción. Completa las descripciones y prepara el dataset antes de entrenar.",
   "images have captions. Prepare the dataset before training.": "imágenes tienen descripción. Prepara el dataset antes de entrenar.",
-  "No images indexed for this project yet.": "Este proyecto todavía no tiene imágenes indexadas."
+  "No images indexed for this project yet.": "Este proyecto todavía no tiene imágenes indexadas.",
+  "LoRA Comparator": "Comparador LoRA",
+  "Select LoRA node": "Selecciona un nodo LoRA",
+  "Confirm comparison": "Confirmar comparación",
+  "Run comparison": "Ejecutar comparación",
+  "Project": "Proyecto",
+  "Stop after current": "Detener después del actual",
+  "Compare results": "Comparar resultados"
 }
