@@ -15,6 +15,14 @@
 
 Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Workspace is the default interface. **Version 0.3.0-rc.1 was published as a GitHub prerelease on 2026-11-21**; it is not a stable release. See [the official release](https://github.com/jlopfri921/OrkiLab-LoRA-TrainerStudio/releases/tag/v0.3.0-rc.1) and the [acceptance register](docs/arkilab/RC_0_3_0_READINESS.md).
 
+## Dataset Studio 0.4 development — manual Caption Studio (not released)
+
+The **development branch in `main`**, after the published 0.3.0-rc.1 prerelease, includes a project-linked Dataset Studio under **Workspace → Dataset Studio**. Import references to local image files, review them, scan for exact/possible visual duplicates and blur, and compare pairs. Images remain at their original locations.
+
+The first **0.4 beta.1 development slice** adds a per-image **Edit caption** dialog with manual text, a bounded history of the 25 latest saved revisions and a way to load an older version before saving it as a new revision. Captions are kept in OrkiLab's local SQLite metadata, with concurrent-edit conflict detection; they **do not yet create or modify `.txt` sidecars**. This is **not an AI caption generator**, a resize/crop exporter or a completed 0.4 beta.1 release; these are separate acceptance steps.
+
+The same development work also synchronizes the Workspace/Queue/Dataset header markup, removes the duplicate ComfyUI return button and resets scrolling to the top after selecting menu sections. Browser appearance and real-dataset acceptance must be verified on the user's Windows installation separately from CI. See [Dataset Studio scope and milestones](docs/arkilab/DATASET_STUDIO_0_4_SCOPE.md).
+
 ## Ecosystem spotlight — owner-managed announcement
 
 The Dashboard includes a small, dismissible **OrkiLab ecosystem** announcement currently restricted to OrkiLab and OrkiCAD AI. It is a first-party editorial promotion, never an advertising network. One announcement is shown at a time, rotated daily, with a session-level dismiss control.
