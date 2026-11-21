@@ -25,7 +25,7 @@ Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, e
 | --- | --- | --- | --- |
 | Windows CI unit tests | NOT VERIFIED | Workflow job URL + result for release SHA | Yes |
 | Linux CI unit tests | NOT VERIFIED | Workflow job URL + result for release SHA | Yes |
-| Browser trainer smoke test | REPORTED PASS — 3/3 (SDXL, Wan 2.2, YuE2) | User-supplied Windows console output; record commit SHA and run full suite | Yes for regression |
+| Browser trainer smoke test | REPORTED PASS — full local suite | User confirms all trainers OK after 3/3 observed sample; exact count, log and SHA not attached | Yes for regression |
 | Workspace/ComfyUI connection gate | REPORTED | Connect/disconnect screen evidence and route behavior | Yes |
 | API-format workflow prepare/execute | REPORTED | Trusted graph identifier, status and output | Yes |
 | Bridge conversion of visual workflow | REPORTED | Graph, preparation stages, actual converted run | Yes |
@@ -56,6 +56,19 @@ The user ran from `D:\\orkilab\\orkilab-lora-trainerstudio` with the project's v
 **Observed console result:** `OK sdxl`, `OK wan22`, `OK yue2`, **`3/3 OK`**. Preserved logs for `server_sdxl`, `server_wan22` and `server_yue2` each contained `Serving Flask app` and `Debug mode: off`, with no reported startup exception. The earlier run via plain `python` yielded `0/3 OK` (servers did not start), suggesting an interpreter/environment mismatch; the exact earlier traceback was not preserved.
 
 This is **user-supplied evidence for the headless UI smoke test**, not an independent CI pass or proof of full GPU training. The script intercepts process starts and checks UI-triggered actions without running actual GPU jobs. The exact tested Git SHA was not supplied, and only three trainers were covered. A full smoke run and precise candidate-SHA verification remain necessary. The separately reported successful ComfyUI image generation is real-workflow evidence but does not turn these mocked trainer runs into GPU validation.
+
+## Additional operator test report (2026-11-21)
+
+After the observed `3/3 OK` representative UI test, the operator was asked to run:
+
+```powershell
+.\venv\Scripts\python.exe -m unittest discover -s tests -v
+.\venv\Scripts\python.exe tools\smoke_test_ui.py --keep
+```
+
+The operator replied **"todo ok"**, which is recorded as **reported success for both the local Python unit-test suite and the full headless trainer UI smoke suite**. The exact totals, execution transcript, commit SHA and GitHub Actions job URLs were **not supplied**; the result is therefore a reported local pass, not independently confirmed CI on Windows and Linux. The smoke tool simulates training actions rather than running GPU training.
+
+Remaining independent gates include release-commit CI on Windows/Linux, complete ComfyUI cancellation/foreign-queue safety, persistent history/media and resource-release checks, negative tests, language/upgrade validation and final versioned release notes.
 
 ## Suggested safe operator command sequence
 
@@ -91,4 +104,4 @@ Then follow the step-by-step [GPU/Generation acceptance matrix](GPU_GENERATION_A
 5. Publish a GitHub prerelease with installation/update and rollback instructions, supported workflow examples, known issues and links to the evidence.
 6. Retain prior candidate as rollback option; do not force-reset or overwrite datasets, workflows, settings or outputs.
 
-**Next decision:** run and log the technical acceptance tests. This document alone does not unblock publishing.
+**Next decision:** collect release-commit CI and critical ComfyUI/GPU acceptance evidence, then prepare the release PR. This document alone does not unblock publishing.
