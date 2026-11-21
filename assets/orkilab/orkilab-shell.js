@@ -2,14 +2,17 @@
    Never rewrites queue controls, image controls or their listeners. */
 (function () {
     "use strict";
+    // Same item order as #home-navigation in GUI/workspace.html.
     const routes = [
-        ["overview", "/workspace#overview"],
-        ["projects", "/workspace#projects"],
-        ["engines", "/workspace#engines"],
-        ["datasets", "/workspace/datasets"],
-        ["gpu", "/workspace#gpu-manager"],
-        ["queue", "/queue"],
-        ["comfy", "/workspace/comfyui"]
+        ["overview", "/workspace#overview", 1],
+        ["projects", "/workspace#projects", 2],
+        ["engines", "/workspace#engines", 3],
+        ["gpu", "/workspace#gpu-manager", 5],
+        ["settings", "/workspace?dialog=settings", null],
+        ["shutdown", "/workspace?dialog=shutdown", null],
+        ["queue", "/queue", 6],
+        ["comfy", "/workspace/comfyui", 7],
+        ["datasets", "/workspace/datasets", 4]
     ];
     const names = {
         en: ["Workspace", "Dashboard", "Projects", "Training engines", "Dataset Studio", "GPU Manager", "Job queue", "ComfyUI Zone", "Local AI workspace", "Open-source · Local-first", "Support OrkiLab"],
@@ -145,11 +148,20 @@
         // reconstructing a similar-looking but divergent header and menu.
         syncCanonicalWorkspaceChrome(page, nav, content);
         nav.setAttribute("aria-label", t[0]);
-        nav.replaceChildren(element("span", "nav-heading", t[0]));
-        routes.forEach(([id, to], idx) => {
-            const a = link(to, t[idx + 1]);
-            if (id === page) a.setAttribute("aria-current", "page");
-            nav.append(a);
+        // Complete fallback menu appears immediately, before /workspace is fetched.
+        nav.replaceChildren();
+        routes.forEach(([id, to, nameIndex]) => {
+            const label = id === "settings" ? (locale === "es" ? "Ajustes" : "Settings") :
+                id === "shutdown" ? (locale === "es" ? "Pausar todo y salir" : "Pause all and exit") :
+                t[nameIndex];
+            const node = id === "settings" || id === "shutdown" ?
+                element("button", "", label) : link(to, label, id === "comfy" || id === "datasets" ? "zone-entry" : "");
+            if (node.tagName === "BUTTON") {
+                node.type = "button";
+                node.addEventListener("click", () => location.assign(to));
+            }
+            if (id === page) node.setAttribute("aria-current", "page");
+            nav.append(node);
         });
         let footer = content.querySelector(".orki-shell-footer");
         if (!footer) {
