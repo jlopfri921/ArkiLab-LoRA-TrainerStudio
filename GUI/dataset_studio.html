@@ -21,6 +21,11 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 .picker{display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer}.picker input{width:18px;height:18px;accent-color:var(--accent)}
 .muted{color:var(--muted)}.status{min-height:24px;color:#f6c17d}.danger{border-color:#ae6471}
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 0}
+.qualitybar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--line)}
+.qualitybar progress{flex:1 1 200px;max-width:460px;height:16px}
+.qualityflag{border:1px solid #597189;border-radius:5px;padding:2px 5px;font-size:12px;color:#e9c98b}
+.qualityflag.duplicate{border-color:#e7a25b;color:#ffca87}
+
 .actions button{padding:9px 12px}.count{margin:0;padding:12px 0}.loading{opacity:.7}
 @media(max-width:780px){.toolbar{grid-template-columns:1fr}body{padding:12px}section{padding:14px}}
 </style></head><body>
@@ -50,6 +55,7 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <button type="button" id="reset" disabled>Mark unreviewed</button>
 <button type="button" class="danger" id="remove" disabled>Remove selected references</button>
 </div>
+<div class="qualitybar" aria-label="Dataset quality scan"><button type="button" id="scan-quality">Analyze image quality</button><button type="button" id="cancel-scan" disabled>Cancel scan</button><progress id="scan-progress" max="100" value="0" aria-label="Scan progress"></progress><span id="scan-label" class="muted" role="status" aria-live="polite">No scan running</span></div>
 <p id="count" class="muted count">No project selected</p>
 <p role="status" aria-live="polite" class="status" id="status"></p>
 <div class="grid" id="images"></div>
@@ -70,11 +76,12 @@ let lang=((typeof I18N!=="undefined"&&I18N.lang)||navigator.language||"en").slic
 const bindings={"project-label":25,"folder-label":1,"import":2,"search-label":3,"refresh":4,"count":5,"review-filter":8,"sort-label":9,"select-all":10,"select-none":11,"approve":12,"reject":13,"reset":14,"remove":15,"help":26,"library":27,"subtitle":28,"intro":29,"limits":30};
 for(const [id,i] of Object.entries(bindings)){if(id!=="review-filter")$(id).textContent=tr[i]}
 project.options[0].textContent=tr[0];for(let i=0;i<4;i++)$("review-filter").options[i].textContent=tr[18+i];for(let i=0;i<3;i++)$("sort").options[i].textContent=tr[22+i];
-let current=[],selected=new Set(),busy=false,seq=0;
+let current=[],selected=new Set(),busy=false,seq=0,scanRun=0,scanning=false;
 function say(message){status.textContent=message}
 function endpoint(){return "/api/workspace/datasets/"+encodeURIComponent(project.value)}
 async function api(path,options={}){const response=await fetch(path,{credentials:"same-origin",...options});const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data}
 function selectionUI(){$("selected-count").textContent=selected.size+" "+tr[16];for(const id of ["approve","reject","reset","remove"])$(id).disabled=busy||!project.value||!selected.size}
+function scanControls(){ $("scan-quality").disabled=scanning||!project.value; $("cancel-scan").disabled=!scanning }
 async function projects(){try{const data=await api("/api/workspace/projects");for(const p of data.projects||[]){if(p.category!=="image")continue;const option=document.createElement("option");option.value=p.id;option.textContent=p.name;project.append(option)}}catch(e){say(e.message)}}
 function postJson(url,payload){return api(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})}
 async function refresh(){
@@ -95,6 +102,8 @@ check.addEventListener("change",()=>{if(check.checked)selected.add(item.id);else
 const pickText=document.createElement("span");pickText.textContent=item.review;pick.append(check,pickText);meta.append(pick);
 const title=document.createElement("strong");title.textContent=item.name;meta.append(title);
 const detail=document.createElement("small");detail.textContent=(item.width&&item.height?item.width+" × "+item.height+" · ":"")+(item.bytes/1048576).toFixed(2)+" MB"+(item.missing?" · "+tr[33]:"");meta.append(detail);
+if(item.analyzed){const quality=document.createElement("span");quality.className="qualityflag"+(item.duplicate?" duplicate":"");quality.textContent=item.duplicate?"Exact duplicate":item.quality==="low_resolution"?"Low resolution":item.quality==="ok"?"Resolution OK":item.quality||"Not checked";meta.append(quality)}
+
 const button=document.createElement("button");button.type="button";button.textContent=tr[34];button.addEventListener("click",async()=>{if(!confirm(tr[31]))return;await batch("remove",[item.id])});meta.append(button);
 card.append(meta);fragment.append(card)}images.append(fragment)
 }catch(e){if(seq===requestSeq)say(e.message)}}
@@ -103,7 +112,27 @@ if(!ids.length||busy||!project.value)return;busy=true;selectionUI();
 try{let updated=0;for(let n=0;n<ids.length;n+=200){const body={action,ids:ids.slice(n,n+200)};if(action==="review")body.review=review;const data=await postJson(endpoint()+"/batch",body);updated+=data.updated}
 selected.clear();say(updated+" · "+(action==="remove"?tr[7]:tr[12]));await refresh()
 }catch(e){say(e.message)}finally{busy=false;selectionUI()}}
-project.addEventListener("change",()=>{selected.clear();refresh()});
+async function qualityScan(){
+if(scanning||!project.value)return;
+const projectAtStart=project.value,token=++scanRun;scanning=true;scanControls();let cursor=null;
+$("scan-progress").value=0;
+try{
+do{
+if(token!==scanRun||project.value!==projectAtStart)break;
+const result=await postJson("/api/workspace/datasets/"+encodeURIComponent(projectAtStart)+"/quality/scan",{cursor,limit:20});
+if(token!==scanRun||project.value!==projectAtStart)break;
+cursor=result.next_cursor;
+$("scan-progress").value=result.total?Math.round(result.done*100/result.total):100;
+$("scan-label").textContent=result.done+" / "+result.total+" images checked";
+await new Promise(resolve=>setTimeout(resolve,0));
+}while(cursor);
+if(token===scanRun&&project.value===projectAtStart){$("scan-label").textContent="Scan completed (exact duplicates and resolution)";await refresh()}
+}catch(e){if(token===scanRun)say(e.message)}
+finally{if(token===scanRun){scanning=false;scanControls()}}
+}
+$("scan-quality").addEventListener("click",qualityScan);
+$("cancel-scan").addEventListener("click",()=>{scanRun++;scanning=false;scanControls();$("scan-label").textContent="Scan cancelled; results already checked are preserved";refresh()});
+project.addEventListener("change",()=>{scanRun++;scanning=false;scanControls();selected.clear();refresh()});
 $("refresh").addEventListener("click",refresh);$("search").addEventListener("input",refresh);
 $("review-filter").addEventListener("change",refresh);$("sort").addEventListener("change",refresh);
 $("select-all").addEventListener("click",()=>{for(const item of current)selected.add(item.id);refreshSelection()});
@@ -115,5 +144,5 @@ $("reset").addEventListener("click",()=>batch("review",[...selected],"unreviewed
 $("remove").addEventListener("click",()=>{if(confirm(tr[31]))batch("remove",[...selected])});
 $("import").addEventListener("click",async()=>{if(!project.value){say(tr[0]);return}const folder=$("folder").value.trim();if(!folder){say(tr[1]);return}
 $("import").disabled=true;try{const data=await postJson(endpoint(),{folder});say(data.imported+" / "+data.scanned+" · "+tr[32]);await refresh()}catch(e){say(e.message)}finally{$("import").disabled=false}});
-selectionUI();projects();
+selectionUI();scanControls();projects();
 </script></body></html>

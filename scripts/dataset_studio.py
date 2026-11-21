@@ -7,6 +7,7 @@ from contextlib import closing
 from pathlib import Path
 
 from flask import jsonify, request, send_file
+import dataset_quality
 
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp"}
 MIMES = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
@@ -101,9 +102,9 @@ def register(app, base):
           width INTEGER, height INTEGER,
           UNIQUE(project_id, path))""")
         existing = {row[1] for row in conn.execute("PRAGMA table_info(dataset_images)")}
-        for column in ("width", "height"):
+        for column in ("width", "height", "quality_sha256", "quality_flag", "quality_scanned_at"):
             if column not in existing:
-                conn.execute(f"ALTER TABLE dataset_images ADD COLUMN {column} INTEGER")
+                conn.execute(f"ALTER TABLE dataset_images ADD COLUMN {column} " + ("INTEGER" if column in ("width", "height") else "TEXT"))
         conn.execute("CREATE INDEX IF NOT EXISTS idx_dataset_project ON dataset_images(project_id)")
         return conn
 
@@ -116,6 +117,8 @@ def register(app, base):
             row = conn.execute("SELECT 1 FROM projects WHERE id=? AND archived=0",
                                (project_id,)).fetchone()
             return row is not None
+
+    dataset_quality.register(app, db, project_exists, local, valid_origin)
 
     @app.route("/api/workspace/datasets/<project_id>", methods=["GET", "POST"])
     def datasets(project_id):
@@ -137,12 +140,18 @@ def register(app, base):
                      "resolution": "(COALESCE(width,0)*COALESCE(height,0)) DESC, name COLLATE NOCASE, id"}[sort]
             with closing(db()) as conn:
                 rows = [dict(r) for r in conn.execute(
-                    "SELECT id,name,bytes,review,path,width,height FROM dataset_images WHERE project_id=? ORDER BY " + order + " LIMIT ?",
+                    "SELECT id,name,bytes,review,path,width,height,quality_sha256,quality_flag,quality_scanned_at FROM dataset_images WHERE project_id=? ORDER BY " + order + " LIMIT ?",
                     (project_id, MAX_IMAGES))]
+            counts = {}
+            for r in rows:
+                if r["quality_sha256"]:
+                    counts[r["quality_sha256"]] = counts.get(r["quality_sha256"], 0) + 1
             return jsonify(images=[
                 {"id": r["id"], "name": r["name"], "bytes": r["bytes"],
                  "review": r["review"], "width": r["width"], "height": r["height"],
-                 "missing": not Path(r["path"]).is_file()}
+                 "missing": not Path(r["path"]).is_file(),
+                 "quality": r["quality_flag"], "analyzed": bool(r["quality_scanned_at"]),
+                 "duplicate": bool(r["quality_sha256"] and counts[r["quality_sha256"]] > 1)}
                 for r in rows if query in r["name"].lower() and (review == "all" or r["review"] == review)])
         if request.mimetype != "application/json" or not 0 < (request.content_length or 0) <= 4096:
             return jsonify(error="Invalid request"), 400
