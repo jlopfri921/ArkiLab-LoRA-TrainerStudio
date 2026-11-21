@@ -141,6 +141,24 @@ class DatasetStudioUiChecks(unittest.TestCase):
         self.assertIn('body.get("confirm") is not True', backend)
         self.assertIn('if not local() or not valid_origin()', backend)
 
+    def test_ollama_discovery_and_cancellation_are_available_in_caption_editor(self):
+        for token in ('id="caption-ai-select"', 'id="caption-ai-refresh"',
+                      'id="caption-ai-cancel"', 'id="caption-ai-discovery-status"',
+                      'const visionExtraText={', 'refreshVisionModels();',
+                      '"/api/workspace/ollama/vision-models"',
+                      'function cancelVision(){', 'signal:controller.signal',
+                      'request_id:requestId', 'suggest/cancel',
+                      'visionController?.abort()', 'cancelVision();++visionDiscovery'):
+            with self.subTest(token=token):
+                self.assertIn(token, self.html)
+        backend = (ROOT / "scripts" / "dataset_caption_vision.py").read_text(encoding="utf-8")
+        for token in ('def local_vision_models()', '"/api/tags"', '"/api/show"',
+                      '"vision" in capabilities', 'def cancel_caption(',
+                      'stream_caption(', 'socket.SHUT_RDWR',
+                      'busy.acquire(blocking=False)', 'NoRedirects()'):
+            with self.subTest(token=token):
+                self.assertIn(token, backend)
+
     def test_opt_in_local_ollama_caption_has_review_and_separate_save(self):
         for token in ('id="caption-ai-model"', 'id="caption-ai-generate"',
                       'id="caption-ai-result"', 'id="caption-ai-apply"',
