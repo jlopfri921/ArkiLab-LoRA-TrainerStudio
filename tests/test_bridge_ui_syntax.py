@@ -2,6 +2,7 @@
 import re
 import shutil
 import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -17,7 +18,15 @@ class BridgeSyntaxTests(unittest.TestCase):
         for script in scripts:
             if not script.strip():
                 continue
-            result = subprocess.run(["node", "--check"], input=script, text=True, capture_output=True, timeout=20)
+            # Windows Node.js can stop reading stdin after seeing an early
+            # parse error; piping this large Workspace script then deadlocks
+            # the Python subprocess writer. Validate a closed temp file instead.
+            with tempfile.TemporaryDirectory() as folder:
+                source = Path(folder) / "workspace_inline.js"
+                source.write_text(script, encoding="utf-8")
+                result = subprocess.run(
+                    ["node", "--check", str(source)], capture_output=True,
+                    text=True, timeout=20)
             self.assertEqual(result.returncode, 0, result.stderr)
 
     @unittest.skipUnless(shutil.which("node"), "node is not installed")
