@@ -64,6 +64,21 @@ class BatchCaptionTests(unittest.TestCase):
                                         text=True, capture_output=True, timeout=20)
             self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_individual_caption_request_shows_wait_and_blocks_repeat_clicks(self):
+        for fragment in (
+            'if(!captionActive||visionBusy)return;',
+            'visionControls(true);',
+            'visionControls(false);',
+            'startVisionClock();',
+            'stopVisionClock();',
+            'const seconds=Math.floor((Date.now()-started)/1000)',
+            'if(!visionActive||visionActive.cancelled)return;',
+            'current.cancelled=true;',
+            'visionController?.abort();',
+            'button.setAttribute("aria-busy",String(running));',
+        ):
+            self.assertIn(fragment, HTML)
+
     def test_native_browser_and_existing_single_caption_remain_available(self):
         for item in ('id="browse-folder"', 'id="caption-ai-generate"',
                      'id="caption-ai-apply"', 'id="caption-save"'):

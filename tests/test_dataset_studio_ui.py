@@ -148,7 +148,7 @@ class DatasetStudioUiChecks(unittest.TestCase):
                       '"/api/workspace/ollama/vision-models"',
                       'function cancelVision(){', 'signal:controller.signal',
                       'request_id:requestId', 'suggest/cancel',
-                      'visionController?.abort()', 'cancelVision();++visionDiscovery'):
+                      'visionController?.abort()', 'cancelVision();stopVisionClock();visionControls(false);++visionDiscovery'):
             with self.subTest(token=token):
                 self.assertIn(token, self.html)
         backend = (ROOT / "scripts" / "dataset_caption_vision.py").read_text(encoding="utf-8")

@@ -439,26 +439,61 @@ async function refreshVisionModels(){
  finally{if(run===visionDiscovery)button.disabled=false}
 }
 $("caption-ai-refresh").addEventListener("click",refreshVisionModels);
-let visionRequest=0,visionController=null,visionActive=null;
+let visionRequest=0,visionController=null,visionActive=null,visionBusy=false,visionStatusTimer=null;
+const visionWaitText={
+ es:"Ollama está procesando la imagen. El primer análisis puede tardar mientras se carga el modelo.",
+ en:"Ollama is processing the image. The first analysis may take longer while the model loads.",
+ pt:"Ollama está a analisar a imagem. A primeira análise pode demorar a carregar o modelo.",
+ fr:"Ollama analyse l'image. Le premier traitement peut prendre du temps pendant le chargement du modèle.",
+ de:"Ollama verarbeitet das Bild. Das erste Laden des Modells kann länger dauern.",
+ it:"Ollama sta analizzando l'immagine. Il primo caricamento del modello può richiedere tempo.",
+ ja:"Ollamaが画像を処理中です。初回はモデルの読み込みに時間がかかります。",
+ ko:"Ollama가 이미지를 처리하고 있습니다. 첫 분석은 모델 로딩으로 시간이 더 걸릴 수 있습니다."
+};
+function visionControls(running){
+ visionBusy=running;
+ const button=$("caption-ai-generate");
+ button.disabled=running;
+ button.textContent=running?visionTr[6]:visionTr[3];
+ button.setAttribute("aria-busy",String(running));
+ $("caption-ai-cancel").hidden=!running;
+ $("caption-ai-model").disabled=running;
+ $("caption-ai-select").disabled=running;
+ $("caption-ai-refresh").disabled=running;
+}
+function stopVisionClock(){
+ if(visionStatusTimer!==null){clearInterval(visionStatusTimer);visionStatusTimer=null}
+}
+function startVisionClock(){
+ stopVisionClock();
+ const started=Date.now();
+ const update=()=>{
+  if(!visionBusy||visionActive?.cancelled)return;
+  const seconds=Math.floor((Date.now()-started)/1000);
+  $("caption-ai-status").textContent=visionTr[6]+" "+(visionWaitText[lang]||visionWaitText.en)+" ("+seconds+" s)";
+ };
+ update();
+ visionStatusTimer=setInterval(update,1000);
+}
 function cancelVision(){
- if(!visionActive)return;
+ if(!visionActive||visionActive.cancelled)return;
  const current=visionActive;
- visionActive=null;
- ++visionRequest;
+ current.cancelled=true;
+ stopVisionClock();
  $("caption-ai-status").textContent=visionExtra[6];
- $("caption-ai-cancel").hidden=true;
- $("caption-ai-generate").disabled=false;
- $("caption-ai-apply").disabled=true;
- $("caption-ai-result").value="";
+ $("caption-ai-cancel").disabled=true;
  visionController?.abort();
- visionController=null;
+ // Keep Generate disabled until the pending request settles: the backend
+ // may still hold the exclusive Ollama lock during cancellation.
  fetch("/api/workspace/datasets/"+encodeURIComponent(current.project)+"/"+encodeURIComponent(current.id)+"/caption/suggest/cancel",{
   method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},
   body:JSON.stringify({request_id:current.requestId})
  }).then(async response=>{
   if(!response.ok&&response.status!==404)throw Error("Cancel failed");
-  $("caption-ai-status").textContent=visionExtra[7];
- }).catch(()=>{$("caption-ai-status").textContent=visionExtra[6]});
+  if(visionActive===current)$("caption-ai-status").textContent=visionExtra[7];
+ }).catch(()=>{
+  if(visionActive===current)$("caption-ai-status").textContent=visionExtra[6];
+ });
 }
 
 // Sequential, cancellable generation: all previews stay in the browser until
@@ -615,32 +650,38 @@ $("batch-caption-save").addEventListener("click",async()=>{
 
 $("caption-ai-cancel").addEventListener("click",cancelVision);
 $("caption-ai-generate").addEventListener("click",async()=>{
- if(!captionActive)return;
+ if(!captionActive||visionBusy)return;
  const model=$("caption-ai-model").value.trim();
  if(!model){$("caption-ai-status").textContent=visionTr[2];$("caption-ai-model").focus();return}
  const image={...captionActive},run=++visionRequest;
  const requestId=crypto.randomUUID().replaceAll("-","");
  const controller=new AbortController();
- visionController=controller;visionActive={...image,requestId};
- const button=$("caption-ai-generate");button.disabled=true;
- $("caption-ai-cancel").hidden=false;
+ visionController=controller;visionActive={...image,requestId,cancelled:false};
+ visionControls(true);
+ $("caption-ai-cancel").disabled=false;
  $("caption-ai-apply").disabled=true;$("caption-ai-result").value="";
- $("caption-ai-status").textContent=visionTr[6];
+ startVisionClock();
  try{
    const result=await api("/api/workspace/datasets/"+encodeURIComponent(image.project)+"/"+encodeURIComponent(image.id)+"/caption/suggest",{
      method:"POST",headers:{"Content-Type":"application/json"},
      body:JSON.stringify({model,confirm:true,request_id:requestId}),
      signal:controller.signal
    });
-   if(run!==visionRequest||!captionActive||image.id!==captionActive.id||image.project!==captionActive.project)return;
+   if(run!==visionRequest||visionActive?.cancelled||!captionActive||image.id!==captionActive.id||image.project!==captionActive.project)return;
    $("caption-ai-result").value=result.caption;
    $("caption-ai-apply").disabled=false;
    $("caption-ai-status").textContent=visionTr[7]+" "+visionTr[8];
- }catch(error){if(run===visionRequest)$("caption-ai-status").textContent=error.message}
- finally{if(run===visionRequest){
-   button.disabled=false;$("caption-ai-cancel").hidden=true;
-   visionActive=null;visionController=null;
- }}
+ }catch(error){
+   if(run===visionRequest&&!visionActive?.cancelled){
+    $("caption-ai-status").textContent=error.name==="AbortError"?visionExtra[7]:error.message;
+   }
+ }finally{
+   if(run===visionRequest){
+    stopVisionClock();
+    visionControls(false);
+    visionActive=null;visionController=null;
+   }
+ }
 });
 $("caption-ai-apply").addEventListener("click",()=>{
  if(!captionActive||$("caption-ai-apply").disabled)return;
@@ -668,7 +709,7 @@ $("caption-text").value=data.caption;$("caption-filename").textContent=item.name
 $("caption-image").alt=item.name;$("caption-image").removeAttribute("src");
 if(!item.missing)$("caption-image").src="/api/workspace/datasets/"+encodeURIComponent(openProject)+"/"+encodeURIComponent(item.id);
 captionCount();$("caption-status").textContent="";
-++visionRequest;$("caption-ai-generate").disabled=false;$("caption-ai-apply").disabled=true;
+++visionRequest;stopVisionClock();visionControls(false);$("caption-ai-apply").disabled=true;
 $("caption-ai-cancel").hidden=true;
 refreshVisionModels();
 $("caption-ai-result").value="";$("caption-ai-status").textContent="";
@@ -690,7 +731,7 @@ if(old){$("caption-text").value=old.caption;captionCount();$("caption-status").t
 function requestCaptionClose(){if($("caption-text").value!==captionOriginal&&!confirm(capTr[12]))return;$("caption-dialog").close()}
 $("caption-close").addEventListener("click",requestCaptionClose);
 $("caption-dialog").addEventListener("cancel",e=>{if($("caption-text").value!==captionOriginal&&!confirm(capTr[12]))e.preventDefault()});
-$("caption-dialog").addEventListener("close",()=>{cancelVision();++visionDiscovery;++visionRequest;captionActive=null;$("caption-image").removeAttribute("src")});
+$("caption-dialog").addEventListener("close",()=>{cancelVision();stopVisionClock();visionControls(false);++visionDiscovery;++visionRequest;captionActive=null;$("caption-image").removeAttribute("src")});
 
 
 const sidecarExportText={
