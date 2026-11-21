@@ -26,15 +26,15 @@ Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, e
 | Windows CI unit tests | NOT VERIFIED | Workflow job URL + result for release SHA | Yes |
 | Linux CI unit tests | NOT VERIFIED | Workflow job URL + result for release SHA | Yes |
 | Browser trainer smoke test | REPORTED PASS — full local suite | User confirms all trainers OK after 3/3 observed sample; exact count, log and SHA not attached | Yes for regression |
-| Workspace/ComfyUI connection gate | REPORTED | Connect/disconnect screen evidence and route behavior | Yes |
+| Workspace/ComfyUI connection gate | REPORTED PASS — disconnect state | Operator confirms correct ComfyUI disconnected-state display; connect and broader routes not separately evidenced | Yes |
 | API-format workflow prepare/execute | REPORTED | Trusted graph identifier, status and output | Yes |
 | Bridge conversion of visual workflow | REPORTED | Graph, preparation stages, actual converted run | Yes |
-| Progress and safe cancel | REPORTED | Pending/active cancel evidence, preserve unrelated queue entries | Yes |
-| History, result downloads, media previews | NOT VERIFIED | Image/audio/video evidence and refresh persistence | Yes for supported types |
-| RAM/VRAM diagnostics and optional release | NOT VERIFIED | Before/peak/after readings + no impact on unrelated jobs | Yes for advertised scope |
+| Progress and safe cancel | REPORTED PASS — generation cancellation, other work unaffected | Operator confirmation; pending vs active cases and logs not specified | Yes |
+| History, result downloads, media previews | REPORTED PASS — generated image appears in history | Operator confirmation; refresh persistence, download and video/audio formats not yet verified | Yes for supported types |
+| RAM/VRAM diagnostics and optional release | REPORTED PASS — RAM/VRAM before/after model release | Operator confirmation; numerical measurements and peak not attached | Yes for advertised scope |
 | GPU Manager single-GPU RTX 3090 | REPORTED | Compare telemetry against `nvidia-smi` | Yes |
 | Multi-GPU hardware | NOT VERIFIED | Two-adapter setup or explicit NOT APPLICABLE with reason | No if appropriately scoped |
-| LoRA Comparator standard-loader path | NOT VERIFIED | Two strengths, sequential run, errors/cancel handling | Yes for advertised scope |
+| LoRA Comparator standard-loader path | PENDING — operator has not run two-strength comparison | Two strengths, sequential run, results and cancel/error handling | Yes for advertised scope |
 | 8-language Workspace navigation | NOT VERIFIED | Browser screenshots/smoke, English fallback | Yes for UI regression |
 | Trainer representative image/video/audio | NOT VERIFIED | Brief per-family tests, saved settings parity | Yes for regression |
 | Failure handling / auth / invalid node | NOT VERIFIED | Negative tests including missing ComfyUI and malformed workflow | Yes |
@@ -69,6 +69,20 @@ After the observed `3/3 OK` representative UI test, the operator was asked to ru
 The operator replied **"todo ok"**, which is recorded as **reported success for both the local Python unit-test suite and the full headless trainer UI smoke suite**. The exact totals, execution transcript, commit SHA and GitHub Actions job URLs were **not supplied**; the result is therefore a reported local pass, not independently confirmed CI on Windows and Linux. The smoke tool simulates training actions rather than running GPU training.
 
 Remaining independent gates include release-commit CI on Windows/Linux, complete ComfyUI cancellation/foreign-queue safety, persistent history/media and resource-release checks, negative tests, language/upgrade validation and final versioned release notes.
+
+## ComfyUI final-check operator report (2026-11-21)
+
+The operator submitted five manual-check outcomes for the local OrkiLab–ComfyUI setup. These are **user-reported PASS results**, not independently collected logs or screenshots; no test commit SHA, ComfyUI version, before/after memory values or workflow identifier was supplied.
+
+| Manual check | Operator result | What this supports / limitations |
+| --- | --- | --- |
+| Generate one image and verify its appearance in generation history | **REPORTED PASS** | Image-generation/history pathway; does not establish persistence after restart or audio/video outputs |
+| Cancel a generation without disturbing other jobs | **REPORTED PASS** | General cancellation isolation; pending and active cancellation subcases not individually recorded |
+| Check RAM and VRAM before/after releasing ComfyUI models | **REPORTED PASS** | Model-release flow and memory readings; no measured values or peak attribution recorded |
+| Disconnect ComfyUI and confirm OrkiLab displays disconnected state correctly | **REPORTED PASS** | UI disconnected-state handling; invalid input/auth failure not inferred |
+| Run a comparison of two LoRA strengths | **PENDING / NOT TESTED** | **Required acceptance for the currently advertised standard-loader comparator**, unless explicitly removed from the RC scope and release claims |
+
+**Do not misinterpret** reported image-history success as verified outputs for all media, or the broad cancel success as proof of the exact E03/E04 adversarial queue scenarios. Preserve those detailed cases as `NOT TESTED` in the separate GPU acceptance matrix until scenario-specific evidence exists. The scope-critical comparison, Windows/Linux GitHub CI on release commit, negative security/invalid-node checks, navigation/i18n and update-safety review remain to be closed before tagging.
 
 ## Suggested safe operator command sequence
 
