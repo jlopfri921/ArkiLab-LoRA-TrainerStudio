@@ -31,8 +31,8 @@ class DatasetQualityTests(unittest.TestCase):
         with closing(sqlite3.connect(dbpath)) as conn, conn:
             conn.execute("CREATE TABLE projects (id TEXT PRIMARY KEY, archived INTEGER NOT NULL)")
             conn.execute("INSERT INTO projects VALUES (?,0)", (self.project,))
-        self.original = (b"\\x89PNG\\r\\n\\x1a\\n" + b"\\x00\\x00\\x00\\x0dIHDR"
-                         + struct.pack(">II", 256, 256) + b"\\x08\\x02\\x00\\x00\\x00")
+        self.original = (b"\x89PNG\r\n\x1a\n" + b"\x00\x00\x00\x0dIHDR"
+                         + struct.pack(">II", 256, 256) + b"\x08\x02\x00\x00\x00")
         self.a = self.folder / "a.png"
         self.b = self.folder / "b.png"
         self.a.write_bytes(self.original)
