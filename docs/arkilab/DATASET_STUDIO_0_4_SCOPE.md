@@ -55,6 +55,12 @@ Users can select up to 200 image references, preview saved non-empty captions an
 
 **Remaining:** image-plus-caption derived export, optional non-destructive resize/crop outputs, bulk caption edit preview, opt-in local captioner, per-trainer profiles, Windows real-dataset validation and full 0.4 beta milestone acceptance.
 
+### Optional local vision caption suggestions (beta.1 development slice)
+
+An optional per-image Ollama adapter can be invoked **only by explicit user action** from Caption Studio. Ollama must be already installed and running locally with an image-capable model; neither installations nor downloads occur automatically. Requests are loopback-only (port 11434), prevent redirects/proxy forwarding, are single-flight, are limited to 12 MiB source images, and time out after 120 seconds. A generated caption is initially a **read-only suggestion**. Applying it to the editor and saving with the normal versioned API are two separate deliberate actions; source files and sidecars are never written.
+
+**Acceptance remains pending:** real Windows Ollama+RTX 3090 workflow, supported vision-model inventory/compatibility, UI cancellation, GPU contention tests, opt-in model management, and full integration with the existing Qwen3-VL shared captioner. Unit tests mock the local backend and do not certify actual GPU inference.
+
 ## Acceptance model
 
 `PASS`: test command/result, commit and environment recorded. `REPORTED PASS`: operator result without retained detailed log. `NOT VERIFIED`: no sufficient evidence; not equal to failure. CI without a GPU **cannot** certify actual end-to-end training. Maintain a separate acceptance record for each 0.4 milestone.
