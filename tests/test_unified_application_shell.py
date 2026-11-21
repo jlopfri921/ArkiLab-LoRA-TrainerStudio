@@ -82,6 +82,39 @@ class UnifiedChromeTests(unittest.TestCase):
         self.assertIn('global.removeAttribute("id")', self.js)
         self.assertIn('document.querySelector("#comfy-navigation")', self.js)
 
+    def test_aqua_menu_links_except_white_settings_and_shutdown(self):
+        for token in (
+            "body.orki-app-frame .orki-app-nav > a,",
+            "body.orki-app-frame #home-navigation > a,",
+            "body.orki-app-frame #comfy-navigation > a {",
+            "color:#3cdbd0;",
+            "body.orki-app-frame .orki-app-nav > button,",
+            "body.orki-app-frame #home-navigation > button,",
+            "color:#fff;",
+            "body.orki-app-frame .orki-app-nav > a:is(:hover,[aria-current=\"page\"])",
+        ):
+            with self.subTest(token=token):
+                self.assertIn(token, self.css)
+
+    def test_comfyui_has_only_local_menu_and_first_back_link(self):
+        workspace = (ROOT / "GUI" / "workspace.html").read_text(encoding="utf-8")
+        start = workspace.index('<nav id="comfy-navigation"')
+        end = workspace.index("</nav>", start)
+        comfy = workspace[start:end]
+        self.assertIn('href="/workspace"', comfy)
+        self.assertIn("Back to Workspace", comfy)
+        self.assertLess(comfy.index('href="/workspace"'), comfy.index('href="#welcome"'))
+        self.assertNotIn("orki-global-nav", comfy)
+        self.assertNotIn('home.cloneNode(true)', self.js)
+        self.assertIn('comfy?.querySelectorAll(".orki-global-nav")', self.js)
+
+    def test_dataset_has_same_official_favicon_as_workspace(self):
+        dataset = (ROOT / "GUI" / "dataset_studio.html").read_text(encoding="utf-8")
+        workspace = (ROOT / "GUI" / "workspace.html").read_text(encoding="utf-8")
+        icon = "/assets/orkilab/orkilab-icon.svg"
+        self.assertIn('rel="icon" type="image/svg+xml" href="' + icon + '"', dataset)
+        self.assertIn('rel="icon" href="' + icon + '"', workspace)
+
     def test_standalone_uses_actual_workspace_markup_not_an_alternate_menu(self):
         self.assertIn('source.querySelector("body > header")', self.js)
         self.assertIn('source.querySelector("#home-navigation")', self.js)
