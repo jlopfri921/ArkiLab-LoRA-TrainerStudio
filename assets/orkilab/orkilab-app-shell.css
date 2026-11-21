@@ -66,6 +66,15 @@ body.orki-app-frame .orki-app-header > .row {
   justify-content:flex-end;
   flex-wrap:wrap;
   gap:12px;
+  /* Prevent generic queue task-row styles from leaking into the header. */
+  grid-template-columns:none;
+  width:auto;
+  padding:0;
+  margin:0;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
 }
 body.orki-app-frame .orki-app-header label{
   display:grid;
