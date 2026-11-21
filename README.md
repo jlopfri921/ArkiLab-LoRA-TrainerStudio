@@ -6,6 +6,7 @@
   <a href="VERSION_ARKILAB"><img alt="Version 0.2.0-rc.1" src="https://img.shields.io/badge/version-0.2.0--rc.1-087F91"></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-315DB3"></a>
   <img alt="Windows and Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-293C60">
+  <a href="https://ko-fi.com/jorgelf"><img alt="Support OrkiLab on Ko-fi" src="https://img.shields.io/badge/Ko--fi-Support%20OrkiLab-FF5E5B?logo=kofi&logoColor=white"></a>
 </p>
 
 <p align="center"><a href="#whats-new-in-orkilab--modern-workspace-and-comfyui-integration">What’s new</a> · <a href="#quick-start">Quick start</a> · <a href="#training-engines">Training engines</a> · <a href="docs/arkilab/ROADMAP.md">Roadmap</a> · <a href="CHANGELOG_ARKILAB.md">Changelog</a> · <a href="#credits">Credits</a></p>
@@ -1051,7 +1052,7 @@ Models and LoRAs downloaded at run time (not part of this repository): MelBandRo
 
 ## Community and support
 
-**YouTube** — Coming soon · **X** — Coming soon · **Discord** — Coming soon · **Ko-fi** — Coming soon
+**YouTube** — Coming soon · **X** — Coming soon · **Discord** — Coming soon · **[Ko-fi — Support OrkiLab](https://ko-fi.com/jorgelf)**
 
 Report issues in the [OrkiLab issue tracker](https://github.com/jlopfri921/OrkiLab-LoRA-TrainerStudio/issues).
 
