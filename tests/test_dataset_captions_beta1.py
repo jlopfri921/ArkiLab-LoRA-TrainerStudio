@@ -70,7 +70,7 @@ class CaptionStudioTests(unittest.TestCase):
         self.assertEqual(self.client.get(self.caption).get_json()["caption"], "first")
         self.assertEqual(self.client.put(self.caption, json={"caption": "x" * 2001, "expected_revision": 1}).status_code, 400)
         self.assertEqual(self.client.put(self.caption, json={"caption": "ok", "expected_revision": True}).status_code, 400)
-        self.assertEqual(self.client.put(self.caption, json={"caption": "bad\\x00control", "expected_revision": 1}).status_code, 400)
+        self.assertEqual(self.client.put(self.caption, json={"caption": "bad" + chr(0) + "control", "expected_revision": 1}).status_code, 400)
         self.assertEqual(self.client.put(self.caption, json={"caption": "ok", "expected_revision": 1},
                          headers={"Origin": "https://attacker.example"}).status_code, 403)
         self.assertEqual(self.client.get(self.caption,
