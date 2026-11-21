@@ -72,9 +72,8 @@
                 a.removeAttribute("aria-current");
             }
             for (const button of global.querySelectorAll("button")) {
+                const mode = button.id === "settings-open" ? "settings" : "shutdown";
                 button.removeAttribute("id");
-                button.onclick = null;
-                const mode = button.textContent.trim() === "Settings" ? "settings" : "shutdown";
                 button.addEventListener("click", () => location.assign("/workspace?dialog=" + mode));
             }
             group.append(global);
@@ -148,6 +147,7 @@
                 if (info && info.version) version.textContent = info.version;
             }).catch(() => {});
         }
+        head.classList.add("orki-app-header");
         const languageText = head.querySelector("#orki-shell-language-label");
         if (languageText) languageText.textContent = typeof I18N !== "undefined" ? I18N.translate("Language") : "Language";
         const selector = head.querySelector("#orki-shell-language");
@@ -192,6 +192,7 @@
             ko: ["여기서 무엇을 할 수 있나요?", "작업 대기열", "진행 중, 대기 중, 완료된 작업을 확인하고 일시정지, 순서 변경, 진행 상황을 확인하세요.", "Dataset Studio", "원본을 삭제하지 않고 이미지를 가져오고 품질을 확인하고 비교할 수 있습니다."]
         };
         const words = help[locale] || help.en;
+        context.classList.add("orki-app-context");
         context.querySelector("#orki-shell-context-title").textContent = page === "queue" ? words[1] : words[3];
         context.querySelector("#orki-shell-context-toggle-label").textContent = words[0];
         context.querySelector("#orki-shell-context-description").textContent = page === "queue" ? words[2] : words[4];
