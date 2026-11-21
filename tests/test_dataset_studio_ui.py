@@ -123,6 +123,24 @@ class DatasetStudioUiChecks(unittest.TestCase):
         self.assertIn('showModal()', self.html)
         self.assertIn('removeAttribute("src")', self.html)
 
+    def test_caption_sidecar_export_is_preflighted_and_explicit(self):
+        for token in ('id="export-sidecars"', 'id="sidecar-export-dialog"',
+                      'id="sidecar-export-confirm"', 'id="sidecar-export-files"',
+                      'id="sidecar-export-download"', 'const sidecarExportText={',
+                      'mode:"preview"', 'mode:"download"',
+                      'confirm:true', 'URL.createObjectURL',
+                      'URL.revokeObjectURL', 'exportIds=[...selected]',
+                      'result.skipped_empty', 'exportReady=result.exportable>0'):
+            with self.subTest(token=token):
+                self.assertIn(token, self.html)
+        for locale in ("en", "es", "pt", "fr", "de", "it", "ja", "ko"):
+            self.assertIn("\\n" + locale + ":[", self.html)
+        backend = (ROOT / "scripts" / "dataset_captions.py").read_text(encoding="utf-8")
+        self.assertIn('as_attachment=True', backend)
+        self.assertIn('zipfile.ZipFile(output', backend)
+        self.assertIn('body.get("confirm") is not True', backend)
+        self.assertIn('if not local() or not valid_origin()', backend)
+
     def test_caption_studio_modal_is_versioned_and_localized(self):
         for token in ('id="caption-dialog"', 'id="caption-close"',
                       'id="caption-text"', 'maxlength="2000"',
