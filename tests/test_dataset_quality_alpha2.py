@@ -85,7 +85,7 @@ class DatasetQualityTests(unittest.TestCase):
         scene = Image.new("RGB", (640, 640), "white")
         draw = ImageDraw.Draw(scene)
         for n in range(8):
-            draw.rectangle((n * 80, n * 80, n * 80 + 36, 620 - n * 20),
+            draw.rectangle((n * 80, n * 80, n * 80 + 36, n * 80 + 64),
                            fill=(20 + n * 18, 30, 170))
         sharp = self.folder / "scene.png"
         compressed = self.folder / "scene.jpg"
