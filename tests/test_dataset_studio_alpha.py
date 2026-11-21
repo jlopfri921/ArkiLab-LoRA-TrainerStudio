@@ -1,5 +1,6 @@
 """Dataset Studio alpha non-destructive and local-only regression tests."""
 import sqlite3
+from contextlib import closing
 import sys
 import tempfile
 import unittest
@@ -28,7 +29,7 @@ class DatasetIndexTests(unittest.TestCase):
         self.project = "a" * 32
         dbpath = self.base / "settings" / "orkilab" / "projects.sqlite3"
         dbpath.parent.mkdir(parents=True)
-        with sqlite3.connect(dbpath) as conn:
+        with closing(sqlite3.connect(dbpath)) as conn, conn:
             conn.execute("CREATE TABLE projects (id TEXT PRIMARY KEY, archived INTEGER NOT NULL)")
             conn.execute("INSERT INTO projects VALUES (?,0)", (self.project,))
         app = Flask(__name__)
