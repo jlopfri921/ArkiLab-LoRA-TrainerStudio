@@ -46,6 +46,17 @@ These results were provided by the operator through the release-readiness checkl
 
 See [the 0.3.0-rc.1 release readiness register](RC_0_3_0_READINESS.md) for publication gates. Windows/Linux CI evidence, detailed queue-safety cases, failures/recovery, multi-format media, i18n and upgrade checks remain open.
 
+## Additional operator acceptance results (2026-11-21)
+
+After the earlier four reported successful ComfyUI checks, the operator confirmed:
+
+| Scenario | Result | Limits of evidence |
+| --- | --- | --- |
+| Reject / handle an invalid workflow | **REPORTED PASS** | Exact invalid graph, error message, authorization outcome and queue changes were not provided. Does not cover all B03 or security cases |
+| Update OrkiLab without losing projects, settings or workflows | **REPORTED PASS** | Exact source/target SHA, backup details and data directory diff were not provided. No evidence of installer/rollback validation |
+
+The two outcomes above are user-reported application-level checks. They **do not retroactively mark G01–L01 individual matrix rows as PASS** when those rows demand additional evidence. CI Windows/Linux on the PR #42 candidate commit passed both foundation and RC validation suites (run IDs `44847212900` and `44847212885`); final merge commit still needs verification.
+
 ## Manual test procedure
 
 1. Capture idle `nvidia-smi` before opening GPU Manager; compare available sensor fields without treating missing telemetry as a fatal error.

@@ -1,13 +1,13 @@
 # OrkiLab changelog
 
-## Unreleased — 0.3 ComfyUI release-candidate preparation (2026-11-21)
+## 0.3.0-rc.1 — release candidate (draft, pending acceptance; 2026-11-21)
 
 - Add a welcome/introduction screen and verified-connection navigation gate for ComfyUI Zone.
 - Explain Projects and Training Engines with guided introductions, contextual actions and localized empty states.
 - Extend GPU Manager with bounded, session-only system RAM and GPU telemetry graphs.
 - Add per-generation RAM/VRAM snapshots (before, sampled peak, after completion and optionally after model/cache release). These are system-wide readings, not proof of memory leaks or per-process attribution.
 - Define the planned **0.3.0-rc.1** feature freeze and acceptance tests in [the roadmap](docs/arkilab/ROADMAP.md). Real-device verification has been reported by the user; specific pass/fail evidence remains to be filed.
-- No release version is changed yet. Model compatibility, unsupported ComfyUI custom nodes, complete trainer modern-view migration and final installer testing remain outside this candidate's guaranteed scope.
+- Candidate version metadata is prepared in a draft PR; **the tag and GitHub prerelease do not exist until acceptance**. Model compatibility, unsupported ComfyUI custom nodes, complete trainer modern-view migration and final installer testing remain outside this candidate's guaranteed scope.
 
 ## Unreleased — Workspace and ComfyUI development (2026-11-20)
 
@@ -29,7 +29,7 @@
 - Extend interface translations to the new modules. Full translations of custom-node inputs are not guaranteed.
 - Document feature workflows, code map and validation limitations in [Workspace feature guide](docs/arkilab/WORKSPACE_FEATURES.md).
 
-**Status:** implemented on the default branch, not yet released as a new version. `VERSION_ARKILAB` remains `0.2.0-rc.1`. ComfyUI Desktop, GPU and end-to-end regression tests remain pending; the entries above are not claims of production validation.
+**Historical development note:** the previous published candidate was `0.2.0-rc.1`. The `0.3.0-rc.1` tag is not created until validation; the entries above are not claims of production certification.
 
 ## 0.2.0-rc.1 — Workspace closeout candidate
 

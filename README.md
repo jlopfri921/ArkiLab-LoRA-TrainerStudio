@@ -3,7 +3,7 @@
 <p align="center"><strong>Train. Adapt. Create.</strong><br>Local-first LoRA training for image, video and audio.</p>
 
 <p align="center">
-  <a href="VERSION_ARKILAB"><img alt="Version 0.2.0-rc.1" src="https://img.shields.io/badge/version-0.2.0--rc.1-087F91"></a>
+  <a href="VERSION_ARKILAB"><img alt="Version 0.3.0-rc.1" src="https://img.shields.io/badge/version-0.3.0--rc.1-087F91"></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-315DB3"></a>
   <img alt="Windows and Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-293C60">
   <a href="https://ko-fi.com/jorgelf"><img alt="Support OrkiLab on Ko-fi" src="https://img.shields.io/badge/Ko--fi-Support%20OrkiLab-FF5E5B?logo=kofi&logoColor=white"></a>
@@ -13,7 +13,7 @@
 
 # OrkiLab — LoRA Trainer Studio
 
-Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Workspace is the default interface. This release candidate still requires comprehensive regression and GPU validation.
+Maintained by [jlopfri921](https://github.com/jlopfri921). OrkiLab is an independent, local-first workspace for adapting generative models with LoRA. Workspace is the default interface. This prerelease candidate still requires completion of the documented release acceptance gates before publication.
 
 ## Ecosystem spotlight — owner-managed announcement
 
@@ -23,7 +23,7 @@ The Dashboard includes a small, dismissible **OrkiLab ecosystem** announcement c
 
 The manifest uses `{"version":1,"items":[...]}`. Items support `id`, `enabled`, multilingual `title` and `description` objects (`es`, `en`, etc.) and an HTTPS `url`. Links are limited to the project's approved domains in `scripts/promotions_feed.py`; updating that allowlist requires shipping a code change. The UI uses text only (no HTML, third-party JavaScript, embedded images, cookies or tracking). Remote requests are made by the local server to the fixed file, not directly from visitors' browsers; no visitor identifiers are sent.
 
-## Next release candidate: 0.3.0-rc.1 (planned, not published)
+## OrkiLab 0.3.0-rc.1 — candidate release (draft; not published until validation)
 
 The next release candidate focuses on a **stable, locally verified ComfyUI integration** rather than expanding all trainers at once. The expected scope is ComfyUI Zone onboarding and connection verification; read-only models/nodes; trusted workflow import, inspection and Bridge preparation; explicit Generation Studio submission with progress, safe cancellation, results and history; GPU monitoring; optional model/cache release; system-wide RAM/VRAM readings per generation; and the existing, **experimental and not yet GPU-validated** LoRA strength-comparison UI (not part of the rc.1 stability promise).
 
@@ -33,7 +33,7 @@ The next release candidate focuses on a **stable, locally verified ComfyUI integ
 
 ## What's new in OrkiLab — modern Workspace and ComfyUI integration
 
-> **Development status (November 20, 2026).** The features below have been implemented on the repository's default branch, but **have not yet passed end-to-end tests with real ComfyUI Desktop workflows and GPU jobs**. The current version identifier remains **0.2.0-rc.1**; do not interpret the 0.3.x development milestones as released versions. Keep backups of important workflows and datasets.
+> **Development status (November 20, 2026).** The features below have been implemented on the repository's default branch, but **have not yet passed end-to-end tests with real ComfyUI Desktop workflows and GPU jobs**. The 0.3.0-rc.1 candidate is prepared on a draft release branch, **not tagged or published until acceptance**; do not interpret development milestones as stable releases. Keep backups of important workflows and datasets.
 
 OrkiLab is growing beyond a collection of LoRA trainers into a unified **local-first training, generation and model-management workspace**, while keeping the existing training engines. The newer interfaces prioritize focused screens, contextual help, collapsible advanced options, and internationalization.
 
