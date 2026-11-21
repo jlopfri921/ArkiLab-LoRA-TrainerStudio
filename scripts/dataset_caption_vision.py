@@ -209,7 +209,7 @@ def register(app, db, project_exists, local, valid_origin):
         except OSError:
             return jsonify(error="Cannot read indexed image"), 404
         if not busy.acquire(blocking=False):
-            return jsonify(error="A local vision caption is already running"), 409
+            return jsonify(error="Ollama is still processing another image. Wait for that request to finish or cancel it before retrying."), 409
         job = None
         if request_id is not None:
             job = {"id": request_id, "project": project_id, "image": image_id,
@@ -220,8 +220,12 @@ def register(app, db, project_exists, local, valid_origin):
             payload = json.dumps({
                 "model": model, "prompt": prompt,
                 "images": [base64.b64encode(binary).decode("ascii")],
+                # Reasoning-capable vision models (e.g. gemma4:26b) may
+                # otherwise spend their token budget on hidden thinking and
+                # return an empty user-visible caption. This is a caption task.
+                "think": False,
                 "stream": request_id is not None, "keep_alive": "0",
-                "options": {"num_predict": 420}
+                "options": {"num_predict": 640}
             }).encode("utf-8")
             req = urllib.request.Request(
                 OLLAMA_URL, data=payload, headers={"Content-Type": "application/json"},
@@ -247,7 +251,7 @@ def register(app, db, project_exists, local, valid_origin):
                 return jsonify(error="Invalid response from local vision model"), 502
             suggestion = result["response"].strip()
             if not suggestion:
-                return jsonify(error="Vision model returned an empty caption"), 422
+                return jsonify(error="The vision model returned no description. Check that it supports image understanding, then retry."), 422
             if any(ord(ch) < 32 and ch not in "\n\t" for ch in suggestion):
                 return jsonify(error="Vision model returned unsupported characters"), 422
             return jsonify(caption=suggestion[:MAX_CAPTION], model=model,
