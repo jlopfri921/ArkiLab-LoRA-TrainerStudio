@@ -17,6 +17,8 @@
 
 **Status:** scope agreed, candidate **not tagged or released**. The version in `VERSION_ARKILAB` remains `0.2.0-rc.1` until the release gate passes.
 
+**Release evidence register:** [0.3.0-rc.1 readiness and test evidence](RC_0_3_0_READINESS.md). Use it to distinguish observed passes, reported runs and unverified gates before tagging.
+
 **Included in the 0.3 RC (features to stabilize, not a promise every workflow will work):**
 
 - Modern Workspace entry points and the ComfyUI Zone introduction/connection gate, with eight interface languages.
