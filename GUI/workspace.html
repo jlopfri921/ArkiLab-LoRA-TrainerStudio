@@ -633,9 +633,65 @@ function refreshCompare(){
  if([...select.options].some(o=>o.value===old))select.value=old;
  else if(select.options.length===2)select.selectedIndex=1;
  $("compare-confirm").checked=false;
- $("compare-run").disabled=!ready||!select.value;
+ $("compare-run").disabled=!ready||!select.value||(checkMode()&&(chosenCheckpoints().length<2||chosenCheckpoints().length>6));
  $("compare-stop").disabled=true;
 }
+let checkpointList=[];
+const checkMode=()=>$("compare-mode").value==="checkpoints";
+async function loadCheckpointProjects(){
+ const chooser=$("compare-checkpoint-project"),old=chooser.value;
+ try{
+  const response=await api("/api/workspace/projects");
+  chooser.replaceChildren(new Option(I18N.lang==="es"?"Selecciona un proyecto":"Select project",""));
+  for(const p of response.projects.filter(p=>p.category==="image"))chooser.add(new Option(p.name+" · "+p.engine,p.id));
+  const requested=new URLSearchParams(location.search).get("checkpoint_project");
+  const chosen=[old,requested].find(id=>id&&[...chooser.options].some(o=>o.value===id));
+  if(chosen)chooser.value=chosen;
+  if(requested&&chooser.value===requested){$("compare-mode").value="checkpoints";updateCheckpointMode()}
+  if(chooser.value)await loadProjectCheckpoints();
+ }catch(error){$("compare-checkpoint-status").textContent=error.message}
+}
+async function loadProjectCheckpoints(){
+ const id=$("compare-checkpoint-project").value,root=$("compare-checkpoint-list");
+ checkpointList=[];root.replaceChildren();$("compare-confirm").checked=false;
+ if(!id){$("compare-checkpoint-status").textContent="";return}
+ $("compare-checkpoint-status").textContent=I18N.lang==="es"?"Buscando checkpoints…":"Scanning checkpoints…";
+ try{
+  const data=await api("/api/workspace/projects/"+encodeURIComponent(id)+"/checkpoints");
+  if(id!==$("compare-checkpoint-project").value)return;
+  checkpointList=data.checkpoints;
+  const suggested=new Set([300,500,700,1000]);
+  for(const entry of checkpointList){
+   const row=el("label",undefined,"row");
+   const check=el("input");check.type="checkbox";check.value=entry.name;check.checked=suggested.has(entry.step);
+   check.dataset.checkpoint="true";
+   check.onchange=()=>{$("compare-confirm").checked=false;updateCheckpointCount()};
+   row.append(check,document.createTextNode("Paso "+entry.step+" · "+entry.name+" · "+(entry.size_bytes/1048576).toFixed(1)+" MiB"));
+   root.append(row);
+  }
+  $("compare-checkpoint-status").textContent=checkpointList.length
+   ?(I18N.lang==="es"?"Selecciona entre 2 y 6 checkpoints.":"Select 2–6 checkpoints.")
+   :(I18N.lang==="es"?"Aún no hay checkpoints guardados.":"No saved checkpoints yet.");
+  updateCheckpointCount();
+ }catch(error){$("compare-checkpoint-status").textContent=error.message}
+}
+function chosenCheckpoints(){return [...$("compare-checkpoint-list").querySelectorAll('input[data-checkpoint]:checked')].map(x=>x.value)}
+function updateCheckpointCount(){
+ const n=chosenCheckpoints().length;
+ if(checkMode())$("compare-run").disabled=compareRunning||!$("compare-node").value||n<2||n>6;
+}
+function updateCheckpointMode(){
+ const active=checkMode();
+ $("compare-checkpoint-group").hidden=!active;
+ $("compare-weights-group").hidden=active;
+ $("compare-confirm").checked=false;
+ refreshCompare();updateCheckpointCount();
+}
+$("compare-mode").onchange=()=>{updateCheckpointMode();if(checkMode())loadCheckpointProjects()};
+$("compare-checkpoint-project").onchange=loadProjectCheckpoints;
+$("compare-checkpoint-refresh").onclick=loadProjectCheckpoints;
+loadCheckpointProjects();
+
 $("gen-open-compare").onclick=()=>{$("compare-search").value="";fillCompareWorkflows();$("compare-workflow").value=$("generation-workflow").value;updateCompareSelection();location.hash="compare";};
 $("compare-search").oninput=fillCompareWorkflows;
 $("compare-workflow").onchange=()=>{$("compare-prepare-status").textContent="";updateCompareSelection();};
@@ -656,7 +712,7 @@ $("compare-prepare").onclick=async()=>{
  }catch(e){out.textContent=e.message;}
  finally{updateCompareSelection();}
 };
-$("compare-node").onchange=()=>{$("compare-confirm").checked=false;$("compare-run").disabled=!$("compare-node").value;};
+$("compare-node").onchange=()=>{$("compare-confirm").checked=false;refreshCompare();};
 $("compare-weights").oninput=()=>$("compare-confirm").checked=false;
 $("compare-stop").onclick=()=>{compareStop=true;$("compare-stop").disabled=true;};
 $("compare-run").onclick=async()=>{
