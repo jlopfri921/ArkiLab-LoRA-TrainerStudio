@@ -25,7 +25,7 @@ The manifest uses `{"version":1,"items":[...]}`. Items support `id`, `enabled`, 
 
 ## Next release candidate: 0.3.0-rc.1 (planned, not published)
 
-The next release candidate focuses on a **stable, locally verified ComfyUI integration** rather than expanding all trainers at once. The expected scope is ComfyUI Zone onboarding and connection verification; read-only models/nodes; trusted workflow import, inspection and Bridge preparation; explicit Generation Studio submission with progress, safe cancellation, results and history; GPU monitoring; optional model/cache release; system-wide RAM/VRAM readings per generation; and standard LoRA strength comparison.
+The next release candidate focuses on a **stable, locally verified ComfyUI integration** rather than expanding all trainers at once. The expected scope is ComfyUI Zone onboarding and connection verification; read-only models/nodes; trusted workflow import, inspection and Bridge preparation; explicit Generation Studio submission with progress, safe cancellation, results and history; GPU monitoring; optional model/cache release; system-wide RAM/VRAM readings per generation; and the existing, **experimental and not yet GPU-validated** LoRA strength-comparison UI (not part of the rc.1 stability promise).
 
 **Not included as complete 0.3 commitments:** full per-trainer interface replacement, Dataset Studio, multiview tools, Ollama Copilot, Hub integrations, a packaged desktop installer, or support for every third-party ComfyUI node/workflow. Existing trainers remain accessible. The RC must pass Windows/Linux CI and documented on-device smoke tests; do not mark the version as 0.3 until then.
 
@@ -69,7 +69,7 @@ OrkiLab is growing beyond a collection of LoRA trainers into a unified **local-f
 | **OrkiLab Bridge** | Installable ComfyUI frontend extension, converts visual workflows via ComfyUI's own graph machinery | Requires restarting ComfyUI after installation; conversion of real nested subgraphs not yet validated |
 | **Generation Studio** | Explicit prepare/review/confirm flow, dynamic parameter editor, essential/advanced grouping, random seed for supported integer seed inputs, per-workflow presets | Presets are browser-local; linked node inputs cannot be changed here; not all workflows convert |
 | **Media results and history** | SQLite job history; image/video/audio preview and download; export submitted API JSON; mesh-file downloads | Generated media stays in ComfyUI; interactive 3D rendering and large-media verification remain outstanding |
-| **LoRA Comparator** | Direct workflow selector with compatibility hints, standard LoRA-loader selection, 2–6 strengths, fixed other parameters, sequential jobs and result grid | Standard `LoraLoader` / `LoraLoaderModelOnly` only; no arbitrary-LoRA/checkpoint comparison yet |
+| **LoRA Comparator (experimental)** | Direct workflow selector with compatibility hints, standard LoRA-loader selection, 2–6 strengths, fixed other parameters, sequential jobs and result grid | **Not GPU-validated for 0.3.0-rc.1; not a supported/stable RC guarantee.** Standard `LoraLoader` / `LoraLoaderModelOnly` only; no arbitrary-LoRA/checkpoint comparison yet |
 | **GPU Manager** | Read-only `nvidia-smi` telemetry, VRAM used/free, GPU load and temperature, visible-page auto-refresh and warnings for active OrkiLab training | Observes only; does **not** manage processes, free memory, or schedule jobs |
 
 ### Using ComfyUI generation: step by step
@@ -111,7 +111,7 @@ The monitor executes a fixed, read-only `nvidia-smi` query; it does **not** clos
 | Browser interface | `GUI/workspace.html`, `GUI/locales/` | Shared page and translated UI |
 | Bridge extension | `integrations/orkilab_bridge/` | Installed separately into ComfyUI's `custom_nodes` |
 
-**Still requiring acceptance tests:** ComfyUI Desktop Bridge after restart, real custom-node/subgraph conversion, image/video/audio playback, LoRA Comparator sequential runs and stop behavior, GPU Manager on actual hardware, multi-GPU handling and trainer UI regressions. An interactive 3D viewer, central/server-side presets, cross-LoRA/checkpoint comparisons and GPU scheduling are future work—not completed features.
+**Still requiring acceptance tests for the RC:** ComfyUI Desktop Bridge after restart, real custom-node/subgraph conversion, image/video/audio playback, GPU Manager on actual hardware, multi-GPU handling and trainer UI regressions. **Deferred beyond rc.1:** LoRA Comparator sequential runs and stop behavior; the visible tool is experimental and unverified. An interactive 3D viewer, central/server-side presets, cross-LoRA/checkpoint comparisons and GPU scheduling are future work—not completed features.
 
 For deeper architecture, endpoint/security notes, a feature-by-feature checklist and tests, see **[the Workspace feature guide](docs/arkilab/WORKSPACE_FEATURES.md)**, **[development roadmap](docs/arkilab/ROADMAP.md)** and **[full changelog](CHANGELOG_ARKILAB.md)**.
 

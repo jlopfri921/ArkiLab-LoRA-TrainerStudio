@@ -17,7 +17,7 @@ Do not convert reported successes into PASS by inference; do not fabricate scree
 
 ## Candidate scope / freeze
 
-Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, explicit execution with cancellation/progress/history, optional resource release and diagnostics, read-only GPU Manager, standard LoRA-strength comparison, and preserved trainer launching and queue. **Do not block this RC on the full rewrite of every trainer UI, Dataset Studio, multiview, Ollama, Hub or installer.** See [roadmap](ROADMAP.md).
+Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, explicit execution with cancellation/progress/history, optional resource release and diagnostics, read-only GPU Manager, and preserved trainer launching and queue. The existing LoRA Comparator remains available as an **experimental, not-yet-validated feature**; its GPU acceptance is deferred beyond rc.1. **Do not block this RC on the full rewrite of every trainer UI, Dataset Studio, multiview, Ollama, Hub or installer.** See [roadmap](ROADMAP.md).
 
 ## Gate checklist
 
@@ -34,7 +34,7 @@ Focus on stable ComfyUI connection, discovery, trusted workflow import/Bridge, e
 | RAM/VRAM diagnostics and optional release | REPORTED PASS — RAM/VRAM before/after model release | Operator confirmation; numerical measurements and peak not attached | Yes for advertised scope |
 | GPU Manager single-GPU RTX 3090 | REPORTED | Compare telemetry against `nvidia-smi` | Yes |
 | Multi-GPU hardware | NOT VERIFIED | Two-adapter setup or explicit NOT APPLICABLE with reason | No if appropriately scoped |
-| LoRA Comparator standard-loader path | PENDING — operator has not run two-strength comparison | Two strengths, sequential run, results and cancel/error handling | Yes for advertised scope |
+| LoRA Comparator standard-loader path | DEFERRED — not verified in this RC | Do not claim comparator stability; run two-strength test before a later validated release | No — explicitly excluded from rc.1 acceptance |
 | 8-language Workspace navigation | NOT VERIFIED | Browser screenshots/smoke, English fallback | Yes for UI regression |
 | Trainer representative image/video/audio | NOT VERIFIED | Brief per-family tests, saved settings parity | Yes for regression |
 | Failure handling / auth / invalid node | NOT VERIFIED | Negative tests including missing ComfyUI and malformed workflow | Yes |
@@ -80,9 +80,9 @@ The operator submitted five manual-check outcomes for the local OrkiLab–ComfyU
 | Cancel a generation without disturbing other jobs | **REPORTED PASS** | General cancellation isolation; pending and active cancellation subcases not individually recorded |
 | Check RAM and VRAM before/after releasing ComfyUI models | **REPORTED PASS** | Model-release flow and memory readings; no measured values or peak attribution recorded |
 | Disconnect ComfyUI and confirm OrkiLab displays disconnected state correctly | **REPORTED PASS** | UI disconnected-state handling; invalid input/auth failure not inferred |
-| Run a comparison of two LoRA strengths | **PENDING / NOT TESTED** | **Required acceptance for the currently advertised standard-loader comparator**, unless explicitly removed from the RC scope and release claims |
+| Run a comparison of two LoRA strengths | **DEFERRED / NOT TESTED** | Existing interface remains experimental; no assertion that comparisons or particular LoRAs work in rc.1 |
 
-**Do not misinterpret** reported image-history success as verified outputs for all media, or the broad cancel success as proof of the exact E03/E04 adversarial queue scenarios. Preserve those detailed cases as `NOT TESTED` in the separate GPU acceptance matrix until scenario-specific evidence exists. The scope-critical comparison, Windows/Linux GitHub CI on release commit, negative security/invalid-node checks, navigation/i18n and update-safety review remain to be closed before tagging.
+**Do not misinterpret** reported image-history success as verified outputs for all media, or the broad cancel success as proof of the exact E03/E04 adversarial queue scenarios. Preserve those detailed cases as `NOT TESTED` in the separate GPU acceptance matrix until scenario-specific evidence exists. Windows/Linux GitHub CI on release commit, negative security/invalid-node checks, navigation/i18n and update-safety review remain to be closed before tagging. Comparator acceptance is deferred and must not be presented as complete.
 
 ## Suggested safe operator command sequence
 
@@ -118,4 +118,4 @@ Then follow the step-by-step [GPU/Generation acceptance matrix](GPU_GENERATION_A
 5. Publish a GitHub prerelease with installation/update and rollback instructions, supported workflow examples, known issues and links to the evidence.
 6. Retain prior candidate as rollback option; do not force-reset or overwrite datasets, workflows, settings or outputs.
 
-**Next decision:** collect release-commit CI and critical ComfyUI/GPU acceptance evidence, then prepare the release PR. This document alone does not unblock publishing.
+**Next decision:** collect release-commit CI and critical ComfyUI/GPU acceptance evidence, then prepare the release PR. Do not gate rc.1 on the unverified comparator. This document alone does not unblock publishing.
