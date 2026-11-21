@@ -71,6 +71,17 @@ class UnifiedChromeTests(unittest.TestCase):
             with self.subTest(js=needle):
                 self.assertIn(needle, self.js)
 
+    def test_queue_does_not_acquire_a_second_language_selector(self):
+        helper = (ROOT / "assets" / "orkilab" / "orkilab-ui.js").read_text(encoding="utf-8")
+        self.assertIn("#ui-lang,#workspace-language,#orki-language,.queue-shell,.studio-layout", helper)
+        self.assertIn('selector.id = "orki-shell-language"', self.js)
+        self.assertIn('header.querySelector("#workspace-language")', self.js)
+
+    def test_comfy_global_actions_are_keyed_by_original_ids_not_translated_text(self):
+        self.assertIn('button.id === "settings-open" ? "settings" : "shutdown"', self.js)
+        self.assertIn('global.removeAttribute("id")', self.js)
+        self.assertIn('document.querySelector("#comfy-navigation")', self.js)
+
     def test_standalone_uses_actual_workspace_markup_not_an_alternate_menu(self):
         self.assertIn('source.querySelector("body > header")', self.js)
         self.assertIn('source.querySelector("#home-navigation")', self.js)
