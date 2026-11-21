@@ -28,7 +28,7 @@ jobs:
           python-version: '3.13'
       # Avoid CUDA/model-download-heavy requirements.txt for this GPU-free gate.
       - name: Install CPU-only test dependencies
-        run: python -m pip install --upgrade pip flask psutil requests
+        run: python -m pip install --upgrade pip flask psutil requests pillow
       - name: Compile common modules
         run: python -m compileall -q scripts tests
       - name: Run unit tests
