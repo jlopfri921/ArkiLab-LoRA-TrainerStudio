@@ -288,7 +288,7 @@ finally{if(token===scanRun){scanning=false;scanControls()}}
 }
 $("scan-quality").addEventListener("click",qualityScan);
 $("cancel-scan").addEventListener("click",()=>{scanRun++;scanning=false;scanControls();$("scan-label").textContent="Scan cancelled; results already checked are preserved";refresh()});
-project.addEventListener("change",()=>{scanRun++;scanning=false;scanControls();selected.clear();refresh()});
+project.addEventListener("change",()=>{if(batchRun?.running)cancelBatch();scanRun++;scanning=false;scanControls();selected.clear();refresh()});
 $("refresh").addEventListener("click",refresh);$("search").addEventListener("input",refresh);
 $("review-filter").addEventListener("change",refresh);$("sort").addEventListener("change",refresh);$("quality-filter").addEventListener("change",refresh);
 $("select-all").addEventListener("click",()=>{for(const item of current)selected.add(item.id);refreshSelection()});
