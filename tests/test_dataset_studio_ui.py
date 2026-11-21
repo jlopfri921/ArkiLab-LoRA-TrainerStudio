@@ -141,6 +141,26 @@ class DatasetStudioUiChecks(unittest.TestCase):
         self.assertIn('body.get("confirm") is not True', backend)
         self.assertIn('if not local() or not valid_origin()', backend)
 
+    def test_opt_in_local_ollama_caption_has_review_and_separate_save(self):
+        for token in ('id="caption-ai-model"', 'id="caption-ai-generate"',
+                      'id="caption-ai-result"', 'id="caption-ai-apply"',
+                      'readonly rows="4"', 'const localVisionText={',
+                      'const visionTr=localVisionText[lang]',
+                      'confirm:true', '/caption/suggest',
+                      '$("caption-ai-apply").disabled=false',
+                      '$("caption-text").value=$("caption-ai-result").value',
+                      '$("caption-text").focus()'):
+            with self.subTest(token=token):
+                self.assertIn(token, self.html)
+        backend = (ROOT / "scripts" / "dataset_caption_vision.py").read_text(encoding="utf-8")
+        for token in ('http://127.0.0.1:11434/api/generate', 'keep_alive',
+                      'NoRedirects', 'MAX_IMAGE_BYTES', 'MAX_PROMPT',
+                      'saved=False', 'timeout=120', 'busy.acquire(blocking=False)'):
+            with self.subTest(token=token):
+                self.assertIn(token, backend)
+        route = (ROOT / "scripts" / "dataset_studio.py").read_text(encoding="utf-8")
+        self.assertIn("dataset_caption_vision.register(app, db, project_exists, local, valid_origin)", route)
+
     def test_caption_studio_modal_is_versioned_and_localized(self):
         for token in ('id="caption-dialog"', 'id="caption-close"',
                       'id="caption-text"', 'maxlength="2000"',
