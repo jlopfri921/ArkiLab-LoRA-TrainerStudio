@@ -2044,5 +2044,7 @@
   "Trainer quick navigation": "トレーナーのクイックナビゲーション",
   "Jump to": "移動先",
   "Console": "コンソール",
-  "Generated previews": "生成プレビュー"
+  "Generated previews": "生成プレビュー",
+  "MiniMax-H3 Image: image and edit LoRAs. Video and audio controls are unavailable in this mode.": "MiniMax-H3 Image: 画像および編集用 LoRA。このモードでは動画・音声の設定は使用できません。",
+  "MiniMax-H3: video and audio LoRAs.": "MiniMax-H3: 動画・音声用 LoRA。"
 }
