@@ -123,6 +123,24 @@ class DatasetStudioUiChecks(unittest.TestCase):
         self.assertIn('showModal()', self.html)
         self.assertIn('removeAttribute("src")', self.html)
 
+    def test_caption_studio_modal_is_versioned_and_localized(self):
+        for token in ('id="caption-dialog"', 'id="caption-close"',
+                      'id="caption-text"', 'maxlength="2000"',
+                      'id="caption-save"', 'id="caption-clear"',
+                      'id="caption-history"', 'id="caption-restore"',
+                      'captionVersions()', 'expected_revision:captionRevision',
+                      'const capTr=captionsText[lang]', 'function openCaption(item)',
+                      'openCaption(item)', 'captionActive=null',
+                      'removeAttribute("src")'):
+            with self.subTest(token=token):
+                self.assertIn(token, self.html)
+        backend = (ROOT / "scripts" / "dataset_captions.py").read_text(encoding="utf-8")
+        routes = (ROOT / "scripts" / "dataset_studio.py").read_text(encoding="utf-8")
+        self.assertIn("dataset_captions.register(app, db, project_exists, local, valid_origin)", routes)
+        self.assertIn('MAX_CAPTION_CHARS = 2000', backend)
+        self.assertIn('MAX_HISTORY = 25', backend)
+        self.assertIn('return jsonify(error="Caption changed in another tab", current=current), 409', backend)
+
     def test_selection_filters_and_localized_ui_present(self):
         for selector in ("project", "folder", "search", "review-filter", "sort",
                          "select-all", "select-none", "approve", "reject", "reset", "remove"):
