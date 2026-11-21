@@ -27,3 +27,19 @@ body .orki-help-button{position:absolute;inset-inline-end:0;top:0;width:21px;hei
 .orki-help-dialog h2{font-size:1.15rem;margin:0 0 10px}.orki-help-dialog p{margin:0 0 16px;white-space:pre-wrap}.orki-help-dialog button{display:block;margin-inline-start:auto}
 @media(max-width:960px){body .hardware-monitor{justify-content:flex-start}body .hw-card{min-width:0;flex:1 1 110px}body .banner-container{justify-content:center}}
 @media(prefers-reduced-motion:reduce){.orki-tools *, .orki-help-dialog *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* 0.3 trainer panel foundation: opt-in classes, no changes to training state. */
+.orki-trainer-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
+.orki-trainer-panel{min-width:0;background:var(--orki-panel);border:1px solid var(--orki-border);border-radius:13px;padding:clamp(12px,1.7vw,18px)}
+.orki-trainer-panel>h2,.orki-trainer-panel>h3{margin:0 0 12px}
+.orki-trainer-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:12px 16px;align-items:start}
+.orki-trainer-fields>*,.orki-trainer-fields label{min-width:0}
+.orki-trainer-fields input:not([type=checkbox]):not([type=radio]),.orki-trainer-fields select,.orki-trainer-fields textarea{width:100%;max-width:100%;min-width:0}
+.orki-trainer-advanced{border:1px solid var(--orki-border);border-radius:11px;background:#101d30;min-width:0}
+.orki-trainer-advanced>summary{cursor:pointer;padding:13px 16px;font-weight:700;color:var(--orki-text)}
+.orki-trainer-advanced>summary:focus-visible{outline:2px solid var(--orki-accent);outline-offset:3px}
+.orki-trainer-advanced[open]>summary{border-bottom:1px solid var(--orki-border)}
+.orki-trainer-advanced-body{padding:14px 16px}
+.orki-trainer-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:sticky;bottom:0;z-index:5;padding:12px 14px;background:#101d30f5;border:1px solid var(--orki-border);border-radius:12px}
+.orki-trainer-actions button{min-height:40px}
+@media(max-width:650px){.orki-trainer-fields{grid-template-columns:1fr}.orki-trainer-actions{position:static}}
