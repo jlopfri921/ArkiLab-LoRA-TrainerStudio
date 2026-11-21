@@ -596,8 +596,7 @@ $("prepare-training").addEventListener("click",async()=>{
   if(!window.confirm(lang==="es"?"Crear una nueva carpeta local con "+preview.ready+" imágenes y sus descripciones, sin modificar las originales?":"Create a new local folder with "+preview.ready+" image/caption pairs, leaving originals unchanged?"))return;
   const result=await postJson(target,{mode:"prepare",image_ids:imageIds,confirm:true});
   if(project.value!==projectId)return;
-  $("folder").value=result.path;
-  say((lang==="es"?"Carpeta preparada: ":"Prepared dataset folder: ")+result.path);
+  say((lang==="es"?"Carpeta preparada; indica esta ruta en el entrenador: ":"Prepared folder; select this path in the trainer: ")+result.path);
   try{await navigator.clipboard.writeText(result.path);say((lang==="es"?"Ruta copiada. Selecciónala en el entrenador compatible: ":"Path copied. Select it in a compatible trainer: ")+result.path)}catch{}
  }catch(error){say(error.message)}
  finally{selectionUI()}
