@@ -32,6 +32,14 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 .qualitybar progress{flex:1 1 200px;max-width:460px;height:16px}
 .qualityflag{border:1px solid #597189;border-radius:5px;padding:2px 5px;font-size:12px;color:#e9c98b}
 .qualityflag.duplicate{border-color:#e7a25b;color:#ffca87}
+.caption-dialog{width:min(740px,95vw);max-width:95vw;max-height:90vh;overflow:auto;background:#152238;color:#e8f0fb;border:1px solid #486482;border-radius:14px;padding:20px}
+.caption-dialog::backdrop{background:#040a13dd}
+.caption-dialog .caption-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.caption-dialog .caption-head h2{margin:0}
+.caption-dialog textarea{width:100%;min-height:145px;resize:vertical;line-height:1.5}
+.caption-dialog .caption-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:12px 0}
+.caption-dialog .caption-preview{max-width:100%;max-height:240px;object-fit:contain;display:block;margin:12px auto;background:#0b1221;border-radius:9px}
+.caption-dialog .caption-history{width:100%}
 .comparison-dialog{width:min(1150px,96vw);max-width:96vw;max-height:94vh;background:#152238;color:#e8f0fb;border:1px solid #486482;border-radius:16px;padding:20px}
 .comparison-dialog::backdrop{background:#040a13d9}
 .compare-header,.compare-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
@@ -107,6 +115,20 @@ label{display:grid;gap:7px;min-width:0}button:focus-visible,input:focus-visible,
 <section class="compare-pane" aria-label="Right image"><div class="compare-viewport"><img id="compare-right" alt=""></div><div class="compare-caption" id="compare-right-meta"></div></section>
 </div>
 <p id="compare-status" class="muted" role="status" aria-live="polite"></p>
+</dialog>
+<dialog class="caption-dialog" id="caption-dialog" aria-labelledby="caption-title">
+<div class="caption-head"><h2 id="caption-title">Caption Studio</h2><button type="button" id="caption-close" aria-label="Close caption editor">✕</button></div>
+<p class="muted" id="caption-help">Write a manual caption for training. Saved in OrkiLab only; image files and existing .txt sidecars remain unchanged.</p>
+<img class="caption-preview" id="caption-image" alt="">
+<p id="caption-filename" class="muted"></p>
+<label for="caption-text" id="caption-label">Caption</label>
+<textarea id="caption-text" maxlength="2000" aria-describedby="caption-count"></textarea>
+<p class="muted" id="caption-count">0 / 2000</p>
+<div class="caption-actions"><button type="button" id="caption-save">Save caption</button><button type="button" id="caption-clear">Clear editor</button></div>
+<label for="caption-history" id="caption-history-label">Previous versions</label>
+<select id="caption-history" class="caption-history"><option value="">Select a version to restore</option></select>
+<button type="button" id="caption-restore">Load selected version into editor</button>
+<p class="status" id="caption-status" role="status" aria-live="polite"></p>
 </dialog>
 <script>
 "use strict";
@@ -184,6 +206,7 @@ if(!findings.length)findings.push(item.quality==="ok"?"✓":item.quality||"?");
 for(const finding of findings){const quality=document.createElement("span");quality.className="qualityflag"+(item.duplicate?" duplicate":"");quality.textContent=finding;quality.title=qt[7];meta.append(quality)}
 }
 
+const captionButton=document.createElement("button");captionButton.type="button";captionButton.textContent=capTr[0];captionButton.addEventListener("click",()=>openCaption(item));meta.append(captionButton);
 const compare=document.createElement("button");compare.type="button";compare.textContent=ct[0];compare.addEventListener("click",()=>openComparison(item.id));meta.append(compare);
 const button=document.createElement("button");button.type="button";button.textContent=tr[34];button.addEventListener("click",async()=>{if(!confirm(tr[31]))return;await batch("remove",[item.id])});meta.append(button);
 card.append(meta);fragment.append(card)}images.append(fragment)
@@ -285,6 +308,60 @@ $("compare-previous").addEventListener("click",()=>{if(compareIndex>0){compareIn
 $("compare-next").addEventListener("click",()=>{if(compareIndex+1<comparePairs.length){compareIndex++;renderComparison()}});
 $("compare-zoom").addEventListener("input",applyCompareZoom);
 $("comparison").addEventListener("close",()=>{for(const side of ["left","right"])$("compare-"+side).removeAttribute("src")});
+
+
+const captionsText={
+en:["Edit caption","Caption Studio","Write a manual caption for training. Only OrkiLab's database changes; original images and .txt sidecars stay untouched.","Caption","Save caption","Clear editor","Previous versions","Load selected version","Select a version to restore","Saved in OrkiLab","Another tab changed this caption. Reopen it before saving.","No unsaved changes to lose?","Unsaved caption changes will be discarded. Close anyway?"],
+es:["Editar descripción","Caption Studio","Escribe una descripción para entrenar. Solo cambia la base de datos de OrkiLab; las imágenes y archivos .txt originales quedan intactos.","Descripción (caption)","Guardar descripción","Limpiar editor","Versiones anteriores","Cargar versión seleccionada","Selecciona una versión para recuperar","Guardado en OrkiLab","La descripción cambió en otra pestaña. Vuelve a abrirla antes de guardar.","¿Cerrar el editor?","Hay cambios sin guardar. ¿Cerrar sin guardarlos?"],
+pt:["Editar legenda","Caption Studio","Edite a legenda para treino. Apenas a base de dados OrkiLab muda; os ficheiros originais permanecem intactos.","Legenda","Guardar legenda","Limpar editor","Versões anteriores","Carregar versão","Selecione uma versão","Guardado no OrkiLab","A legenda foi alterada noutra janela. Reabra para editar.","Fechar editor?","Há alterações não guardadas. Fechar?"],
+fr:["Modifier légende","Caption Studio","Saisissez une légende pour l'entraînement. Seule la base OrkiLab change; les fichiers d'origine restent intacts.","Légende","Enregistrer","Effacer","Versions précédentes","Charger la version","Choisir une version","Enregistré dans OrkiLab","La légende a changé dans un autre onglet. Rouvrez-la.","Fermer ?","Modifications non enregistrées. Fermer ?"],
+de:["Beschriftung bearbeiten","Caption Studio","Bearbeiten Sie die Trainingsbeschreibung. Originalbilder und .txt-Dateien bleiben unverändert.","Beschreibung","Speichern","Editor leeren","Frühere Versionen","Version laden","Version auswählen","In OrkiLab gespeichert","In einem anderen Tab geändert. Bitte erneut öffnen.","Schließen?","Ungespeicherte Änderungen verwerfen?"],
+it:["Modifica didascalia","Caption Studio","Scrivi una descrizione per l'addestramento. I file originali non vengono modificati.","Descrizione","Salva","Svuota editor","Versioni precedenti","Carica versione","Seleziona versione","Salvato in OrkiLab","Modificato in un'altra scheda. Riapri.","Chiudere?","Modifiche non salvate. Chiudere?"],
+ja:["キャプション編集","Caption Studio","学習用キャプションを編集します。元の画像やテキストファイルは変更しません。","キャプション","保存","入力を消去","以前のバージョン","選択した版を読み込む","バージョンを選択","保存しました","別のタブで変更されました。再度開いてください。","閉じますか？","未保存の変更があります。閉じますか？"],
+ko:["캡션 편집","Caption Studio","학습용 캡션을 편집합니다. 원본 이미지와 .txt 파일은 변경하지 않습니다.","캡션","저장","입력 지우기","이전 버전","선택한 버전 불러오기","버전 선택","OrkiLab에 저장됨","다른 탭에서 변경되었습니다. 다시 여세요.","닫으시겠습니까?","저장되지 않은 변경 사항을 버릴까요?"]
+};
+const capTr=captionsText[lang];
+$("caption-title").textContent=capTr[1];$("caption-help").textContent=capTr[2];$("caption-label").textContent=capTr[3];
+$("caption-save").textContent=capTr[4];$("caption-clear").textContent=capTr[5];$("caption-history-label").textContent=capTr[6];
+$("caption-restore").textContent=capTr[7];$("caption-close").setAttribute("aria-label",capTr[1]);
+let captionActive=null,captionOriginal="",captionRevision=0,captionHistory=[];
+function captionCount(){$("caption-count").textContent=$("caption-text").value.length+" / 2000"}
+function captionPath(){return "/api/workspace/datasets/"+encodeURIComponent(captionActive.project)+"/"+encodeURIComponent(captionActive.id)+"/caption"}
+async function captionVersions(){
+const result=await api(captionPath()+"/history");
+captionHistory=result.history||[];const dropdown=$("caption-history");dropdown.replaceChildren();
+const empty=document.createElement("option");empty.value="";empty.textContent=capTr[8];dropdown.append(empty);
+for(const old of captionHistory){const option=document.createElement("option");option.value=String(old.revision);
+option.textContent="v"+old.revision+" · "+new Date(old.changed_at).toLocaleString(lang);dropdown.append(option)}
+}
+async function openCaption(item){
+if(!project.value)return;
+const openProject=project.value,link="/api/workspace/datasets/"+encodeURIComponent(openProject)+"/"+encodeURIComponent(item.id)+"/caption";
+try{const data=await api(link);if(project.value!==openProject)return;
+captionActive={id:item.id,project:openProject};captionRevision=data.revision;captionOriginal=data.caption;
+$("caption-text").value=data.caption;$("caption-filename").textContent=item.name;
+$("caption-image").alt=item.name;$("caption-image").removeAttribute("src");
+if(!item.missing)$("caption-image").src="/api/workspace/datasets/"+encodeURIComponent(openProject)+"/"+encodeURIComponent(item.id);
+captionCount();$("caption-status").textContent="";
+await captionVersions();$("caption-dialog").showModal();$("caption-text").focus()
+}catch(e){say(e.message)}
+}
+$("caption-text").addEventListener("input",captionCount);
+$("caption-save").addEventListener("click",async()=>{
+if(!captionActive)return;
+const button=$("caption-save");button.disabled=true;
+try{const result=await api(captionPath(),{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({caption:$("caption-text").value,expected_revision:captionRevision})});
+captionRevision=result.revision;captionOriginal=result.caption;$("caption-status").textContent=capTr[9]+" · v"+captionRevision;await captionVersions()
+}catch(e){$("caption-status").textContent=e.message.includes("409")?capTr[10]:e.message}
+finally{button.disabled=false}
+});
+$("caption-clear").addEventListener("click",()=>{$("caption-text").value="";captionCount();$("caption-text").focus()});
+$("caption-restore").addEventListener("click",()=>{const target=Number($("caption-history").value);const old=captionHistory.find(h=>h.revision===target);
+if(old){$("caption-text").value=old.caption;captionCount();$("caption-status").textContent="v"+old.revision+" → "+capTr[4]}});
+function requestCaptionClose(){if($("caption-text").value!==captionOriginal&&!confirm(capTr[12]))return;$("caption-dialog").close()}
+$("caption-close").addEventListener("click",requestCaptionClose);
+$("caption-dialog").addEventListener("cancel",e=>{if($("caption-text").value!==captionOriginal&&!confirm(capTr[12]))e.preventDefault()});
+$("caption-dialog").addEventListener("close",()=>{captionActive=null;$("caption-image").removeAttribute("src")});
 
 selectionUI();scanControls();projects();
 </script><script src="/assets/orkilab/orkilab-shell.js"></script>
