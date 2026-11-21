@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 import zipfile
+from contextlib import closing
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -30,7 +31,7 @@ class TrainingDatasetExportTests(unittest.TestCase):
         self.project_id = "a" * 32
         db = self.root / "settings" / "orkilab" / "projects.sqlite3"
         db.parent.mkdir(parents=True)
-        with sqlite3.connect(db) as connection:
+        with closing(sqlite3.connect(db)) as connection, connection:
             connection.execute("CREATE TABLE projects (id TEXT PRIMARY KEY, archived INTEGER NOT NULL)")
             connection.execute("INSERT INTO projects VALUES (?, 0)", (self.project_id,))
         app = Flask(__name__)
