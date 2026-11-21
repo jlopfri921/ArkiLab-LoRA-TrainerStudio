@@ -692,19 +692,37 @@ async function loadCompareCompatibility(){
  }
 }
 $("compare-show-all").onchange=fillCompareWorkflows;
+function compareIsReady(){
+ return !!generationToken&&!generationDirty&&!generationBusy&&!generationPreparing
+  &&$("generation-workflow").value===$("compare-workflow").value;
+}
+function compareEditableLoaders(){
+ const fields=generationFields||[];
+ return fields.filter(f=>["LoraLoader","LoraLoaderModelOnly"].includes(f.class_type)
+  &&f.name==="strength_model"&&["number","integer"].includes(f.kind)
+  &&fields.some(other=>other.node===f.node&&other.name==="lora_name"&&other.kind==="choice"));
+}
+function updateCompareRunState(){
+ const ready=compareIsReady(),node=$("compare-node").value;
+ const usable=compareEditableLoaders().some(f=>f.node===node);
+ const selected=checkMode()?chosenCheckpoints().length:0;
+ const checkpointOk=!checkMode()||(
+  !!$("compare-checkpoint-project").value&&selected>=2&&selected<=6);
+ $("compare-run").disabled=compareRunning||!ready||!usable||!checkpointOk
+  ||!$("compare-confirm").checked;
+}
 function refreshCompare(){
  if(compareRunning)return;
  const select=$("compare-node"),old=select.value;
  select.replaceChildren(new Option(t("Select LoRA node"),""));
- const ready=!!generationToken&&!generationDirty&&!generationBusy&&!generationPreparing&&$("generation-workflow").value===$("compare-workflow").value;
- if(ready)for(const f of generationFields.filter(f=>["LoraLoader","LoraLoaderModelOnly"].includes(f.class_type)&&f.name==="strength_model")){
+ if(compareIsReady())for(const f of compareEditableLoaders()){
   const model=generationFields.find(x=>x.node===f.node&&x.name==="lora_name");
   select.add(new Option((model?.value||t("LoRA"))+" · "+f.class_type+" #"+f.node,f.node));
  }
  if([...select.options].some(o=>o.value===old))select.value=old;
  else if(select.options.length===2)select.selectedIndex=1;
- $("compare-confirm").checked=false;
- $("compare-run").disabled=!ready||!select.value||(checkMode()&&(chosenCheckpoints().length<2||chosenCheckpoints().length>6));
+ if(select.value!==old)$("compare-confirm").checked=false;
+ updateCompareRunState();
  $("compare-stop").disabled=true;
 }
 let checkpointList=[];
@@ -748,11 +766,7 @@ async function loadProjectCheckpoints(){
  }catch(error){$("compare-checkpoint-status").textContent=error.message}
 }
 function chosenCheckpoints(){return [...$("compare-checkpoint-list").querySelectorAll('input[data-checkpoint]:checked')].map(x=>x.value)}
-function updateCheckpointCount(){
- const n=chosenCheckpoints().length;
- const ready=!!generationToken&&!generationDirty&&!generationBusy&&!generationPreparing&&$("generation-workflow").value===$("compare-workflow").value;
- if(checkMode())$("compare-run").disabled=compareRunning||!ready||!$("compare-node").value||n<2||n>6;
-}
+function updateCheckpointCount(){updateCompareRunState();}
 function updateCheckpointMode(){
  const active=checkMode();
  $("compare-checkpoint-group").hidden=!active;
@@ -797,13 +811,21 @@ $("compare-prepare").onclick=async()=>{
   if(scoped&&w.compatibility?.status!=="candidate"){
    out.textContent=(I18N.lang==="es"?"Workflow convertido, pero aún no está autorizado para comparar checkpoints: ":"Workflow converted but not yet eligible for checkpoint comparison: ")+compatibilityReason(w);
   }else{
-   out.textContent=count?t("Ready: {count} LoRA loader(s) available for comparison.",{count}):t("No compatible standard LoRA loader found. Try a workflow with LoraLoader or LoraLoaderModelOnly.");
+   if(count)out.textContent=t("Ready: {count} LoRA loader(s) available for comparison.",{count});
+   else{
+    const graph=JSON.parse($("generation-graph").textContent||"{}");
+    const loaders=Object.values(graph).filter(n=>["LoraLoader","LoraLoaderModelOnly"].includes(n?.class_type));
+    out.textContent=loaders.length
+     ?(I18N.lang==="es"?"Workflow preparado, pero el cargador LoRA no tiene lora_name y strength_model editables. Comprueba sus conexiones.":"Workflow prepared, but lora_name and strength_model are not editable on its LoRA loader. Check its links.")
+     :t("No compatible standard LoRA loader found. Try a workflow with LoraLoader or LoraLoaderModelOnly.");
+   }
   }
  }catch(e){out.textContent=e.message;}
  finally{bridgeViaComparator=false;updateCompareSelection();}
 };
-$("compare-node").onchange=()=>{$("compare-confirm").checked=false;refreshCompare();};
-$("compare-weights").oninput=()=>$("compare-confirm").checked=false;
+$("compare-node").onchange=()=>{$("compare-confirm").checked=false;updateCompareRunState();};
+$("compare-weights").oninput=()=>{$("compare-confirm").checked=false;updateCompareRunState();};
+$("compare-confirm").onchange=updateCompareRunState;
 $("compare-stop").onclick=()=>{compareStop=true;$("compare-stop").disabled=true;};
 $("compare-run").onclick=async()=>{
  if(compareRunning||generationBusy||generationPreparing||generationDirty||!generationToken||$("compare-workflow").value!==$("generation-workflow").value||!$("compare-node").value||!$("compare-confirm").checked)return;
